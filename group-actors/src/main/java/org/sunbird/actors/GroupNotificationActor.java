@@ -48,7 +48,9 @@ public class GroupNotificationActor extends BaseActor{
         if(CollectionUtils.isNotEmpty(notifications)){
             sendNotifications(notifications, request.getContext());
         }
-
+        Response response = new Response();
+        response.put(JsonKey.RESULT,"ok");
+        sender().tell(response, self());
     }
 
     /**
