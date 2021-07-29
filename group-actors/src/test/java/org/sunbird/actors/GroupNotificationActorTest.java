@@ -221,12 +221,10 @@ public class GroupNotificationActorTest extends BaseActorTest {
         member1.setGroupId("1234");
         member1.setUserId("234");
         member1.setRole(JsonKey.ADMIN);
-
         MemberResponse member2 = new MemberResponse();
         member2.setGroupId("1234");
         member2.setUserId("2341");
         member2.setRole(JsonKey.MEMBER);
-
         List<MemberResponse> members = new ArrayList<>();
         members.add(member1);
         members.add(member2);
