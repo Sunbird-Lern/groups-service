@@ -65,7 +65,7 @@ public class UpdateGroupMembershipActor extends BaseActor {
 
       if (CollectionUtils.isNotEmpty(members)) {
         MemberService memberService = new MemberServiceImpl();
-        response = memberService.editMembers(members,actorMessage.getContext());
+        response = memberService.editMembers(members,actorMessage.getContext(), userId);
       }
       boolean isUseridRedisEnabled =
               Boolean.parseBoolean(

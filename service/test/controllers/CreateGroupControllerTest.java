@@ -23,7 +23,7 @@ public class CreateGroupControllerTest extends BaseApplicationTest {
   @Test
   public void testCreateGroupPasses() {
     Map<String, Object> reqMap = new HashMap<>();
-    reqMap.put(JsonKey.GROUP_NAME, "group");
+    reqMap.put(JsonKey.NAME, "group");
     Map<String, Object> request = new HashMap<>();
     List<Map<String, Object>> members = new ArrayList<>();
     Map<String, Object> member = new HashMap<>();

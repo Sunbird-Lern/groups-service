@@ -45,8 +45,8 @@ public class CassandraMocker {
     EmbeddedCassandra.session.execute(
         EmbeddedCassandra.insertStatement.bind(
             request.getRequest().get(JsonKey.ID),
-            request.getRequest().get(JsonKey.GROUP_NAME),
-            request.getRequest().get(JsonKey.GROUP_DESC)));
+            request.getRequest().get(JsonKey.NAME),
+            request.getRequest().get(JsonKey.DESC)));
     Response response = new Response();
     response.put(Constants.RESPONSE, Constants.SUCCESS);
     return response;

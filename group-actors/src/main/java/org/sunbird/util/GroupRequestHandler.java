@@ -19,8 +19,8 @@ public class GroupRequestHandler {
 
   public Group handleCreateGroupRequest(Request actorMessage) {
     Group group = new Group();
-    group.setName((String) actorMessage.getRequest().get(JsonKey.GROUP_NAME));
-    group.setDescription((String) actorMessage.getRequest().get(JsonKey.GROUP_DESC));
+    group.setName((String) actorMessage.getRequest().get(JsonKey.NAME));
+    group.setDescription((String) actorMessage.getRequest().get(JsonKey.DESC));
     String membershipType = (String) actorMessage.getRequest().get(JsonKey.GROUP_MEMBERSHIP_TYPE);
     if (StringUtils.isNotEmpty(membershipType)) {
       group.setMembershipType(membershipType);
@@ -42,8 +42,8 @@ public class GroupRequestHandler {
   public Group handleUpdateGroupRequest(Request actorMessage) {
     Group group = new Group();
     group.setId((String) actorMessage.getRequest().get(JsonKey.GROUP_ID));
-    group.setName((String) actorMessage.getRequest().get(JsonKey.GROUP_NAME));
-    group.setDescription((String) actorMessage.getRequest().get(JsonKey.GROUP_DESC));
+    group.setName((String) actorMessage.getRequest().get(JsonKey.NAME));
+    group.setDescription((String) actorMessage.getRequest().get(JsonKey.DESC));
     group.setMembershipType((String) actorMessage.getRequest().get(JsonKey.GROUP_MEMBERSHIP_TYPE));
     String status = (String) actorMessage.getRequest().get(JsonKey.GROUP_STATUS);
 

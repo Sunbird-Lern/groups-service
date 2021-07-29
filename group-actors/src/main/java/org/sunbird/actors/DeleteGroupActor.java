@@ -1,6 +1,7 @@
 package org.sunbird.actors;
 
 import java.text.MessageFormat;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
@@ -8,9 +9,11 @@ import org.sunbird.actor.core.ActorConfig;
 import org.sunbird.common.exception.AuthorizationException;
 import org.sunbird.common.exception.BaseException;
 import org.sunbird.common.message.ResponseCode;
+import org.sunbird.common.util.NotificationType;
 import org.sunbird.models.MemberResponse;
 import org.sunbird.common.request.Request;
 import org.sunbird.common.response.Response;
+import org.sunbird.notifications.NotificationManager;
 import org.sunbird.service.GroupService;
 import org.sunbird.service.GroupServiceImpl;
 import org.sunbird.service.MemberService;
@@ -70,7 +73,7 @@ public class DeleteGroupActor extends BaseActor {
      // Get all members belong to the group
      MemberService memberService = new MemberServiceImpl();
      List<MemberResponse> membersInDB = memberService.fetchMembersByGroupId(groupId, actorMessage.getContext());
-     Response response = groupService.deleteGroup(groupId, membersInDB, actorMessage.getContext());
+     Response response = groupService.deleteGroup(groupId, membersInDB, actorMessage.getContext(), userId);
      // delete cache for the group and all members belong to the group
      boolean isUseridRedisEnabled =
              Boolean.parseBoolean(
@@ -83,6 +86,7 @@ public class DeleteGroupActor extends BaseActor {
      }
      sender().tell(response, self());
      TelemetryHandler.logGroupDeleteTelemetry(actorMessage, groupId, dbResGroup,true);
+     NotificationManager.sendNotifications(actorMessage, Arrays.asList(NotificationType.GROUP_DELETE),dbResGroup, membersInDB);
    }catch (Exception ex){
      logger.debug(actorMessage.getContext(),MessageFormat.format("DeleteGroupActor: Request: {0}",actorMessage.getRequest()));
      TelemetryHandler.logGroupDeleteTelemetry(actorMessage, groupId, dbResGroup,false);

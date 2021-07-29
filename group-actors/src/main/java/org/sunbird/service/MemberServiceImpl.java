@@ -14,12 +14,14 @@ import java.util.stream.Collectors;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.sunbird.common.util.NotificationType;
 import org.sunbird.dao.MemberDao;
 import org.sunbird.dao.MemberDaoImpl;
 import org.sunbird.common.exception.BaseException;
 import org.sunbird.models.Member;
 import org.sunbird.models.MemberResponse;
 import org.sunbird.common.response.Response;
+import org.sunbird.notifications.NotificationManager;
 import org.sunbird.util.GroupUtil;
 import org.sunbird.common.util.JsonKey;
 import org.sunbird.util.LoggerUtil;
@@ -32,18 +34,22 @@ public class MemberServiceImpl implements MemberService {
   private static UserService userService = UserServiceImpl.getInstance();
 
   @Override
-  public Response addMembers(List<Member> member, List<Map<String, Object>> dbResGroupIds, Map<String, Object> reqContext)
+  public Response addMembers(List<Member> members, List<Map<String, Object>> dbResGroupIds, Map<String, Object> reqContext, String updatedBy)
       throws BaseException {
-    Response response = memberDao.addMembers(member, reqContext);
+    Response response = memberDao.addMembers(members, reqContext);
     if (response != null
         && response.getResult().get(JsonKey.RESPONSE) != null
         && dbResGroupIds == null) {
-      dbResGroupIds = getGroupIdsforUserIds(GroupUtil.getMemberIdList(member), reqContext);
+      dbResGroupIds = getGroupIdsforUserIds(GroupUtil.getMemberIdList(members), reqContext);
     }
     // Update if userId is already in DB, otherwise insert
-    addGroupInUserGroup(member, dbResGroupIds, reqContext);
+    addGroupInUserGroup(members, dbResGroupIds, reqContext);
+    // CALL Notification for Member Add
+    Map<String,Object> notificationObj = createMemberUpdateNotificationObject(members,updatedBy);
     return response;
   }
+
+
 
   @Override
   public List<Map<String, Object>> getGroupIdsforUserIds(List<String> member, Map<String, Object> reqContext) {
@@ -94,19 +100,24 @@ public class MemberServiceImpl implements MemberService {
   }
 
   @Override
-  public Response editMembers(List<Member> member, Map<String, Object> reqContext) throws BaseException {
+  public Response editMembers(List<Member> member, Map<String, Object> reqContext, String updatedBy) throws BaseException {
     Response response = memberDao.editMembers(member, reqContext);
+
+    //Call Notification for member edit
+    Map<String,Object> notificationObj = createMemberUpdateNotificationObject(member,updatedBy);
     return response;
   }
 
   @Override
-  public Response removeMembers(List<Member> member, Map<String, Object> reqContext) throws BaseException {
+  public Response removeMembers(List<Member> member, Map<String, Object> reqContext, String updatedBy) throws BaseException {
     Response response = memberDao.editMembers(member, reqContext);
 
     if (response != null && response.getResult().get(JsonKey.RESPONSE) != null) {
       List<Map<String, Object>> dbResGroupIds =
           getGroupIdsforUserIds(GroupUtil.getMemberIdList(member), reqContext);
       removeGroupInUserGroup(member, dbResGroupIds, reqContext);
+      //Call Notification for member remove
+      Map<String,Object> notificationObj = createMemberUpdateNotificationObject(member,updatedBy);
     }
     return response;
   }
@@ -149,12 +160,12 @@ public class MemberServiceImpl implements MemberService {
     memberDao.deleteMemberFromGroup(groupId, members, reqContext);
   }
 
-  public void handleMemberOperations(Map memberOperationMap, String groupId, String contextUserId, Map<String, Object> reqContext)
+  public void handleMemberOperations(Map memberOperationMap, String groupId, String updatedBy, Map<String, Object> reqContext)
       throws BaseException {
     List<Map<String, Object>> memberAddList =
         (List<Map<String, Object>>) memberOperationMap.get(JsonKey.ADD);
     if (CollectionUtils.isNotEmpty(memberAddList)) {
-      Response addMemberRes = handleMemberAddition(memberAddList, groupId, contextUserId, null, reqContext);
+      Response addMemberRes = handleMemberAddition(memberAddList, groupId, updatedBy, null, reqContext);
     }
     List<Map<String, Object>> memberEditList =
         (List<Map<String, Object>>) memberOperationMap.get(JsonKey.EDIT);
@@ -162,12 +173,12 @@ public class MemberServiceImpl implements MemberService {
       List<Member> editMembers =
           memberEditList
               .stream()
-              .map(data -> getMemberModelForEdit(data, groupId, contextUserId))
+              .map(data -> getMemberModelForEdit(data, groupId, updatedBy))
               .collect(Collectors.toList());
       if (!editMembers.isEmpty()) {
         logger.info(reqContext,MessageFormat.format(
             "Number of members to be modified in the group {0} are {1}", groupId, editMembers.size()));
-        Response editMemberRes = editMembers(editMembers, reqContext);
+        Response editMemberRes = editMembers(editMembers, reqContext, updatedBy);
       }
     }
     List<String> memberRemoveList = (List<String>) memberOperationMap.get(JsonKey.REMOVE);
@@ -175,14 +186,14 @@ public class MemberServiceImpl implements MemberService {
       List<Member> removeMembers =
           memberRemoveList
               .stream()
-              .map(data -> getMemberModelForRemove(data, groupId, contextUserId))
+              .map(data -> getMemberModelForRemove(data, groupId, updatedBy))
               .collect(Collectors.toList());
       if (!removeMembers.isEmpty()) {
         logger.info(reqContext,MessageFormat.format(
             "Number of members needs to be removed from the group {0} are {1}",
             groupId,
             removeMembers.size()));
-        Response removeMemberRes = removeMembers(removeMembers, reqContext);
+        Response removeMemberRes = removeMembers(removeMembers, reqContext, updatedBy);
       }
     }
   }
@@ -191,7 +202,7 @@ public class MemberServiceImpl implements MemberService {
   public Response handleMemberAddition(
       List<Map<String, Object>> memberList,
       String groupId,
-      String contextUserId,
+      String updatedBy,
       List<Map<String, Object>> userGroupsList,
       Map<String, Object> reqContext)
       throws BaseException {
@@ -200,10 +211,10 @@ public class MemberServiceImpl implements MemberService {
     List<Member> members =
         memberList
             .stream()
-            .map(data -> getMemberModelForAdd(data, groupId, contextUserId))
+            .map(data -> getMemberModelForAdd(data, groupId, updatedBy))
             .collect(Collectors.toList());
     if (!members.isEmpty()) {
-      addMemberRes = addMembers(members, userGroupsList, reqContext);
+      addMemberRes = addMembers(members, userGroupsList, reqContext,updatedBy);
     }
     return addMemberRes;
   }
@@ -269,7 +280,7 @@ public class MemberServiceImpl implements MemberService {
     return members;
   }
 
-  private void fetchMemberDetails(List<MemberResponse> members, Map<String, Object> reqContext)
+  public void fetchMemberDetails(List<MemberResponse> members, Map<String, Object> reqContext)
       throws BaseException {
     List<String> memberIds = new ArrayList<>();
     members.forEach(
@@ -395,5 +406,19 @@ public class MemberServiceImpl implements MemberService {
             ? GroupUtil.convertTimestampToUTC(member.getRemovedOn().getTime())
             : null);
     return memberResponse;
+  }
+
+  /**
+   *  Create notification context for Member ADD
+   * @param members
+   * @param userId
+   * @return
+   */
+  private Map<String, Object> createMemberUpdateNotificationObject(List<Member> members, String userId) {
+    Map<String,Object> notificationObj = new HashMap<>();
+    notificationObj.put(JsonKey.GROUP_ID,members.get(0).getGroupId());
+    notificationObj.put(JsonKey.MEMBERS,members);
+    notificationObj.put(JsonKey.UPDATED_BY,userId);
+    return notificationObj;
   }
 }

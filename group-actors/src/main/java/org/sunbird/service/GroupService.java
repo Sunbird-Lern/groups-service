@@ -26,5 +26,5 @@ public interface GroupService {
   List<Map<String, Object>> handleActivityOperations(
       String groupId, Map<String, Object> activityOperationMap, Map<String, Object> reqContext) throws BaseException;
 
-  Response deleteGroup(String groupId, List<MemberResponse> members, Map<String, Object> reqContext) throws BaseException;
+  Response deleteGroup(String groupId, List<MemberResponse> members, Map<String, Object> reqContext, String userId) throws BaseException;
 }

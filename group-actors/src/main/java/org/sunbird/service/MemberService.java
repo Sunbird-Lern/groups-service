@@ -9,14 +9,14 @@ import org.sunbird.common.response.Response;
 
 public interface MemberService {
 
-  Response addMembers(List<Member> member, List<Map<String, Object>> userGroupsList, Map<String, Object> reqContext)
+  Response addMembers(List<Member> member, List<Map<String, Object>> userGroupsList, Map<String, Object> reqContext, String userId)
       throws BaseException;
 
-  Response editMembers(List<Member> member, Map<String, Object> reqContext) throws BaseException;
+  Response editMembers(List<Member> member, Map<String, Object> reqContext, String updatedBy) throws BaseException;
 
-  Response removeMembers(List<Member> member, Map<String, Object> reqContext) throws BaseException;
+  Response removeMembers(List<Member> member, Map<String, Object> reqContext, String updatedBy) throws BaseException;
 
-  void handleMemberOperations(Map memberOperationMap, String groupId, String contextUserId, Map<String, Object> reqContext)
+  void handleMemberOperations(Map memberOperationMap, String groupId, String updatedBy, Map<String, Object> reqContext)
       throws BaseException;
 
   Response handleMemberAddition(

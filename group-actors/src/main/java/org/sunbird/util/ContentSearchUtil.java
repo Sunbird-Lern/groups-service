@@ -24,7 +24,7 @@ public class ContentSearchUtil implements SearchServiceUtil {
     if (StringUtils.isBlank(searchPath))
       searchPath = PropertiesCache.getInstance().getProperty(JsonKey.SUNBIRD_CS_SEARCH_URL);
     if (StringUtils.isBlank(baseUrl))
-      searchPath = PropertiesCache.getInstance().getProperty(JsonKey.SUNBIRD_CS_BASE_URL);
+      baseUrl = PropertiesCache.getInstance().getProperty(JsonKey.SUNBIRD_CS_BASE_URL);
     if (StringUtils.isNotBlank(authKey)) {
       Map<String, String> headerMap = new HashMap<>();
       headerMap.put(JsonKey.AUTHORIZATION, JsonKey.BEARER + authKey);

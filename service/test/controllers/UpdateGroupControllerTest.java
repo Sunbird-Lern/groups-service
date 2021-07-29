@@ -25,7 +25,7 @@ public class UpdateGroupControllerTest extends BaseApplicationTest {
   public void testUpdateGroupPasses() {
     Map<String, Object> reqMap = new HashMap<>();
     reqMap.put(JsonKey.GROUP_ID, "group1");
-    reqMap.put(JsonKey.GROUP_NAME, "group name1");
+    reqMap.put(JsonKey.NAME, "group name1");
     Map<String, Object> request = new HashMap<>();
     List<Map<String, Object>> members = new ArrayList<>();
     Map<String, Object> member = new HashMap<>();

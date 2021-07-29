@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.sunbird.common.util.NotificationType;
 import org.sunbird.dao.GroupDao;
 import org.sunbird.dao.GroupDaoImpl;
 import org.sunbird.dao.MemberDao;
@@ -22,6 +23,7 @@ import org.sunbird.models.GroupResponse;
 import org.sunbird.models.Member;
 import org.sunbird.models.MemberResponse;
 import org.sunbird.common.response.Response;
+import org.sunbird.notifications.NotificationManager;
 import org.sunbird.util.*;
 import org.sunbird.common.util.JsonKey;
 
@@ -235,7 +237,7 @@ public class GroupServiceImpl implements GroupService {
   }
 
   @Override
-  public Response deleteGroup(String groupId, List<MemberResponse> members, Map<String,Object> reqContext) throws BaseException {
+  public Response deleteGroup(String groupId, List<MemberResponse> members, Map<String,Object> reqContext, String userId) throws BaseException {
     Response responseObj = groupDao.deleteGroup(groupId, reqContext);
     // Remove member mapping to the deleted group
     if (null != responseObj) {
@@ -245,12 +247,16 @@ public class GroupServiceImpl implements GroupService {
       List<Map<String, Object>> dbResGroupIds = memberService.getGroupIdsforUserIds(memberIds, reqContext);
       memberService.removeGroupInUserGroup(memberList, dbResGroupIds, reqContext);
       memberService.deleteGroupMembers(groupId, memberIds, reqContext);
+      // CALL Notification for delete Member
+      Map<String,Object> notificationObj = createDeleteNotificationObject(groupId,members,userId);
       return responseObj;
     }
 
     logger.error(reqContext,MessageFormat.format("Error while deleting group {0}", groupId));
     throw new BaseException(IResponseMessage.SERVER_ERROR, IResponseMessage.INTERNAL_ERROR);
   }
+
+
 
   private List<Member> createDeleteMemberList(
       List<MemberResponse> members, List<String> memberIds) {
@@ -349,5 +355,20 @@ public class GroupServiceImpl implements GroupService {
       }
     }
     return dbActivityList;
+  }
+
+  /**
+   * Create delete notification Context Object
+   * @param groupId
+   * @param members
+   * @param userId
+   * @return
+   */
+  private Map<String, Object> createDeleteNotificationObject(String groupId, List<MemberResponse> members, String userId) {
+    Map<String,Object> notificationObj = new HashMap<>();
+    notificationObj.put(JsonKey.GROUP_ID,groupId);
+    notificationObj.put(JsonKey.MEMBERS,members);
+    notificationObj.put(JsonKey.UPDATED_BY,userId);
+    return notificationObj;
   }
 }

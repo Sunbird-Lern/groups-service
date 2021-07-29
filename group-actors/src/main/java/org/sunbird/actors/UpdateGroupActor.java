@@ -13,10 +13,12 @@ import org.sunbird.common.exception.AuthorizationException;
 import org.sunbird.common.exception.BaseException;
 import org.sunbird.common.exception.ValidationException;
 import org.sunbird.common.message.ResponseCode;
+import org.sunbird.common.util.NotificationType;
 import org.sunbird.models.Group;
 import org.sunbird.models.MemberResponse;
 import org.sunbird.common.request.Request;
 import org.sunbird.common.response.Response;
+import org.sunbird.notifications.NotificationManager;
 import org.sunbird.service.GroupService;
 import org.sunbird.service.GroupServiceImpl;
 import org.sunbird.service.MemberService;
@@ -50,6 +52,8 @@ public class UpdateGroupActor extends BaseActor {
    * @param actorMessage
    */
   private void updateGroup(Request actorMessage) throws BaseException {
+    List<String> notifications = new ArrayList<>();
+
     logger.info(actorMessage.getContext(),"UpdateGroup method call");
 
     GroupRequestHandler requestHandler = new GroupRequestHandler();
@@ -99,6 +103,7 @@ public class UpdateGroupActor extends BaseActor {
                         (Map) actorMessage.getRequest().get(JsonKey.MEMBERS),
                         userId,
                         membersInDB,actorMessage.getContext()));
+        notifications.add(NotificationType.MEMBER_UPDATE);
       }
       // Activity validation
       if (MapUtils.isNotEmpty(
@@ -107,6 +112,7 @@ public class UpdateGroupActor extends BaseActor {
                 JsonKey.ACTIVITIES,
                 validateActivityList(
                         group, (Map<String, Object>) actorMessage.getRequest().get(JsonKey.ACTIVITIES),actorMessage.getContext()));
+        notifications.add(NotificationType.ACTIVITY_UPDATE);
       }
       boolean deleteFromUserCache = false;
       // Group and activity updates
@@ -124,7 +130,7 @@ public class UpdateGroupActor extends BaseActor {
         // if inactive status then delete group included to support backward compatability for old
         // mobile apps
         if (JsonKey.INACTIVE.equals(group.getStatus())) {
-          Response response = groupService.deleteGroup(group.getId(), membersInDB,actorMessage.getContext());
+          Response response = groupService.deleteGroup(group.getId(), membersInDB,actorMessage.getContext(),userId);
         } else {
           Response response = groupService.updateGroup(group,actorMessage.getContext());
         }
@@ -150,6 +156,8 @@ public class UpdateGroupActor extends BaseActor {
       }
       sender().tell(response, self());
       TelemetryHandler.logGroupUpdateTelemetry(actorMessage, group, dbResGroup,true);
+      //
+      NotificationManager.sendNotifications(actorMessage,notifications,dbResGroup,membersInDB);
     }catch (Exception ex){
        logger.info(actorMessage.getContext(),MessageFormat.format("UpdateGroupActor: Request: {0}",actorMessage.getRequest()));
        TelemetryHandler.logGroupUpdateTelemetry(actorMessage, group,dbResGroup,false);
@@ -213,8 +221,8 @@ public class UpdateGroupActor extends BaseActor {
 
     // check only admin should be able to update name, description, status ,add,edit or remove
     // members
-    if (StringUtils.isNotEmpty((String) groupRequest.get(JsonKey.GROUP_DESC))
-        || StringUtils.isNotEmpty((String) groupRequest.get(JsonKey.GROUP_NAME))
+    if (StringUtils.isNotEmpty((String) groupRequest.get(JsonKey.DESC))
+        || StringUtils.isNotEmpty((String) groupRequest.get(JsonKey.NAME))
         || StringUtils.isNotEmpty((String) groupRequest.get(JsonKey.GROUP_MEMBERSHIP_TYPE))
         || StringUtils.isNotEmpty((String) groupRequest.get(JsonKey.GROUP_STATUS))
         || MapUtils.isNotEmpty((Map) groupRequest.get(JsonKey.MEMBERS))) {
@@ -249,7 +257,7 @@ public class UpdateGroupActor extends BaseActor {
   private List<Map<String, String>> validateMembersAndSave(
       String groupId,
       Map memberOperationMap,
-      String requestedBy,
+      String updatedBy,
       List<MemberResponse> membersInDB,
       Map<String,Object> reqContext) {
     List<Map<String, String>> memberErrorList = new ArrayList<>();
@@ -283,7 +291,7 @@ public class UpdateGroupActor extends BaseActor {
 
     cacheUtil.delCache(groupId + "_" + JsonKey.MEMBERS);
     if (!memberLimit) {
-      memberService.handleMemberOperations(memberOperationMap, groupId, requestedBy,reqContext);
+      memberService.handleMemberOperations(memberOperationMap, groupId, updatedBy,reqContext);
     }
     return memberErrorList;
   }

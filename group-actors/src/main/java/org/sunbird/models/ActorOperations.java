@@ -10,8 +10,8 @@ public enum ActorOperations {
   DEL_CACHE("delCache"),
   GET_CACHE("getCache"),
   DELETE_GROUP("deleteGroup"),
-  UPDATE_GROUP_MEMBERSHIP("updateGroupMembership");
-
+  UPDATE_GROUP_MEMBERSHIP("updateGroupMembership"),
+  SEND_NOTIFICATION("sendNotifications");
   private String value;
 
   /**

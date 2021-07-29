@@ -86,7 +86,7 @@ public class CreateGroupActorTest extends BaseActorTest {
     Response response = CassandraUtil.createResponse(resultSet);
     List<Map<String, Object>> groupList =
         (List<Map<String, Object>>) response.getResult().get(JsonKey.RESPONSE);
-    Assert.assertEquals(reqObj.get(JsonKey.GROUP_NAME), groupList.get(0).get(JsonKey.GROUP_NAME));
+    Assert.assertEquals(reqObj.get(JsonKey.NAME), groupList.get(0).get(JsonKey.NAME));
 
     // check members are inserted successfully or not
     ResultSet groupMember =
@@ -220,8 +220,8 @@ public class CreateGroupActorTest extends BaseActorTest {
     context.put(JsonKey.USER_ID, "user1");
     reqObj.setContext(context);
     reqObj.setOperation(ActorOperations.CREATE_GROUP.getValue());
-    reqObj.getRequest().put(JsonKey.GROUP_NAME, "TestGroup Name");
-    reqObj.getRequest().put(JsonKey.GROUP_DESC, "TestGroup Description");
+    reqObj.getRequest().put(JsonKey.NAME, "TestGroup Name");
+    reqObj.getRequest().put(JsonKey.DESC, "TestGroup Description");
     List<Map<String, Object>> members = new ArrayList<>();
     Map<String, Object> member = new HashMap<>();
     member.put(JsonKey.USER_ID, "userID");

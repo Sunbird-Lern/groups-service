@@ -486,7 +486,7 @@ public class UpdateGroupActorTest extends BaseActorTest {
     context.put(JsonKey.USER_ID, "user1");
     reqObj.setContext(context);
     reqObj.setOperation(ActorOperations.UPDATE_GROUP.getValue());
-    reqObj.getRequest().put(JsonKey.GROUP_NAME, "TestGroup Name1");
+    reqObj.getRequest().put(JsonKey.NAME, "TestGroup Name1");
 
     Map<String, List<Map<String, Object>>> memberOpearations = new HashMap<>();
     List<Map<String, Object>> members = new ArrayList<>();
@@ -541,7 +541,7 @@ public class UpdateGroupActorTest extends BaseActorTest {
     context.put(JsonKey.USER_ID, "user1");
     reqObj.setContext(context);
     reqObj.setOperation(ActorOperations.UPDATE_GROUP.getValue());
-    reqObj.getRequest().put(JsonKey.GROUP_NAME, "TestGroup");
+    reqObj.getRequest().put(JsonKey.NAME, "TestGroup");
     reqObj.getRequest().put(JsonKey.STATUS, "suspended");
     reqObj.getRequest().put(JsonKey.GROUP_ID, "group1");
     return reqObj;
@@ -554,7 +554,7 @@ public class UpdateGroupActorTest extends BaseActorTest {
     context.put(JsonKey.USER_ID, "userID22");
     reqObj.setContext(context);
     reqObj.setOperation(ActorOperations.UPDATE_GROUP.getValue());
-    reqObj.getRequest().put(JsonKey.GROUP_NAME, "TestGroup");
+    reqObj.getRequest().put(JsonKey.NAME, "TestGroup");
     reqObj.getRequest().put(JsonKey.STATUS, "suspended");
     reqObj.getRequest().put(JsonKey.GROUP_ID, "group1");
     return reqObj;

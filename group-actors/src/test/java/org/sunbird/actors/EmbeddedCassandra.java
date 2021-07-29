@@ -45,8 +45,8 @@ public class EmbeddedCassandra {
         session.prepare(
             QueryBuilder.insertInto(KEYSPACE, GROUP_TABLE)
                 .value(JsonKey.ID, bindMarker())
-                .value(JsonKey.GROUP_NAME, bindMarker())
-                .value(JsonKey.GROUP_DESC, bindMarker()));
+                .value(JsonKey.NAME, bindMarker())
+                .value(JsonKey.DESC, bindMarker()));
 
     // link prepared statements to boundstatements
     PreparedStatement selectGroupQuery =

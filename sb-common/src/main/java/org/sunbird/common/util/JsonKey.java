@@ -25,8 +25,8 @@ public interface JsonKey {
   String SUNBIRD_CASSANDRA_IP = "sunbird_cassandra_host";
   String SUNBIRD_GROUPS = "sunbird_groups";
   String GROUP_ID = "groupId";
-  String GROUP_DESC = "description";
-  String GROUP_NAME = "name";
+  String DESC = "description";
+  String NAME = "name";
   String MEMBERS = "members";
   String MEMBER = "member";
   String USER_ID = "userId";
@@ -70,6 +70,7 @@ public interface JsonKey {
   String CREATED_ON = "createdOn";
   String CREATED_BY = "createdBy";
   String UPDATED_ON = "updatedOn";
+  String UPDATED_BY = "updatedBy";
   String USER_SERVICE_BASE_URL = "LEARNER_SERVICE_PORT";
   String USER_SERVICE_SEARCH_URL = "sunbird_user_service_search_url";
   String SUNBIRD_CS_BASE_URL = "CONTENT_SERVICE_PORT";
@@ -127,4 +128,21 @@ public interface JsonKey {
   String GROUPS = "groups";
   String X_TRACE_ENABLED = "x-trace-enabled";
   String FAILED = "failed";
+  String CATEGORY = "category";
+  //Template Properties
+  String PROP1 = "prop1";
+  String PROP2 = "prop2";
+  String PROP3 = "prop3";
+
+  String GROUPS_SERVICE = "groups-service";
+  String SYSTEM = "SYSTEM";
+  String TEMPLATE = "template";
+  String ADDITIONAL_INFO = "additionalInfo";
+  String FEED = "FEED";
+
+  String NOTIFICATION_SERVICE_BASE_URL = "notification_service_base_url";
+  String NOTIFICATION_SERVICE_API_URL = "notification_service_api_url";
+
+  String MAX_BATCH_LIMIT = "max_batch_limit";
+  String PROPS = "props";
 }
