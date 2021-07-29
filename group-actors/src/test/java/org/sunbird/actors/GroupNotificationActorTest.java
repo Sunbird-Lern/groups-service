@@ -103,13 +103,11 @@ public class GroupNotificationActorTest extends BaseActorTest {
         Map<String,Object> reqMap = memberAddReq();
         Map<String,Object> groupDetails = getGroupDetails();
         List<MemberResponse> members = getGroupMembers();
-
         Map<String,Object> reqObj = new HashMap<>();
         reqObj.put(JsonKey.REQUEST,reqMap);
         reqObj.put(JsonKey.GROUP,groupDetails);
         reqObj.put(JsonKey.MEMBERS,members);
         request.setRequest(reqObj);
-
         Map<String,Object> context = new HashMap<>();
         context.put(JsonKey.USER_ID,"12");
         context.put(JsonKey.MANAGED_FOR,"12");
