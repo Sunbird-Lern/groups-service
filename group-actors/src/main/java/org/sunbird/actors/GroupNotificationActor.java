@@ -97,8 +97,7 @@ public class GroupNotificationActor extends BaseActor{
 
     private void sendNotifications(List<Notification> notifications, Map<String,Object> reqContext) {
         NotificationService notificationService = new NotificationService();
-        for (Notification notification: notifications) {
-               notificationService.sendSyncNotification(notification, reqContext);
-        }
+        notificationService.sendSyncNotification(notifications, reqContext);
+
     }
 }

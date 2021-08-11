@@ -26,7 +26,7 @@ public class GroupDeleteNotificationHandler implements INotificationHandler{
             Map<String,Object> templates = getTemplateObj(groupDetails, updatedBy);
             List<MemberResponse> membersInDB = (List<MemberResponse>) request.getRequest().get(JsonKey.MEMBERS);
             MemberResponse memberDetail = membersInDB.stream().filter(x -> x.getUserId().equals(updatedBy.get(JsonKey.ID))).findAny().orElse(null);
-            Map<String, Object> additionalInfo = getAdditionalInfo(updatedBy, groupDetails, memberDetail);
+            Map<String, Object> additionalInfo = getAdditionalInfo(groupDetails, memberDetail);
             actionData.put(JsonKey.TEMPLATE,templates);
             actionData.put(JsonKey.CREATED_BY,updatedBy);
             actionData.put(JsonKey.ADDITIONAL_INFO,additionalInfo);
@@ -48,16 +48,8 @@ public class GroupDeleteNotificationHandler implements INotificationHandler{
         return null;
     }
 
-    private Map<String, Object> getAdditionalInfo(Map<String, Object> updatedBy, Map<String, Object> groupDetails, MemberResponse memberDetail) {
+    private Map<String, Object> getAdditionalInfo( Map<String, Object> groupDetails, MemberResponse memberDetail) {
         Map<String, Object> additionalInfo = new HashMap<>();
-
-        if (null != memberDetail) {
-            Map<String, Object> userInfo = new HashMap<>();
-            userInfo.put(JsonKey.ID, updatedBy.get(JsonKey.ID));
-            userInfo.put(JsonKey.NAME, updatedBy.get(JsonKey.NAME));
-            userInfo.put(JsonKey.ROLE, memberDetail.getRole());
-            additionalInfo.put(JsonKey.USER, userInfo);
-        }
         Map<String,Object> group= new HashMap<>();
         group.put(JsonKey.ID, groupDetails.get(JsonKey.ID));
         group.put(JsonKey.NAME, groupDetails.get(JsonKey.NAME));
@@ -69,9 +61,9 @@ public class GroupDeleteNotificationHandler implements INotificationHandler{
         Map<String,Object> template = new HashMap<>();
         template.put(JsonKey.TYPE, "JSON");
         Map<String,Object> props = new HashMap<>();
-        props.put(JsonKey.PROP1, groupDetails.get(JsonKey.NAME));
-        props.put(JsonKey.PROP2, updatedBy.get(JsonKey.NAME));
-        template.put(JsonKey.PROPS,props);
+        props.put(JsonKey.PARAM1, groupDetails.get(JsonKey.NAME));
+        props.put(JsonKey.PARAM2, updatedBy.get(JsonKey.NAME));
+        template.put(JsonKey.PARAMS,props);
         return template;
     }
 }

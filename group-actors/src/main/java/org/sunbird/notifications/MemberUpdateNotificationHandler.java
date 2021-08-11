@@ -25,7 +25,7 @@ public class MemberUpdateNotificationHandler implements INotificationHandler{
             Map memberOperationMap = (Map)reqObj.get(JsonKey.MEMBERS);
             // Get Member Details of the Updated By user
             List<MemberResponse> membersInDB = (List<MemberResponse>) request.getRequest().get(JsonKey.MEMBERS);
-            Map<String, Object> additionalInfo = getAdditionalInfo(updatedBy, groupDetails);
+            Map<String, Object> additionalInfo = getAdditionalInfo(groupDetails);
 
             if (CollectionUtils.isNotEmpty(
                     (List<Map<String, Object>>) memberOperationMap.get(JsonKey.ADD))) {
@@ -100,7 +100,7 @@ public class MemberUpdateNotificationHandler implements INotificationHandler{
         return notification;
     }
 
-    private Map<String, Object> getAdditionalInfo(Map<String, Object> updatedBy, Map<String, Object> groupDetails) {
+    private Map<String, Object> getAdditionalInfo(Map<String, Object> groupDetails) {
         Map<String, Object> additionalInfo = new HashMap<>();
         Map<String,Object> group= new HashMap<>();
         group.put(JsonKey.ID, groupDetails.get(JsonKey.ID));
@@ -113,9 +113,9 @@ public class MemberUpdateNotificationHandler implements INotificationHandler{
           Map<String,Object> template = new HashMap<>();
           template.put(JsonKey.TYPE, "JSON");
           Map<String,Object> props = new HashMap<>();
-          props.put(JsonKey.PROP1, groupDetails.get(JsonKey.NAME));
-          props.put(JsonKey.PROP2, updatedBy.get(JsonKey.NAME));
-          template.put(JsonKey.PROPS,props);
+          props.put(JsonKey.PARAM1, groupDetails.get(JsonKey.NAME));
+          props.put(JsonKey.PARAM2, updatedBy.get(JsonKey.NAME));
+          template.put(JsonKey.PARAMS,props);
           return template;
     }
 
@@ -123,9 +123,9 @@ public class MemberUpdateNotificationHandler implements INotificationHandler{
         Map<String,Object> template = new HashMap<>();
         template.put(JsonKey.TYPE, "JSON");
         Map<String,Object> props = new HashMap<>();
-        props.put(JsonKey.PROP1, updatedBy.get(JsonKey.NAME));;
-        props.put(JsonKey.PROP2, groupDetails.get(JsonKey.NAME));
-        template.put(JsonKey.PROPS,props);
+        props.put(JsonKey.PARAM1, updatedBy.get(JsonKey.NAME));;
+        props.put(JsonKey.PARAM2, groupDetails.get(JsonKey.NAME));
+        template.put(JsonKey.PARAM3,props);
 
         return template;
     }
@@ -134,9 +134,9 @@ public class MemberUpdateNotificationHandler implements INotificationHandler{
         Map<String,Object> template = new HashMap<>();
         template.put(JsonKey.TYPE, "JSON");
         Map<String,Object> props = new HashMap<>();
-        props.put(JsonKey.PROP1, groupDetails.get(JsonKey.NAME));;
-        props.put(JsonKey.PROP2, updatedBy.get(JsonKey.NAME));
-        template.put(JsonKey.PROPS,props);
+        props.put(JsonKey.PARAM1, groupDetails.get(JsonKey.NAME));;
+        props.put(JsonKey.PARAM2, updatedBy.get(JsonKey.NAME));
+        template.put(JsonKey.PARAMS,props);
 
         return template;
     }

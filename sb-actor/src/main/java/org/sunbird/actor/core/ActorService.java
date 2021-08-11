@@ -19,7 +19,7 @@ public class ActorService {
   private static ActorSystem system;
   private static Config config =
       ConfigFactory.systemEnvironment().withFallback(ConfigFactory.load());
-  private static Map<String, ActorRef> actorRefCache = ActorCache.getActorCache();
+  private static Map<String, ActorRef>  actorRefCache= ActorCache.getActorCache();
 
   // static variable instance of type ActorService
   private static ActorService instance = null;

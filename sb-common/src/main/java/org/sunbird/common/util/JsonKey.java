@@ -130,19 +130,18 @@ public interface JsonKey {
   String FAILED = "failed";
   String CATEGORY = "category";
   //Template Properties
-  String PROP1 = "prop1";
-  String PROP2 = "prop2";
-  String PROP3 = "prop3";
+  String PARAM1 = "param1";
+  String PARAM2 = "param2";
+  String PARAM3 = "param3";
 
   String GROUPS_SERVICE = "groups-service";
   String SYSTEM = "SYSTEM";
   String TEMPLATE = "template";
   String ADDITIONAL_INFO = "additionalInfo";
   String FEED = "FEED";
-
   String NOTIFICATION_SERVICE_BASE_URL = "notification_service_base_url";
   String NOTIFICATION_SERVICE_API_URL = "notification_service_api_url";
-
   String MAX_BATCH_LIMIT = "max_batch_limit";
-  String PROPS = "props";
+  String GROUP_ROLE = "groupRole";
+  String NOTIFICATIONS = "notifications";
 }

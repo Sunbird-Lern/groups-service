@@ -26,22 +26,25 @@ public class NotificationService {
         max_batch_limits = PropertiesCache.getInstance().getProperty(JsonKey.MAX_BATCH_LIMIT);
     }
 
-    public void sendSyncNotification(Notification notification, Map<String,Object> reqContext){
-         List<String> ids = notification.getIds();
-         List<Notification> notifications = createNotificationsBatch(notification);
-         for (Notification notificationReq: notifications) {
-            Map<String, String> requestHeader = new HashMap<>();
-            getUpdatedRequestHeader(requestHeader, reqContext);
-            try {
-                String notificationStrReq = objectMapper.writeValueAsString(notificationReq);
-                logger.info(notificationStrReq);
+    public void sendSyncNotification(List<Notification> notifications, Map<String,Object> reqContext){
+        List<Notification> notificationList = new ArrayList<>();
+        for (Notification notification: notifications) {
+            List<String> ids = notification.getIds();
+            notificationList.addAll(createNotificationsBatch(notification));
+        }
+        Map<String, String> requestHeader = new HashMap<>();
+        getUpdatedRequestHeader(requestHeader, reqContext);
+        try {
+            Map<String,Object> notificationReq = new HashMap<>();
+            notificationReq.put(JsonKey.NOTIFICATIONS,notificationList);
+            String notificationStrReq = objectMapper.writeValueAsString(notificationReq);
+            logger.info(notificationStrReq);
                 /*String response =
                         HttpClientUtil.post(
                                 notificationServiceBaseUrl + notificationServiceUrl, notificationStrReq, requestHeader,reqContext);
 */
-            } catch (JsonProcessingException ex) {
-                // log the error
-            }
+        } catch (JsonProcessingException ex) {
+            // log the error
         }
     }
 

@@ -67,15 +67,13 @@ public class ActivityUpdateNotificationHandler implements INotificationHandler{
         //Each activity add will be sent as different notifications
 
         for (Map<String,Object> activity: activities) {
-            List<MemberResponse> adminMembers = membersInDB.stream().
-                    filter(x -> x.getRole().equals(JsonKey.ADMIN)).
-                    collect(Collectors.toList());
+
             //Create separate notification call for Admins and Members
             notifications.add(getNotificationObj(JsonKey.ADMIN,"activity-remove",groupDetails, updatedBy, activity,membersInDB.stream().
-                    filter(x -> x.getRole().equals(JsonKey.ADMIN)).
+                    filter(x -> x.getRole().equals(JsonKey.ADMIN) && !x.getUserId().equals(updatedBy.get(JsonKey.ID))).
                     collect(Collectors.toList())) );
             notifications.add(getNotificationObj(JsonKey.MEMBER,"activity-remove", groupDetails, updatedBy, activity,membersInDB.stream().
-                    filter(x -> x.getRole().equals(JsonKey.MEMBER)).
+                    filter(x -> x.getRole().equals(JsonKey.MEMBER) && !x.getUserId().equals(updatedBy.get(JsonKey.ID))).
                     collect(Collectors.toList())));
 
 
@@ -101,15 +99,13 @@ public class ActivityUpdateNotificationHandler implements INotificationHandler{
         //Each activity add will be sent as different notifications
 
         for (Map<String,Object> activity: activityList) {
-               List<MemberResponse> adminMembers = membersInDB.stream().
-                                           filter(x -> x.getRole().equals(JsonKey.ADMIN)).
-                                           collect(Collectors.toList());
+
                 //Create separate notification call for Admins and Members
                 notifications.add(getNotificationObj(JsonKey.ADMIN,"activity-add",groupDetails, updatedBy, activity,membersInDB.stream().
-                        filter(x -> x.getRole().equals(JsonKey.ADMIN)).
+                        filter(x -> x.getRole().equals(JsonKey.ADMIN)&& !x.getUserId().equals(updatedBy.get(JsonKey.ID))).
                         collect(Collectors.toList())) );
                 notifications.add(getNotificationObj(JsonKey.MEMBER,"activity-add", groupDetails, updatedBy, activity,membersInDB.stream().
-                        filter(x -> x.getRole().equals(JsonKey.MEMBER)).
+                        filter(x -> x.getRole().equals(JsonKey.MEMBER) && !x.getUserId().equals(updatedBy.get(JsonKey.ID))).
                         collect(Collectors.toList())));
 
 
@@ -160,7 +156,7 @@ public class ActivityUpdateNotificationHandler implements INotificationHandler{
         notification.setPriority(1);
         notification.setType(JsonKey.FEED);
         Map<String,Object> actionData = new HashMap<>();
-        Map<String,Object> template = getAddActivityTemplateObj(groupDetails, updatedBy, activity);
+        Map<String,Object> template = getActivityTemplateObj(groupDetails, updatedBy, activity);
         actionData.put(JsonKey.TEMPLATE,template);
         actionData.put(JsonKey.TYPE,activityOp);
         actionData.put(JsonKey.CREATED_BY, updatedBy);
@@ -176,22 +172,22 @@ public class ActivityUpdateNotificationHandler implements INotificationHandler{
         return notification;
     }
 
-    private Map<String, Object> getAddActivityTemplateObj(Map<String, Object> groupDetails, Map<String, Object> updatedBy
+    private Map<String, Object> getActivityTemplateObj(Map<String, Object> groupDetails, Map<String, Object> updatedBy
                                                         ,Map<String,Object> activity) {
         Map<String,Object> template = new HashMap<>();
         template.put(JsonKey.TYPE, "JSON");
         Map<String,Object> props = new HashMap<>();
-        props.put(JsonKey.PROP1, activity.get(JsonKey.DESC));
-        props.put(JsonKey.PROP2, groupDetails.get(JsonKey.NAME));
-        props.put(JsonKey.PROP3, updatedBy.get(JsonKey.NAME));
-        template.put(JsonKey.PROPS,props);
+        props.put(JsonKey.PARAM1, activity.get(JsonKey.NAME));
+        props.put(JsonKey.PARAM2, groupDetails.get(JsonKey.NAME));
+        props.put(JsonKey.PARAM3, updatedBy.get(JsonKey.NAME));
+        template.put(JsonKey.PARAMS,props);
         return template;
     }
 
     private Map<String, Object> getAdditionalInfo(Map<String, Object> groupDetails,
                                                   String role, Map<String,Object> activityInfo ) {
         Map<String, Object> additionalInfo = new HashMap<>();
-        additionalInfo.put(JsonKey.ROLE,role);
+        additionalInfo.put(JsonKey.GROUP_ROLE,role);
         Map<String,Object> group= new HashMap<>();
         group.put(JsonKey.ID, groupDetails.get(JsonKey.ID));
         group.put(JsonKey.NAME, groupDetails.get(JsonKey.NAME));
