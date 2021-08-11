@@ -220,6 +220,7 @@ public class GroupServiceImpl implements GroupService {
         logger.info(reqContext,MessageFormat.format("Group details fetched - count : {0} ", dbGroupDetails.size()));
         dbGroupDetails.forEach(
             map -> {
+              map.remove(JsonKey.ACTIVITIES);
               Group group = objectMapper.convertValue(map, Group.class);
               GroupResponse groupResponse = createGroupResponseObj(group);
               groups.add(groupResponse);
