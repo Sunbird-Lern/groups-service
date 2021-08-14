@@ -37,14 +37,16 @@ public class NotificationService {
         try {
             Map<String,Object> notificationReq = new HashMap<>();
             notificationReq.put(JsonKey.NOTIFICATIONS,notificationList);
-            String notificationStrReq = objectMapper.writeValueAsString(notificationReq);
+            Map<String,Object> request  = new HashMap<>();
+            request.put(JsonKey.REQUEST,notificationReq);
+            String notificationStrReq = objectMapper.writeValueAsString(request);
             logger.info(notificationStrReq);
-                /*String response =
+            String response =
                         HttpClientUtil.post(
                                 notificationServiceBaseUrl + notificationServiceUrl, notificationStrReq, requestHeader,reqContext);
-*/
+
         } catch (JsonProcessingException ex) {
-            // log the error
+            logger.error(reqContext,"Error sending notifications",ex);
         }
     }
 

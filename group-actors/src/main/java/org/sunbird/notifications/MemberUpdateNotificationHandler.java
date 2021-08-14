@@ -82,7 +82,7 @@ public class MemberUpdateNotificationHandler implements INotificationHandler{
 
         Notification notification = new Notification();
         Map<String,Object> actionData = new HashMap<>();
-        actionData.put(JsonKey.TYPE, "member-add");
+        actionData.put(JsonKey.TYPE, "add-member");
         actionData.put(JsonKey.CATEGORY,JsonKey.GROUP);
         Map<String,Object> templates = getAddMemberTemplateObj(groupDetails, updatedBy);
         actionData.put(JsonKey.TEMPLATE,templates);
@@ -114,7 +114,6 @@ public class MemberUpdateNotificationHandler implements INotificationHandler{
           template.put(JsonKey.TYPE, "JSON");
           Map<String,Object> props = new HashMap<>();
           props.put(JsonKey.PARAM1, groupDetails.get(JsonKey.NAME));
-          props.put(JsonKey.PARAM2, updatedBy.get(JsonKey.NAME));
           template.put(JsonKey.PARAMS,props);
           return template;
     }
@@ -125,7 +124,7 @@ public class MemberUpdateNotificationHandler implements INotificationHandler{
         Map<String,Object> props = new HashMap<>();
         props.put(JsonKey.PARAM1, updatedBy.get(JsonKey.NAME));;
         props.put(JsonKey.PARAM2, groupDetails.get(JsonKey.NAME));
-        template.put(JsonKey.PARAM3,props);
+        template.put(JsonKey.PARAMS,props);
 
         return template;
     }

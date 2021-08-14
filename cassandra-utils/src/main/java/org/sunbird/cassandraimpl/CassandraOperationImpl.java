@@ -50,7 +50,7 @@ public abstract class CassandraOperationImpl implements CassandraOperation {
   }
 
   @Override
-  public Response insertRecord(String keyspaceName, String tableName, Map<String, Object> request, RequestContext reqContext)
+  public Response insertRecord(String keyspaceName, String tableName, Map<String, Object> request, Map<String,Object> reqContext)
       throws DBException {
     long startTime = System.currentTimeMillis();
     logger.debug(reqContext,MessageFormat.format("Cassandra Service insertRecord method started at == {0}", startTime));

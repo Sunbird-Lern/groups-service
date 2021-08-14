@@ -69,10 +69,10 @@ public class ActivityUpdateNotificationHandler implements INotificationHandler{
         for (Map<String,Object> activity: activities) {
 
             //Create separate notification call for Admins and Members
-            notifications.add(getNotificationObj(JsonKey.ADMIN,"activity-remove",groupDetails, updatedBy, activity,membersInDB.stream().
+            notifications.add(getNotificationObj(JsonKey.ADMIN,"activity-removed",groupDetails, updatedBy, activity,membersInDB.stream().
                     filter(x -> x.getRole().equals(JsonKey.ADMIN) && !x.getUserId().equals(updatedBy.get(JsonKey.ID))).
                     collect(Collectors.toList())) );
-            notifications.add(getNotificationObj(JsonKey.MEMBER,"activity-remove", groupDetails, updatedBy, activity,membersInDB.stream().
+            notifications.add(getNotificationObj(JsonKey.MEMBER,"activity-removed", groupDetails, updatedBy, activity,membersInDB.stream().
                     filter(x -> x.getRole().equals(JsonKey.MEMBER) && !x.getUserId().equals(updatedBy.get(JsonKey.ID))).
                     collect(Collectors.toList())));
 
@@ -101,10 +101,10 @@ public class ActivityUpdateNotificationHandler implements INotificationHandler{
         for (Map<String,Object> activity: activityList) {
 
                 //Create separate notification call for Admins and Members
-                notifications.add(getNotificationObj(JsonKey.ADMIN,"activity-add",groupDetails, updatedBy, activity,membersInDB.stream().
+                notifications.add(getNotificationObj(JsonKey.ADMIN,"activity-added",groupDetails, updatedBy, activity,membersInDB.stream().
                         filter(x -> x.getRole().equals(JsonKey.ADMIN)&& !x.getUserId().equals(updatedBy.get(JsonKey.ID))).
                         collect(Collectors.toList())) );
-                notifications.add(getNotificationObj(JsonKey.MEMBER,"activity-add", groupDetails, updatedBy, activity,membersInDB.stream().
+                notifications.add(getNotificationObj(JsonKey.MEMBER,"activity-added", groupDetails, updatedBy, activity,membersInDB.stream().
                         filter(x -> x.getRole().equals(JsonKey.MEMBER) && !x.getUserId().equals(updatedBy.get(JsonKey.ID))).
                         collect(Collectors.toList())));
 

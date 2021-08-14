@@ -138,7 +138,7 @@ public interface JsonKey {
   String SYSTEM = "SYSTEM";
   String TEMPLATE = "template";
   String ADDITIONAL_INFO = "additionalInfo";
-  String FEED = "FEED";
+  String FEED = "feed";
   String NOTIFICATION_SERVICE_BASE_URL = "notification_service_base_url";
   String NOTIFICATION_SERVICE_API_URL = "notification_service_api_url";
   String MAX_BATCH_LIMIT = "max_batch_limit";

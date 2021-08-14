@@ -66,7 +66,7 @@ public class LoggerUtil {
         logger.debug(message);
     }
 
-    public void debug(RequestContext requestContext, String message) {
+    public void debug(Map<String,Object> requestContext, String message) {
         if (isDebugEnabled(requestContext)) {
             logger.info(Markers.appendEntries(requestContext), message);
         } else {
