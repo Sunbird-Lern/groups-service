@@ -136,7 +136,7 @@ public class ActivityUpdateNotificationHandler implements INotificationHandler{
                     }
                 }
             } catch (JsonProcessingException e) {
-               // logger.error(reqContext,"No Service Class Configured");
+                logger.error(reqContext,"No Service Class Configured");
             }
         }
     }
