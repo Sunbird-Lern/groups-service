@@ -4,6 +4,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.sunbird.common.request.Request;
 import org.sunbird.common.util.JsonKey;
 import org.sunbird.common.util.Notification;
+import org.sunbird.common.util.NotificationType;
 import org.sunbird.models.MemberResponse;
 import org.sunbird.service.GroupService;
 import org.sunbird.service.GroupServiceImpl;
@@ -56,7 +57,7 @@ public class MemberUpdateNotificationHandler implements INotificationHandler{
         boolean isExitRequest = removeMemberList.size() == 1 && ((String)updatedBy.get(JsonKey.ID)).equals(removeMemberList.get(0));
         List<String> userIds = new ArrayList<>();
         if(isExitRequest){
-            actionData.put(JsonKey.TYPE, "member-exit");
+            actionData.put(JsonKey.TYPE, NotificationType.GROUP_MEMBER_EXIT);
             Map<String,Object> templates = getMemberExitTemplateObj(groupDetails, updatedBy);
             actionData.put(JsonKey.TEMPLATE,templates);
             for (MemberResponse member:membersInDb) {
@@ -65,7 +66,7 @@ public class MemberUpdateNotificationHandler implements INotificationHandler{
                 }
             }
         }else{
-            actionData.put(JsonKey.TYPE, "member-remove");
+            actionData.put(JsonKey.TYPE, NotificationType.GROUP_MEMBER_REMOVED);
             Map<String,Object> templates = getMemberRemovedTemplateObj(groupDetails, updatedBy);
             actionData.put(JsonKey.TEMPLATE,templates);
             userIds.addAll(removeMemberList);
@@ -82,7 +83,7 @@ public class MemberUpdateNotificationHandler implements INotificationHandler{
 
         Notification notification = new Notification();
         Map<String,Object> actionData = new HashMap<>();
-        actionData.put(JsonKey.TYPE, "add-member");
+        actionData.put(JsonKey.TYPE, NotificationType.GROUP_MEMBER_ADD);
         actionData.put(JsonKey.CATEGORY,JsonKey.GROUP);
         Map<String,Object> templates = getAddMemberTemplateObj(groupDetails, updatedBy);
         actionData.put(JsonKey.TEMPLATE,templates);

@@ -20,7 +20,7 @@ public class GroupDeleteNotificationHandler implements INotificationHandler{
         Map<String,Object> groupDetails = (Map<String, Object>) request.getRequest().get(JsonKey.GROUP);
         if(MapUtils.isNotEmpty(groupDetails)) {
             Map<String,Object> actionData = new HashMap<>();
-            actionData.put(JsonKey.TYPE, NotificationType.GROUP_DELETE);
+            actionData.put(JsonKey.TYPE, NotificationType.GROUP_DELETED);
             actionData.put(JsonKey.CATEGORY,JsonKey.GROUP);
 
             Map<String,Object> templates = getTemplateObj(groupDetails, updatedBy);

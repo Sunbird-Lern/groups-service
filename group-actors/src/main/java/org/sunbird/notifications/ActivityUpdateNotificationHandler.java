@@ -5,6 +5,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.sunbird.common.request.Request;
 import org.sunbird.common.util.JsonKey;
 import org.sunbird.common.util.Notification;
+import org.sunbird.common.util.NotificationType;
 import org.sunbird.models.MemberResponse;
 import org.sunbird.service.MemberService;
 import org.sunbird.service.MemberServiceImpl;
@@ -69,10 +70,10 @@ public class ActivityUpdateNotificationHandler implements INotificationHandler{
         for (Map<String,Object> activity: activities) {
 
             //Create separate notification call for Admins and Members
-            notifications.add(getNotificationObj(JsonKey.ADMIN,"activity-removed",groupDetails, updatedBy, activity,membersInDB.stream().
+            notifications.add(getNotificationObj(JsonKey.ADMIN,NotificationType.GROUP_ACTIVITY_REMOVED,groupDetails, updatedBy, activity,membersInDB.stream().
                     filter(x -> x.getRole().equals(JsonKey.ADMIN) && !x.getUserId().equals(updatedBy.get(JsonKey.ID))).
                     collect(Collectors.toList())) );
-            notifications.add(getNotificationObj(JsonKey.MEMBER,"activity-removed", groupDetails, updatedBy, activity,membersInDB.stream().
+            notifications.add(getNotificationObj(JsonKey.MEMBER,NotificationType.GROUP_ACTIVITY_REMOVED, groupDetails, updatedBy, activity,membersInDB.stream().
                     filter(x -> x.getRole().equals(JsonKey.MEMBER) && !x.getUserId().equals(updatedBy.get(JsonKey.ID))).
                     collect(Collectors.toList())));
 
@@ -101,10 +102,10 @@ public class ActivityUpdateNotificationHandler implements INotificationHandler{
         for (Map<String,Object> activity: activityList) {
 
                 //Create separate notification call for Admins and Members
-                notifications.add(getNotificationObj(JsonKey.ADMIN,"activity-added",groupDetails, updatedBy, activity,membersInDB.stream().
+                notifications.add(getNotificationObj(JsonKey.ADMIN, NotificationType.GROUP_ACTIVITY_ADD,groupDetails, updatedBy, activity,membersInDB.stream().
                         filter(x -> x.getRole().equals(JsonKey.ADMIN)&& !x.getUserId().equals(updatedBy.get(JsonKey.ID))).
                         collect(Collectors.toList())) );
-                notifications.add(getNotificationObj(JsonKey.MEMBER,"activity-added", groupDetails, updatedBy, activity,membersInDB.stream().
+                notifications.add(getNotificationObj(JsonKey.MEMBER,NotificationType.GROUP_ACTIVITY_ADD, groupDetails, updatedBy, activity,membersInDB.stream().
                         filter(x -> x.getRole().equals(JsonKey.MEMBER) && !x.getUserId().equals(updatedBy.get(JsonKey.ID))).
                         collect(Collectors.toList())));
 
