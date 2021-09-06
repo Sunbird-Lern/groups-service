@@ -115,6 +115,7 @@ public class MemberUpdateNotificationHandler implements INotificationHandler{
           template.put(JsonKey.TYPE, "JSON");
           Map<String,Object> props = new HashMap<>();
           props.put(JsonKey.PARAM1, groupDetails.get(JsonKey.NAME));
+          props.put(JsonKey.PARAM2,updatedBy.get(JsonKey.NAME));
           template.put(JsonKey.PARAMS,props);
           return template;
     }

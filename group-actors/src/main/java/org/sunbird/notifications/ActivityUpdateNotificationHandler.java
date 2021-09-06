@@ -160,6 +160,7 @@ public class ActivityUpdateNotificationHandler implements INotificationHandler{
         Map<String,Object> template = getActivityTemplateObj(groupDetails, updatedBy, activity);
         actionData.put(JsonKey.TEMPLATE,template);
         actionData.put(JsonKey.TYPE,activityOp);
+        actionData.put(JsonKey.CATEGORY,JsonKey.GROUP);
         actionData.put(JsonKey.CREATED_BY, updatedBy);
         actionData.put(JsonKey.ADDITIONAL_INFO,getAdditionalInfo(groupDetails,role, activity));
         notification.setAction(actionData);
