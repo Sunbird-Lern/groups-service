@@ -140,7 +140,6 @@ public class ActivityUpdateNotificationHandler implements INotificationHandler{
             }
         }
     }
-
     /**
      *  Create Notification Object
      * @param role
