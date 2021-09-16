@@ -133,7 +133,6 @@ public interface JsonKey {
   String PARAM1 = "param1";
   String PARAM2 = "param2";
   String PARAM3 = "param3";
-
   String GROUPS_SERVICE = "groups-service";
   String SYSTEM = "SYSTEM";
   String TEMPLATE = "template";
