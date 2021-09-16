@@ -191,7 +191,7 @@ public class ActivityUpdateNotificationHandler implements INotificationHandler{
         group.put(JsonKey.ID, groupDetails.get(JsonKey.ID));
         group.put(JsonKey.NAME, groupDetails.get(JsonKey.NAME));
         additionalInfo.put(JsonKey.GROUP, group);
-        additionalInfo.put(JsonKey.ACTIVITY,additionalInfo);
+        additionalInfo.put(JsonKey.ACTIVITY,activityInfo);
         return additionalInfo;
     }
 }
