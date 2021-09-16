@@ -62,8 +62,6 @@ public class ActivityUpdateNotificationHandler implements INotificationHandler{
               activities.add(activity);
           }
         }
-        Map<SearchServiceUtil, Map<String, String>> idClassTypeMap =
-                GroupUtil.groupActivityIdsBySearchUtilClass(activities,reqContext);
         getActivityDetails(reqContext, activities);
         //Each activity add will be sent as different notifications
 
@@ -193,6 +191,7 @@ public class ActivityUpdateNotificationHandler implements INotificationHandler{
         group.put(JsonKey.ID, groupDetails.get(JsonKey.ID));
         group.put(JsonKey.NAME, groupDetails.get(JsonKey.NAME));
         additionalInfo.put(JsonKey.GROUP, group);
+        additionalInfo.put(JsonKey.ACTIVITY,additionalInfo);
         return additionalInfo;
     }
 }
