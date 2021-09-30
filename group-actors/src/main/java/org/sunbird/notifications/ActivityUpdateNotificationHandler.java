@@ -100,17 +100,24 @@ public class ActivityUpdateNotificationHandler implements INotificationHandler{
         for (Map<String,Object> activity: activityList) {
 
                 //Create separate notification call for Admins and Members
-                notifications.add(getNotificationObj(JsonKey.ADMIN, NotificationType.GROUP_ACTIVITY_ADD,groupDetails, updatedBy, activity,membersInDB.stream().
+                Notification memberNotification = getNotificationObj(JsonKey.ADMIN, NotificationType.GROUP_ACTIVITY_ADD,groupDetails, updatedBy, activity,membersInDB.stream().
                         filter(x -> x.getRole().equals(JsonKey.ADMIN)&& !x.getUserId().equals(updatedBy.get(JsonKey.ID))).
-                        collect(Collectors.toList())) );
-                notifications.add(getNotificationObj(JsonKey.MEMBER,NotificationType.GROUP_ACTIVITY_ADD, groupDetails, updatedBy, activity,membersInDB.stream().
+                        collect(Collectors.toList()));
+               checkNotificationToBeAdded(notifications, memberNotification);
+               Notification adminNotification =getNotificationObj(JsonKey.MEMBER,NotificationType.GROUP_ACTIVITY_ADD, groupDetails, updatedBy, activity,membersInDB.stream().
                         filter(x -> x.getRole().equals(JsonKey.MEMBER) && !x.getUserId().equals(updatedBy.get(JsonKey.ID))).
-                        collect(Collectors.toList())));
-
+                        collect(Collectors.toList()));
+               checkNotificationToBeAdded(notifications, adminNotification);
 
         }
         return notifications;
 
+    }
+
+    private void checkNotificationToBeAdded(List<Notification> notifications, Notification notification) {
+        if (null != notification) {
+            notifications.add(notification);
+        }
     }
 
     /**
@@ -168,7 +175,7 @@ public class ActivityUpdateNotificationHandler implements INotificationHandler{
             }
         }
         notification.setIds(userIds);
-        return notification;
+        return CollectionUtils.isNotEmpty(userIds) ? notification : null;
     }
 
     private Map<String, Object> getActivityTemplateObj(Map<String, Object> groupDetails, Map<String, Object> updatedBy

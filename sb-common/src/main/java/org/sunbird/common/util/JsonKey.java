@@ -144,4 +144,6 @@ public interface JsonKey {
   String GROUP_ROLE = "groupRole";
   String NOTIFICATIONS = "notifications";
   String ACTIVITY="activity";
+  String ENABLE_TENANT_CONFIGURATION = "enable_tenant_config";
+  String ASTERISK = "*";
 }

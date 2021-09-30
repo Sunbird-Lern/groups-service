@@ -30,7 +30,10 @@ public class MemberUpdateNotificationHandler implements INotificationHandler{
 
             if (CollectionUtils.isNotEmpty(
                     (List<Map<String, Object>>) memberOperationMap.get(JsonKey.ADD))) {
-                notifications.add(handleMemberAddNotifications(memberOperationMap,groupDetails,updatedBy,additionalInfo));
+                Notification notification = handleMemberAddNotifications(memberOperationMap,groupDetails,updatedBy,additionalInfo);
+                if(null != notification){
+                    notifications.add(notification);
+                }
             }
 
             if (CollectionUtils.isNotEmpty(
@@ -40,7 +43,10 @@ public class MemberUpdateNotificationHandler implements INotificationHandler{
             }
             // Validate Member Remove
             if (CollectionUtils.isNotEmpty((List<String>) memberOperationMap.get(JsonKey.REMOVE))) {
-                notifications.add(handleMemberRemoveNotifications(memberOperationMap,groupDetails,membersInDB,updatedBy,additionalInfo));
+                Notification notification = handleMemberRemoveNotifications(memberOperationMap,groupDetails,membersInDB,updatedBy,additionalInfo);
+                if(null != notification){
+                    notifications.add(notification);
+                }
             }
             return notifications;
         }
@@ -75,7 +81,7 @@ public class MemberUpdateNotificationHandler implements INotificationHandler{
         notification.setPriority(1);
         notification.setType(JsonKey.FEED);
         notification.setAction(actionData);
-        return notification;
+        return CollectionUtils.isNotEmpty(userIds) ? notification : null;
     }
 
     private Notification handleMemberAddNotifications(Map memberOperationMap,Map<String,Object> groupDetails
@@ -98,7 +104,7 @@ public class MemberUpdateNotificationHandler implements INotificationHandler{
         notification.setPriority(1);
         notification.setType(JsonKey.FEED);
         notification.setAction(actionData);
-        return notification;
+        return CollectionUtils.isNotEmpty(userIds)? notification : null;
     }
 
     private Map<String, Object> getAdditionalInfo(Map<String, Object> groupDetails) {

@@ -60,6 +60,10 @@ public class GroupNotificationActorTest extends BaseActorTest {
         when(PropertiesCache.getInstance()).thenReturn(propertiesCache);
         when(PropertiesCache.getInstance().getProperty(JsonKey.MAX_BATCH_LIMIT))
                 .thenReturn("4");
+        when(PropertiesCache.getInstance().getProperty(JsonKey.ENABLE_TENANT_CONFIGURATION))
+                .thenReturn("custchannel,tc");
+
+
     }
 
     @Test

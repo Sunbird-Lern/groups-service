@@ -1,5 +1,6 @@
 package org.sunbird.notifications;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.MapUtils;
 import org.sunbird.common.request.Request;
 import org.sunbird.common.util.JsonKey;
@@ -43,7 +44,7 @@ public class GroupDeleteNotificationHandler implements INotificationHandler{
             notification.setPriority(1);
             notification.setType(JsonKey.FEED);
             notification.setAction(actionData);
-            return Arrays.asList(notification);
+            return CollectionUtils.isNotEmpty(userIds) ? Arrays.asList(notification) : null;
         }
         return null;
     }
