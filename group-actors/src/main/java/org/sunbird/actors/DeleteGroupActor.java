@@ -73,7 +73,7 @@ public class DeleteGroupActor extends BaseActor {
      // Get all members belong to the group
      MemberService memberService = new MemberServiceImpl();
      List<MemberResponse> membersInDB = memberService.fetchMembersByGroupId(groupId, actorMessage.getContext());
-     Response response = groupService.deleteGroup(groupId, membersInDB, actorMessage.getContext(), userId);
+     Response response = groupService.deleteGroup(groupId, membersInDB, actorMessage.getContext());
      // delete cache for the group and all members belong to the group
      boolean isUseridRedisEnabled =
              Boolean.parseBoolean(

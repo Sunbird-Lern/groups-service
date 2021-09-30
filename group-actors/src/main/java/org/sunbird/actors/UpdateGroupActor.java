@@ -130,7 +130,7 @@ public class UpdateGroupActor extends BaseActor {
         // if inactive status then delete group included to support backward compatability for old
         // mobile apps
         if (JsonKey.INACTIVE.equals(group.getStatus())) {
-          Response response = groupService.deleteGroup(group.getId(), membersInDB,actorMessage.getContext(),userId);
+          Response response = groupService.deleteGroup(group.getId(), membersInDB,actorMessage.getContext());
         } else {
           Response response = groupService.updateGroup(group,actorMessage.getContext());
         }
