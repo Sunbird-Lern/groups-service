@@ -238,7 +238,7 @@ public class GroupServiceImpl implements GroupService {
   }
 
   @Override
-  public Response deleteGroup(String groupId, List<MemberResponse> members, Map<String,Object> reqContext, String userId) throws BaseException {
+  public Response deleteGroup(String groupId, List<MemberResponse> members, Map<String,Object> reqContext) throws BaseException {
     Response responseObj = groupDao.deleteGroup(groupId, reqContext);
     // Remove member mapping to the deleted group
     if (null != responseObj) {
@@ -248,8 +248,6 @@ public class GroupServiceImpl implements GroupService {
       List<Map<String, Object>> dbResGroupIds = memberService.getGroupIdsforUserIds(memberIds, reqContext);
       memberService.removeGroupInUserGroup(memberList, dbResGroupIds, reqContext);
       memberService.deleteGroupMembers(groupId, memberIds, reqContext);
-      // CALL Notification for delete Member
-      Map<String,Object> notificationObj = createDeleteNotificationObject(groupId,members,userId);
       return responseObj;
     }
 
@@ -358,18 +356,4 @@ public class GroupServiceImpl implements GroupService {
     return dbActivityList;
   }
 
-  /**
-   * Create delete notification Context Object
-   * @param groupId
-   * @param members
-   * @param userId
-   * @return
-   */
-  private Map<String, Object> createDeleteNotificationObject(String groupId, List<MemberResponse> members, String userId) {
-    Map<String,Object> notificationObj = new HashMap<>();
-    notificationObj.put(JsonKey.GROUP_ID,groupId);
-    notificationObj.put(JsonKey.MEMBERS,members);
-    notificationObj.put(JsonKey.UPDATED_BY,userId);
-    return notificationObj;
-  }
 }
