@@ -97,7 +97,6 @@ public class GroupNotificationActor extends BaseActor{
         }
 
     }
-
     /**
      * Get User Details from user service
      * @param request
@@ -139,6 +138,7 @@ public class GroupNotificationActor extends BaseActor{
         return userDetails;
     }
 
+    //Get user ids to fetch details
     private List<String> getMemberIds(Request request) {
         List<MemberResponse> members = (List<MemberResponse>) request.getRequest().get(JsonKey.MEMBERS);
         Map<String,Object> reqObj = (Map<String,Object>)request.getRequest().get(JsonKey.REQUEST);
