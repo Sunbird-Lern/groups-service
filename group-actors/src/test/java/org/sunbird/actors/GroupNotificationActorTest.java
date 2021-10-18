@@ -26,6 +26,7 @@ import org.sunbird.common.util.NotificationType;
 import org.sunbird.helper.ServiceFactory;
 import org.sunbird.models.Member;
 import org.sunbird.models.MemberResponse;
+import org.sunbird.util.HttpClientUtil;
 import org.sunbird.util.SystemConfigUtil;
 import org.sunbird.util.helper.PropertiesCache;
 
@@ -41,7 +42,8 @@ import static org.powermock.api.mockito.PowerMockito.when;
         Localizer.class,
         Application.class,
         SystemConfigUtil.class,
-        PropertiesCache.class
+        PropertiesCache.class,
+        HttpClientUtil.class
 })
 @PowerMockIgnore({"javax.management.*", "jdk.internal.reflect.*"})
 public class GroupNotificationActorTest extends BaseActorTest {
@@ -53,7 +55,7 @@ public class GroupNotificationActorTest extends BaseActorTest {
         PowerMockito.mockStatic(Localizer.class);
         Localizer localizer = mock(Localizer.class);
         when(Localizer.getInstance()).thenReturn(localizer);
-        when(localizer.getMessage(Mockito.any(),Mockito.any())).thenReturn("");
+        when(localizer.getMessage(Mockito.any(), Mockito.any())).thenReturn("");
         PowerMockito.mockStatic(SystemConfigUtil.class);
         PowerMockito.mockStatic(PropertiesCache.class);
         propertiesCache = mock(PropertiesCache.class);
@@ -63,8 +65,10 @@ public class GroupNotificationActorTest extends BaseActorTest {
         when(PropertiesCache.getInstance().getProperty(JsonKey.ENABLE_TENANT_CONFIGURATION))
                 .thenReturn("custchannel,tc");
 
-
+        PowerMockito.mockStatic(HttpClientUtil.class);
+        when(HttpClientUtil.post(Mockito.anyString(), Mockito.any(), Mockito.anyMap(), Mockito.anyMap())).thenReturn(getUserDetails());
     }
+
 
     @Test
     public void testMemberAddNotification() {
@@ -73,7 +77,7 @@ public class GroupNotificationActorTest extends BaseActorTest {
         PowerMockito.mockStatic(ServiceFactory.class);
         Request reqObj = memberAddNotificationReq();
         subject.tell(reqObj, probe.getRef());
-        Response res = probe.expectMsgClass(Duration.ofSeconds(50), Response.class);
+        Response res = probe.expectMsgClass(Duration.ofSeconds(30), Response.class);
         Assert.assertTrue(null != res && res.getResponseCode() == 200);
     }
 
@@ -89,7 +93,19 @@ public class GroupNotificationActorTest extends BaseActorTest {
     }
 
     @Test
-    public void testActivityAddeNotification() {
+    public void testMemberExitNotification() {
+        TestKit probe = new TestKit(system);
+        ActorRef subject = system.actorOf(props);
+        PowerMockito.mockStatic(ServiceFactory.class);
+        Request reqObj = memberExitNotificationReq();
+        subject.tell(reqObj, probe.getRef());
+        Response res = probe.expectMsgClass(Duration.ofSeconds(50), Response.class);
+        Assert.assertTrue(null != res && res.getResponseCode() == 200);
+    }
+
+
+    @Test
+    public void testActivityAddedNotification() {
         TestKit probe = new TestKit(system);
         ActorRef subject = system.actorOf(props);
         PowerMockito.mockStatic(ServiceFactory.class);
@@ -121,106 +137,136 @@ public class GroupNotificationActorTest extends BaseActorTest {
         Assert.assertTrue(null != res && res.getResponseCode() == 200);
     }
 
-    private Map<String,Object> memberAddReq() {
-        Map<String,Object> reqMap = new HashMap<>();
-        reqMap.put(JsonKey.GROUP_ID,"1234");
-        Map<String,Object> memberOp = new HashMap<>();
-        List<Map<String,Object>> members = new ArrayList<>();
-        Map<String,Object> member = new HashMap<>();
-        member.put(JsonKey.USER_ID,"12");
-        member.put(JsonKey.ROLE,JsonKey.MEMBER);
+    private Map<String, Object> memberAddReq() {
+        Map<String, Object> reqMap = new HashMap<>();
+        reqMap.put(JsonKey.GROUP_ID, "1234");
+        Map<String, Object> memberOp = new HashMap<>();
+        List<Map<String, Object>> members = new ArrayList<>();
+        Map<String, Object> member = new HashMap<>();
+        member.put(JsonKey.USER_ID, "12");
+        member.put(JsonKey.ROLE, JsonKey.MEMBER);
         members.add(member);
-        memberOp.put(JsonKey.ADD,members);
-        reqMap.put(JsonKey.MEMBERS,memberOp);
-        return  reqMap;
+        memberOp.put(JsonKey.ADD, members);
+        reqMap.put(JsonKey.MEMBERS, memberOp);
+        return reqMap;
     }
 
-    private Request memberAddNotificationReq(){
+    private Request memberAddNotificationReq() {
         Request request = new Request();
-        Map<String,Object> reqMap = memberAddReq();
-        Map<String,Object> groupDetails = getGroupDetails();
+        Map<String, Object> reqMap = memberAddReq();
+        Map<String, Object> groupDetails = getGroupDetails();
         List<MemberResponse> members = getGroupMembers();
-        Map<String,Object> reqObj = new HashMap<>();
-        reqObj.put(JsonKey.REQUEST,reqMap);
-        reqObj.put(JsonKey.GROUP,groupDetails);
-        reqObj.put(JsonKey.MEMBERS,members);
+        Map<String, Object> reqObj = new HashMap<>();
+        reqObj.put(JsonKey.REQUEST, reqMap);
+        reqObj.put(JsonKey.GROUP, groupDetails);
+        reqObj.put(JsonKey.MEMBERS, members);
         request.setRequest(reqObj);
-        Map<String,Object> context = new HashMap<>();
-        context.put(JsonKey.USER_ID,"12");
-        context.put(JsonKey.MANAGED_FOR,"12");
+        Map<String, Object> context = new HashMap<>();
+        context.put(JsonKey.USER_ID, "12");
+        context.put(JsonKey.MANAGED_FOR, "12");
         request.setContext(context);
         request.setOperation(NotificationType.MEMBER_UPDATE);
         return request;
     }
 
-    private Request groupDeleteNotificationReq(){
+    private Request groupDeleteNotificationReq() {
         Request request = new Request();
-        Map<String,Object> reqMap = groupDeleteReq();
-        Map<String,Object> groupDetails = getGroupDetails();
+        Map<String, Object> reqMap = groupDeleteReq();
+        Map<String, Object> groupDetails = getGroupDetails();
         List<MemberResponse> members = getGroupMembers();
-        Map<String,Object> reqObj = new HashMap<>();
-        reqObj.put(JsonKey.REQUEST,reqMap);
-        reqObj.put(JsonKey.GROUP,groupDetails);
-        reqObj.put(JsonKey.MEMBERS,members);
+        Map<String, Object> reqObj = new HashMap<>();
+        reqObj.put(JsonKey.REQUEST, reqMap);
+        reqObj.put(JsonKey.GROUP, groupDetails);
+        reqObj.put(JsonKey.MEMBERS, members);
         request.setRequest(reqObj);
-        Map<String,Object> context = new HashMap<>();
-        context.put(JsonKey.USER_ID,"12");
-        context.put(JsonKey.MANAGED_FOR,"12");
+        Map<String, Object> context = new HashMap<>();
+        context.put(JsonKey.USER_ID, "12");
+        context.put(JsonKey.MANAGED_FOR, "12");
         request.setContext(context);
         request.setOperation(NotificationType.GROUP_DELETE);
         return request;
     }
 
-    private Request memberRemoveNotificationReq(){
+    private Request memberRemoveNotificationReq() {
         Request request = new Request();
-        Map<String,Object> reqMap = memberRemoveReq();
-        Map<String,Object> groupDetails = getGroupDetails();
+        Map<String, Object> reqMap = memberRemoveReq();
+        Map<String, Object> groupDetails = getGroupDetails();
         List<MemberResponse> members = getGroupMembers();
-        Map<String,Object> reqObj = new HashMap<>();
-        reqObj.put(JsonKey.REQUEST,reqMap);
-        reqObj.put(JsonKey.GROUP,groupDetails);
-        reqObj.put(JsonKey.MEMBERS,members);
+        Map<String, Object> reqObj = new HashMap<>();
+        reqObj.put(JsonKey.REQUEST, reqMap);
+        reqObj.put(JsonKey.GROUP, groupDetails);
+        reqObj.put(JsonKey.MEMBERS, members);
         request.setRequest(reqObj);
 
-        Map<String,Object> context = new HashMap<>();
-        context.put(JsonKey.USER_ID,"12");
-        context.put(JsonKey.MANAGED_FOR,"12");
+        Map<String, Object> context = new HashMap<>();
+        context.put(JsonKey.USER_ID, "12");
+        context.put(JsonKey.MANAGED_FOR, "12");
+        request.setContext(context);
+        request.setOperation(NotificationType.MEMBER_UPDATE);
+        return request;
+    }
+
+    private Request memberExitNotificationReq() {
+        Request request = new Request();
+        Map<String, Object> reqMap = memberExitReq();
+        Map<String, Object> groupDetails = getGroupDetails();
+        List<MemberResponse> members = getGroupMembers();
+        Map<String, Object> reqObj = new HashMap<>();
+        reqObj.put(JsonKey.REQUEST, reqMap);
+        reqObj.put(JsonKey.GROUP, groupDetails);
+        reqObj.put(JsonKey.MEMBERS, members);
+        request.setRequest(reqObj);
+
+        Map<String, Object> context = new HashMap<>();
+        context.put(JsonKey.USER_ID, "12");
+        context.put(JsonKey.MANAGED_FOR, "12");
         request.setContext(context);
         request.setOperation(NotificationType.MEMBER_UPDATE);
         return request;
     }
 
     private Map<String, Object> memberRemoveReq() {
-        Map<String,Object> reqMap = new HashMap<>();
-        reqMap.put(JsonKey.GROUP_ID,"1234");
-        Map<String,Object> memberOp = new HashMap<>();
+        Map<String, Object> reqMap = new HashMap<>();
+        reqMap.put(JsonKey.GROUP_ID, "1234");
+        Map<String, Object> memberOp = new HashMap<>();
         List<String> members = new ArrayList<>();
-        members.add("2341") ;
-        memberOp.put(JsonKey.REMOVE,members);
-        reqMap.put(JsonKey.MEMBERS,memberOp);
-        return  reqMap;
+        members.add("2341");
+        memberOp.put(JsonKey.REMOVE, members);
+        reqMap.put(JsonKey.MEMBERS, memberOp);
+        return reqMap;
+    }
+
+    private Map<String, Object> memberExitReq() {
+        Map<String, Object> reqMap = new HashMap<>();
+        reqMap.put(JsonKey.GROUP_ID, "1234");
+        Map<String, Object> memberOp = new HashMap<>();
+        List<String> members = new ArrayList<>();
+        members.add("12");
+        memberOp.put(JsonKey.REMOVE, members);
+        reqMap.put(JsonKey.MEMBERS, memberOp);
+        return reqMap;
     }
 
     private Map<String, Object> groupDeleteReq() {
-        Map<String,Object> reqMap = new HashMap<>();
-        reqMap.put(JsonKey.GROUP_ID,"1234");
-        return  reqMap;
+        Map<String, Object> reqMap = new HashMap<>();
+        reqMap.put(JsonKey.GROUP_ID, "1234");
+        return reqMap;
     }
 
-    private Map<String,Object> getGroupDetails(){
-        Map<String,Object> dbResGroup = new HashMap<>();
-        dbResGroup.put(JsonKey.ID,"1234");
-        dbResGroup.put(JsonKey.NAME,"Test");
-        List<Map<String,Object>> activities = new ArrayList<>();
-        Map<String,Object> activity = new HashMap<>();
-        activity.put(JsonKey.ID,"do_12345");
-        activity.put(JsonKey.TYPE,"Course");
+    private Map<String, Object> getGroupDetails() {
+        Map<String, Object> dbResGroup = new HashMap<>();
+        dbResGroup.put(JsonKey.ID, "1234");
+        dbResGroup.put(JsonKey.NAME, "Test");
+        List<Map<String, Object>> activities = new ArrayList<>();
+        Map<String, Object> activity = new HashMap<>();
+        activity.put(JsonKey.ID, "do_12345");
+        activity.put(JsonKey.TYPE, "Course");
         activities.add(activity);
-        dbResGroup.put(JsonKey.ACTIVITIES,activities);
+        dbResGroup.put(JsonKey.ACTIVITIES, activities);
         return dbResGroup;
     }
 
-    private List<MemberResponse> getGroupMembers(){
+    private List<MemberResponse> getGroupMembers() {
         MemberResponse member1 = new MemberResponse();
         member1.setGroupId("1234");
         member1.setUserId("234");
@@ -235,37 +281,37 @@ public class GroupNotificationActorTest extends BaseActorTest {
         return members;
     }
 
-    private Request activityAddNotificationReq(){
+    private Request activityAddNotificationReq() {
         Request request = new Request();
-        Map<String,Object> reqMap = activityAddReq();
-        Map<String,Object> groupDetails = getGroupDetails();
+        Map<String, Object> reqMap = activityAddReq();
+        Map<String, Object> groupDetails = getGroupDetails();
         List<MemberResponse> members = getGroupMembers();
-        Map<String,Object> reqObj = new HashMap<>();
-        reqObj.put(JsonKey.REQUEST,reqMap);
-        reqObj.put(JsonKey.GROUP,groupDetails);
-        reqObj.put(JsonKey.MEMBERS,members);
+        Map<String, Object> reqObj = new HashMap<>();
+        reqObj.put(JsonKey.REQUEST, reqMap);
+        reqObj.put(JsonKey.GROUP, groupDetails);
+        reqObj.put(JsonKey.MEMBERS, members);
         request.setRequest(reqObj);
-        Map<String,Object> context = new HashMap<>();
-        context.put(JsonKey.USER_ID,"12");
-        context.put(JsonKey.MANAGED_FOR,"12");
+        Map<String, Object> context = new HashMap<>();
+        context.put(JsonKey.USER_ID, "12");
+        context.put(JsonKey.MANAGED_FOR, "12");
         request.setContext(context);
         request.setOperation(NotificationType.ACTIVITY_UPDATE);
         return request;
     }
 
-    private Request activityRemoveNotificationReq(){
+    private Request activityRemoveNotificationReq() {
         Request request = new Request();
-        Map<String,Object> reqMap = activityRemoveReq();
-        Map<String,Object> groupDetails = getGroupDetails();
+        Map<String, Object> reqMap = activityRemoveReq();
+        Map<String, Object> groupDetails = getGroupDetails();
         List<MemberResponse> members = getGroupMembers();
-        Map<String,Object> reqObj = new HashMap<>();
-        reqObj.put(JsonKey.REQUEST,reqMap);
-        reqObj.put(JsonKey.GROUP,groupDetails);
-        reqObj.put(JsonKey.MEMBERS,members);
+        Map<String, Object> reqObj = new HashMap<>();
+        reqObj.put(JsonKey.REQUEST, reqMap);
+        reqObj.put(JsonKey.GROUP, groupDetails);
+        reqObj.put(JsonKey.MEMBERS, members);
         request.setRequest(reqObj);
-        Map<String,Object> context = new HashMap<>();
-        context.put(JsonKey.USER_ID,"12");
-        context.put(JsonKey.MANAGED_FOR,"12");
+        Map<String, Object> context = new HashMap<>();
+        context.put(JsonKey.USER_ID, "12");
+        context.put(JsonKey.MANAGED_FOR, "12");
         request.setContext(context);
         request.setOperation(NotificationType.ACTIVITY_UPDATE);
         return request;
@@ -273,27 +319,32 @@ public class GroupNotificationActorTest extends BaseActorTest {
 
 
     private Map<String, Object> activityAddReq() {
-        Map<String,Object> reqMap = new HashMap<>();
-        reqMap.put(JsonKey.GROUP_ID,"1234");
-        Map<String,Object> activityOp = new HashMap<>();
-        List<Map<String,Object>> activities = new ArrayList<>();
-        Map<String,Object> activity= new HashMap<>();
-        activity.put(JsonKey.ID,"do_123457");
-        activity.put(JsonKey.TYPE,"Course");
+        Map<String, Object> reqMap = new HashMap<>();
+        reqMap.put(JsonKey.GROUP_ID, "1234");
+        Map<String, Object> activityOp = new HashMap<>();
+        List<Map<String, Object>> activities = new ArrayList<>();
+        Map<String, Object> activity = new HashMap<>();
+        activity.put(JsonKey.ID, "do_123457");
+        activity.put(JsonKey.TYPE, "Course");
         activities.add(activity);
-        activityOp.put(JsonKey.ADD,activities);
-        reqMap.put(JsonKey.ACTIVITIES,activityOp);
-        return  reqMap;
+        activityOp.put(JsonKey.ADD, activities);
+        reqMap.put(JsonKey.ACTIVITIES, activityOp);
+        return reqMap;
     }
 
     private Map<String, Object> activityRemoveReq() {
-        Map<String,Object> reqMap = new HashMap<>();
-        reqMap.put(JsonKey.GROUP_ID,"1234");
-        Map<String,Object> activityOp = new HashMap<>();
+        Map<String, Object> reqMap = new HashMap<>();
+        reqMap.put(JsonKey.GROUP_ID, "1234");
+        Map<String, Object> activityOp = new HashMap<>();
         List<String> activity = new ArrayList<>();
-        activity.add("do_1234") ;
-        activityOp.put(JsonKey.REMOVE,activity);
-        reqMap.put(JsonKey.ACTIVITIES,activityOp);
-        return  reqMap;
+        activity.add("do_1234");
+        activityOp.put(JsonKey.REMOVE, activity);
+        reqMap.put(JsonKey.ACTIVITIES, activityOp);
+        return reqMap;
+    }
+
+
+    private String getUserDetails() {
+        return "{\"id\":\"api.user.search\",\"ver\":\"v1\",\"ts\":\"2021-10-14 08:07:47:366+0000\",\"params\":{\"resmsgid\":null,\"msgid\":\"7e6815596011bf8f8908ec79c827d244\",\"err\":null,\"status\":\"success\",\"errmsg\":null},\"responseCode\":\"OK\",\"result\":{\"response\":{\"count\":1,\"content\":[{\"channel\":\"custchannel\",\"id\":\"12\",\"recoveryEmail\":\"\",\"identifier\":\"12\",\"firstName\":\"satish\",\"provider\":null,\"userName\":\"satish_x6cc\",\"userId\":\"12\"},{\"channel\":\"custchannel\",\"id\":\"a10d5216-6b96-404c-8d1c-cc1f720d910a\",\"recoveryEmail\":\"\",\"identifier\":\"a10d5216-6b96-404c-8d1c-cc1f720d910a\",\"firstName\":\"satish\",\"provider\":null,\"userName\":\"satish_x6cc\",\"userId\":\"a10d5216-6b96-404c-8d1c-cc1f720d910a\"}]}}}";
     }
 }
