@@ -53,7 +53,7 @@ public class GroupDeleteNotificationHandler implements INotificationHandler{
         Map<String, Object> additionalInfo = new HashMap<>();
         Map<String,Object> group= new HashMap<>();
         group.put(JsonKey.ID, groupDetails.get(JsonKey.ID));
-        group.put(JsonKey.NAME, groupDetails.get(JsonKey.NAME)+" group");
+        group.put(JsonKey.NAME, groupDetails.get(JsonKey.NAME)+" "+JsonKey.GROUP);
         additionalInfo.put(JsonKey.GROUP, group);
         return additionalInfo;
     }
