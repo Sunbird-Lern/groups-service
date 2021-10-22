@@ -67,7 +67,7 @@ public class MemberUpdateNotificationHandler implements INotificationHandler{
             Map<String,Object> templates = getMemberExitTemplateObj(groupDetails, updatedBy);
             actionData.put(JsonKey.TEMPLATE,templates);
             for (MemberResponse member:membersInDb) {
-                if(JsonKey.ADMIN.equals(member.getRole())){
+                if(!updatedBy.equals(member.getUserId()) && JsonKey.ADMIN.equals(member.getRole())){
                     userIds.add(member.getUserId());
                 }
             }
