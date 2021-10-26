@@ -83,7 +83,7 @@ public class NotificationService {
         if (null == header) {
             header = new HashMap<>();
         }
-        header.put("Content-Type", "application/json");
+        header.put("Content-Type", "application/json;charset=UTF-8");
         setTraceIdInHeader(header, reqContext);
     }
 

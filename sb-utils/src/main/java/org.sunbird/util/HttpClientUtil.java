@@ -1,5 +1,6 @@
 package org.sunbird.util;
 
+import java.nio.charset.Charset;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -120,7 +121,7 @@ public class HttpClientUtil {
           httpPost.addHeader(entry.getKey(), entry.getValue());
         }
       }
-      StringEntity entity = new StringEntity(params);
+      StringEntity entity = new StringEntity(params, Charset.forName("UTF-8"));
       httpPost.setEntity(entity);
 
       response = httpclient.execute(httpPost);
