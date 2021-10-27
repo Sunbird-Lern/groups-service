@@ -103,7 +103,7 @@ public class DeleteGroupActorTest extends BaseActorTest {
 
     Request reqObj = deleteGroupReq();
     subject.tell(reqObj, probe.getRef());
-    Response res = probe.expectMsgClass(Duration.ofSeconds(20), Response.class);
+    Response res = probe.expectMsgClass(Duration.ofSeconds(40), Response.class);
     Assert.assertTrue(null != res && res.getResponseCode() == 200);
   }
 
