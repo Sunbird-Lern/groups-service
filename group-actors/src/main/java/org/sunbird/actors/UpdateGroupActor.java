@@ -156,7 +156,6 @@ public class UpdateGroupActor extends BaseActor {
       }
       sender().tell(response, self());
       TelemetryHandler.logGroupUpdateTelemetry(actorMessage, group, dbResGroup,true);
-      //
       NotificationManager.sendNotifications(actorMessage,notifications,dbResGroup,membersInDB);
     }catch (Exception ex){
        logger.info(actorMessage.getContext(),MessageFormat.format("UpdateGroupActor: Request: {0}",actorMessage.getRequest()));

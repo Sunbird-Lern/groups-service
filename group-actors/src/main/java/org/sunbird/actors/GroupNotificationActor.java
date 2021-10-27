@@ -38,7 +38,7 @@ public class GroupNotificationActor extends BaseActor{
         String updatedBy = new GroupRequestHandler().getRequestedBy(request);
         Map<String,Map<String,Object>> userDetails = getUserDetails(request);
         String channelEnabled = PropertiesCache.getInstance().getProperty(JsonKey.ENABLE_TENANT_CONFIGURATION);
-        logger.info(MessageFormat.format("Notification Enabled for Tenants:{0} ",channelEnabled));
+        logger.info(request.getContext(),MessageFormat.format("Notification Enabled for Tenants:{0} ",channelEnabled));
         //If notification is available for all channel, the value will be *
         if(!JsonKey.ASTERISK.equals(channelEnabled)){
             removeDisabledChannelMembers(request, userDetails,channelEnabled);

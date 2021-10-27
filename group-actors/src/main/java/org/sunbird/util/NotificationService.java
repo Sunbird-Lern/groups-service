@@ -40,7 +40,7 @@ public class NotificationService {
             Map<String,Object> request  = new HashMap<>();
             request.put(JsonKey.REQUEST,notificationReq);
             String notificationStrReq = objectMapper.writeValueAsString(request);
-            logger.info(notificationStrReq);
+            logger.info(reqContext,notificationStrReq);
             String response =
                         HttpClientUtil.post(
                                 notificationServiceBaseUrl + notificationServiceUrl, notificationStrReq, requestHeader,reqContext);
@@ -83,7 +83,7 @@ public class NotificationService {
         if (null == header) {
             header = new HashMap<>();
         }
-        header.put("Content-Type", "application/json;charset=UTF-8");
+        header.put("Content-Type", "application/json");
         setTraceIdInHeader(header, reqContext);
     }
 
