@@ -127,7 +127,7 @@ public class UpdateGroupActorTest extends BaseActorTest {
 
     Request reqObj = updateGroupReq();
     subject.tell(reqObj, probe.getRef());
-    Response res = probe.expectMsgClass(Duration.ofSeconds(60), Response.class);
+    Response res = probe.expectMsgClass(Duration.ofSeconds(40), Response.class);
     Assert.assertTrue(null != res && res.getResponseCode() == 200);
   }
 
