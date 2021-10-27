@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 public class NotificationManager {
-    private LoggerUtil logger = new LoggerUtil(NotificationManager.class);
+    private static LoggerUtil logger = new LoggerUtil(NotificationManager.class);
 
     /**
      * This function will take the request object and list of notifications to be sent
@@ -23,6 +23,8 @@ public class NotificationManager {
     public static void sendNotifications(Request request, List<String> notifications, Map<String,Object> dbResGroup,
                                          List<MemberResponse> groupMembers){
         //Send list of notifications
+        logger.info(request.getContext(),"NotificationManager: Send Notifications"+ notifications.size());
+
         for (String notification: notifications ) {
             Request reqObj = new Request();
             Map<String,Object> reqMap = new HashMap<>();
