@@ -120,7 +120,7 @@ public class MemberUpdateNotificationHandler implements INotificationHandler{
           Map<String,Object> template = new HashMap<>();
           template.put(JsonKey.TYPE, "JSON");
           Map<String,Object> props = new HashMap<>();
-          props.put(JsonKey.PARAM1, groupDetails.get(JsonKey.NAME));
+          props.put(JsonKey.PARAM1, groupDetails.get(JsonKey.NAME)+" "+JsonKey.GROUP);
           props.put(JsonKey.PARAM2,updatedBy.get(JsonKey.NAME));
           template.put(JsonKey.PARAMS,props);
           return template;
@@ -131,7 +131,7 @@ public class MemberUpdateNotificationHandler implements INotificationHandler{
         template.put(JsonKey.TYPE, "JSON");
         Map<String,Object> props = new HashMap<>();
         props.put(JsonKey.PARAM1, updatedBy.get(JsonKey.NAME));;
-        props.put(JsonKey.PARAM2, groupDetails.get(JsonKey.NAME));
+        props.put(JsonKey.PARAM2, groupDetails.get(JsonKey.NAME)+" "+JsonKey.GROUP);
         template.put(JsonKey.PARAMS,props);
 
         return template;
@@ -141,7 +141,7 @@ public class MemberUpdateNotificationHandler implements INotificationHandler{
         Map<String,Object> template = new HashMap<>();
         template.put(JsonKey.TYPE, "JSON");
         Map<String,Object> props = new HashMap<>();
-        props.put(JsonKey.PARAM1, groupDetails.get(JsonKey.NAME));;
+        props.put(JsonKey.PARAM1, groupDetails.get(JsonKey.NAME)+" "+JsonKey.GROUP);;
         props.put(JsonKey.PARAM2, updatedBy.get(JsonKey.NAME));
         template.put(JsonKey.PARAMS,props);
 

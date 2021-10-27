@@ -184,7 +184,7 @@ public class ActivityUpdateNotificationHandler implements INotificationHandler{
         template.put(JsonKey.TYPE, "JSON");
         Map<String,Object> props = new HashMap<>();
         props.put(JsonKey.PARAM1, activity.get(JsonKey.NAME));
-        props.put(JsonKey.PARAM2, groupDetails.get(JsonKey.NAME));
+        props.put(JsonKey.PARAM2, groupDetails.get(JsonKey.NAME)+" "+JsonKey.GROUP);
         props.put(JsonKey.PARAM3, updatedBy.get(JsonKey.NAME));
         template.put(JsonKey.PARAMS,props);
         return template;
