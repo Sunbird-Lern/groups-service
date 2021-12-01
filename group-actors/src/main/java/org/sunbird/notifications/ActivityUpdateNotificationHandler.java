@@ -68,14 +68,14 @@ public class ActivityUpdateNotificationHandler implements INotificationHandler{
         for (Map<String,Object> activity: activities) {
 
             //Create separate notification call for Admins and Members
-            notifications.add(getNotificationObj(JsonKey.ADMIN,NotificationType.GROUP_ACTIVITY_REMOVED,groupDetails, updatedBy, activity,membersInDB.stream().
+            Notification memberNotification = getNotificationObj(JsonKey.ADMIN,NotificationType.GROUP_ACTIVITY_REMOVED,groupDetails, updatedBy, activity,membersInDB.stream().
                     filter(x -> x.getRole().equals(JsonKey.ADMIN) && !x.getUserId().equals(updatedBy.get(JsonKey.ID))).
-                    collect(Collectors.toList())) );
-            notifications.add(getNotificationObj(JsonKey.MEMBER,NotificationType.GROUP_ACTIVITY_REMOVED, groupDetails, updatedBy, activity,membersInDB.stream().
+                    collect(Collectors.toList()));
+            checkNotificationToBeAdded(notifications, memberNotification);
+            Notification adminNotification =getNotificationObj(JsonKey.MEMBER,NotificationType.GROUP_ACTIVITY_REMOVED, groupDetails, updatedBy, activity,membersInDB.stream().
                     filter(x -> x.getRole().equals(JsonKey.MEMBER) && !x.getUserId().equals(updatedBy.get(JsonKey.ID))).
-                    collect(Collectors.toList())));
-
-
+                    collect(Collectors.toList()));
+            checkNotificationToBeAdded(notifications, adminNotification);
         }
         return notifications;
     }
