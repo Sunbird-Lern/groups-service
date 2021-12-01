@@ -341,6 +341,61 @@ public class UpdateGroupActorTest extends BaseActorTest {
   }
 
   @Test
+  public void testUpdateGroupToRemoveMemberGroup() {
+    TestKit probe = new TestKit(system);
+    ActorRef subject = system.actorOf(props);
+    PowerMockito.mockStatic(ServiceFactory.class);
+    CassandraOperation cassandraOperation = mock(CassandraOperationImpl.class);
+    when(ServiceFactory.getInstance()).thenReturn(cassandraOperation);
+    try {
+      when(cassandraOperation.updateRecord(
+              Mockito.anyString(), Mockito.anyString(), Mockito.anyObject(),Mockito.any()))
+              .thenReturn(getCassandraResponse());
+
+      when(cassandraOperation.updateAddSetRecord(
+              Mockito.anyString(),
+              Mockito.anyString(),
+              Mockito.anyMap(),
+              Mockito.anyString(),
+              Mockito.anyObject(),Mockito.any()))
+              .thenReturn(getCassandraResponse())
+              .thenReturn(getCassandraResponse());
+      when(cassandraOperation.updateRemoveSetRecord(
+              Mockito.anyString(),
+              Mockito.anyString(),
+              Mockito.anyMap(),
+              Mockito.anyString(),
+              Mockito.anyObject(),Mockito.any()))
+              .thenReturn(getCassandraResponse());
+      when(cassandraOperation.batchUpdate(
+              Mockito.anyString(), Mockito.anyString(), Mockito.anyList(),Mockito.any()))
+              .thenReturn(getCassandraResponse());
+      when(cassandraOperation.executeSelectQuery(
+              Mockito.anyString(), Mockito.anyString(), Mockito.anyMap(), Mockito.anyObject(),Mockito.any()))
+              .thenReturn(memberSizeResponse());
+      when(cassandraOperation.getRecordById(
+              Mockito.anyString(), Mockito.anyString(), Mockito.anyString(),Mockito.any()))
+              .thenReturn(getGroupsDetailsResponse());
+      when(cassandraOperation.getRecordsByPrimaryKeys(
+              Mockito.anyString(),
+              Matchers.eq("group_member"),
+              Mockito.anyList(),
+              Mockito.anyString(),Mockito.any()))
+              .thenReturn(getMemberResponse());
+      when(cassandraOperation.deleteRecord(
+              Mockito.anyString(), Mockito.anyString(), Mockito.anyString(),Mockito.any()))
+              .thenReturn(getCassandraResponse());
+    } catch (BaseException be) {
+      Assert.assertTrue(false);
+    }
+
+    Request reqObj = removeMemberGroupReq();
+
+    subject.tell(reqObj, probe.getRef());
+
+  }
+
+  @Test
   public void testUpdateGroupWithDBThrowException() {
     TestKit probe = new TestKit(system);
     ActorRef subject = system.actorOf(props);
@@ -476,6 +531,22 @@ public class UpdateGroupActorTest extends BaseActorTest {
     activityOperations.put(JsonKey.ADD, activities);
     reqObj.getRequest().put(JsonKey.ACTIVITIES, activityOperations);
     reqObj.setOperation(ActorOperations.UPDATE_GROUP.getValue());
+    return reqObj;
+  }
+
+  private static Request removeMemberGroupReq(){
+    Request reqObj = new Request();
+    reqObj.setHeaders(headerMap);
+    Map<String, Object> context = new HashMap<>();
+    context.put(JsonKey.USER_ID, "user1");
+    reqObj.setContext(context);
+    reqObj.setOperation(ActorOperations.UPDATE_GROUP.getValue());
+    reqObj.getRequest().put(JsonKey.GROUP_ID, "group1");
+    Map<String, List<String>> memberOpearations = new HashMap<>();
+    List<String> removeMemberList = new ArrayList<>();
+    removeMemberList.add("userID22");
+    memberOpearations.put("remove",removeMemberList);
+    reqObj.getRequest().put(JsonKey.MEMBERS,removeMemberList);
     return reqObj;
   }
 

@@ -161,4 +161,35 @@ public class HttpClientUtilTest {
         String response = HttpClientUtil.postFormData(url,reqObj,headers,reqContext);
         Assert.assertTrue(null != response);
     }
+
+    @Test
+    public void testPostFormDataFailed() throws IOException {
+        PowerMockito.mockStatic(HttpClients.class);
+        CloseableHttpClient httpClient = PowerMockito.mock(CloseableHttpClient.class);
+        CloseableHttpResponse httpResponse = PowerMockito.mock(CloseableHttpResponse.class);
+        StatusLine statusLine = PowerMockito.mock(StatusLine.class);
+        Mockito.when(statusLine.getStatusCode()).thenReturn(200);
+        Mockito.when(httpResponse.getStatusLine()).thenReturn(statusLine);
+        HttpEntity httpEntity = PowerMockito.mock(HttpEntity.class);
+        InputStream targetStream = new ByteArrayInputStream(successResponse.getBytes());
+        Mockito.when(httpEntity.getContent()).thenReturn(targetStream);
+        Mockito.when(httpEntity.getContentLength()).thenReturn((long) successResponse.getBytes().length);
+
+        Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
+        Mockito.when(httpClient.execute(Mockito.any())).thenThrow(new RuntimeException());
+
+        HttpClientBuilder httpClientBuilder = PowerMockito.mock(HttpClientBuilder.class);
+        Mockito.when(httpClientBuilder.build()).thenReturn(httpClient);
+        Mockito.when(HttpClients.custom()).thenReturn(httpClientBuilder);
+        HttpClientUtil.getInstance();
+        Map<String,Object> reqContext = new HashMap<>();
+        reqContext.put("userid","123123123");
+        Map<String,String> headers = new HashMap<>();
+        headers.put("Content-Type","application/json");
+        Map<String,String> reqObj = new HashMap<>();
+        reqObj.put("test","13132");
+        reqObj.put("testing","true");
+        String response = HttpClientUtil.postFormData(url,reqObj,headers,reqContext);
+        Assert.assertTrue(StringUtils.isEmpty(response));
+    }
 }

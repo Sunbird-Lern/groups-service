@@ -78,6 +78,13 @@ public class ReadGroupActorTest extends BaseActorTest {
               Mockito.anyList(),
               Mockito.any()))
           .thenReturn(getMemberResponseByGroupIds());
+      when(cassandraOperation.getRecordsByPrimaryKeys(
+              Mockito.anyString(),
+              Matchers.eq(GROUP_MEMBER_TABLE),
+              Mockito.anyList(),
+              Mockito.anyString(),
+              Mockito.anyMap()))
+              .thenReturn(getMemberResponseByGroupIds());
       PowerMockito.mockStatic(HttpClientUtil.class);
       when(HttpClientUtil.post(Mockito.anyString(), Mockito.anyString(), Mockito.anyMap(),Mockito.any()))
           .thenReturn(getUserServiceResponse());
