@@ -182,7 +182,6 @@ public class HttpClientUtilTest {
         Mockito.when(httpClientBuilder.build()).thenReturn(httpClient);
         Mockito.when(HttpClients.custom()).thenReturn(httpClientBuilder);
         HttpClientUtil.getInstance();
-        
         Map<String,Object> reqContext = new HashMap<>();
         reqContext.put("userid","123123123");
         Map<String,String> headers = new HashMap<>();
