@@ -24,12 +24,21 @@ public class GroupUpdateRequestValidator implements IRequestValidator {
     logger.info(request.getContext(),"Validating the update group request "+request.getRequest());
     try {
       ValidationUtil.validateRequestObject(request);
-      ValidationUtil.validateMandatoryParamsWithType(
-              request.getRequest(),
-              Lists.newArrayList(JsonKey.GROUP_ID),
-              String.class,
-              true,
-              JsonKey.REQUEST,request.getContext());
+      if (request.getRequest().containsKey(JsonKey.NAME)) {
+        ValidationUtil.validateMandatoryParamsWithType(
+                request.getRequest(),
+                Lists.newArrayList(JsonKey.GROUP_ID, JsonKey.NAME),
+                String.class,
+                true,
+                JsonKey.REQUEST, request.getContext());
+      } else {
+        ValidationUtil.validateMandatoryParamsWithType(
+                request.getRequest(),
+                Lists.newArrayList(JsonKey.GROUP_ID),
+                String.class,
+                true,
+                JsonKey.REQUEST, request.getContext());
+      }
       ValidationUtil.validateParamsWithType(request.getRequest(),Lists.newArrayList(JsonKey.MEMBERS,JsonKey.ACTIVITIES),
               Map.class,JsonKey.REQUEST,request.getContext());
       validateActivityList(request);
