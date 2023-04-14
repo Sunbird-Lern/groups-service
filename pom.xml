@@ -15,7 +15,7 @@
         <maven.compiler.target>11</maven.compiler.target>
         <jackson.version>2.10.1</jackson.version>
         <akka.x.version>2.5.19</akka.x.version>
-        <junit.version>4.12</junit.version>
+        <junit.version>4.13.1</junit.version>
 
         <version.compiler.plugin>2.3.1</version.compiler.plugin>
         <scoverage.plugin.version>1.1.1</scoverage.plugin.version>
