@@ -48,7 +48,7 @@ public class ActivityConfigReader {
         Class<?> classType = Class.forName((String) config.get("serviceClass"));
         SearchServiceUtil searchServiceUtil = (SearchServiceUtil) classType.newInstance();
         for (String activityType : activityTypeList) {
-          activityServiceConfigMap.put(activityType, searchServiceUtil);
+          activityServiceConfigMap.put(activityType.toLowerCase(), searchServiceUtil);
         }
         serviceTypeFieldsConfigMap.put(
             searchServiceUtil, (List<String>) config.get(JsonKey.FIELDS));
@@ -59,7 +59,7 @@ public class ActivityConfigReader {
   }
 
   public static SearchServiceUtil getServiceUtilClassName(String activityType) {
-    return activityServiceConfigMap.get(activityType);
+    return activityServiceConfigMap.get(activityType.toLowerCase());
   }
 
   public static List<String> getFieldsLists(SearchServiceUtil objectType) {
