@@ -11,6 +11,7 @@
 
 #sunbird_redis_host=''
 #sunbird_redis_port=''
+#sunbird_redis_dbIndex=''
 
 #CONTENT_SERVICE_PORT=''
 
