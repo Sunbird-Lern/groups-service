@@ -1,0 +1,483 @@
+{
+	"info": {
+		"_postman_id": "cf1aae62-523a-4cd1-b27c-1ad5adbd73a3",
+		"name": "Groups_APIs",
+		"description": "The Group APIs is a collection of API's for creation and management of learning groups in sunbird platform.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "4875988",
+		"_collection_link": "https://dark-star-147860.postman.co/workspace/LernBBAPIs~32e17cc4-6806-407e-b8ef-485ad4d0b712/collection/4875988-cf1aae62-523a-4cd1-b27c-1ad5adbd73a3?action=share&source=collection_link&creator=4875988"
+	},
+	"item": [
+		{
+			"name": "HealthCheck",
+			"item": [
+				{
+					"name": "HealthCheck",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{host}}/health"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "AuthToken",
+			"item": [
+				{
+					"name": "UserToken",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let jsonResponse = pm.response.json();",
+									"",
+									"// Set global variable",
+									"// pm.variables.set('refresh_token', jsonResponse.refresh_token);",
+									"// pm.globals.set(\"refresh_token\", jsonResponse.result.identifier);",
+									"pm.collectionVariables.set(\"refresh_token\", jsonResponse.refresh_token);",
+									"// pm.collectionVariables.set(\"variable_key\", \"variable_value\");",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							},
+							{
+								"key": "Cookie",
+								"value": "connect.sid=s%3Ad3chYLP8OfuB2bWgfEFohiWpDxM7GFol.gOPmzH3d2nP9enZ5qSHlVx1e%2BozTleCjXtfz7LUycCk"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "client_id",
+									"value": "{{client_id}}",
+									"type": "text"
+								},
+								{
+									"key": "client_secret",
+									"value": "{{client_secret}}",
+									"type": "text"
+								},
+								{
+									"key": "grant_type",
+									"value": "password",
+									"type": "text"
+								},
+								{
+									"key": "username",
+									"value": "tnorgadmin@yopmail.com",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "Test@123",
+									"type": "text"
+								}
+							]
+						},
+						"url": "{{host}}/auth/realms/sunbird/protocol/openid-connect/token"
+					},
+					"response": []
+				},
+				{
+					"name": "RefreshToken",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Extract the locationId from the response and set it to the environment variable",
+									"pm.test(\"Set access_token in environment variable\", function () {",
+									"    const responseJson = pm.response.json();",
+									"    pm.environment.set(\"keycloak_access_token\", responseJson.result.access_token);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{kong_api_key}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							},
+							{
+								"key": "Cookie",
+								"value": "connect.sid=s%3Ad3chYLP8OfuB2bWgfEFohiWpDxM7GFol.gOPmzH3d2nP9enZ5qSHlVx1e%2BozTleCjXtfz7LUycCk"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "refresh_token",
+									"value": "{{refresh_token}}",
+									"type": "text"
+								}
+							]
+						},
+						"url": "{{host}}/auth/v1/refresh/token"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "CreateGroup",
+			"item": [
+				{
+					"name": "CreateGroup",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Extract the groupId from the response and set it to the environment variable",
+									"pm.test(\"Set groupId in environment variable\", function () {",
+									"    const responseJson = pm.response.json();",
+									"    pm.environment.set(\"group_id\", responseJson.result.groupId);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{kong_api_key}}",
+								"type": "text"
+							},
+							{
+								"key": "X-Authenticated-User-token",
+								"value": "{{keycloak_access_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"request\": {\n        \"name\": \"{{group_name}}\",\n        \"description\": \"{{group_description}}\"\n    }\n}",
+							"options": {
+								"raw": {
+									"headerFamily": "json",
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{host}}/api/group/v1/create",
+						"description": "This API is used to create a group\n   - The endpoint for **Create Group** is `/group/v1/create`  \n   - The fields marked with an asterisk (*) are mandatory. They cannot be null or empty."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "ListGroup",
+			"item": [
+				{
+					"name": "ListGroupsByUser",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{kong_api_key}}",
+								"type": "text"
+							},
+							{
+								"key": "X-Authenticated-User-token",
+								"value": "{{keycloak_access_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"request\": {\n        \"filters\": {\n            \"userId\": \"{{user_id}}\"\n        }\n    }\n}",
+							"options": {
+								"raw": {
+									"headerFamily": "json",
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{host}}/api/group/v1/list",
+						"description": "This API is used for listing groups of a particular user.\n  - The endpoint for **List Group** is `/group/v1/list`\n  - The fields marked with an asterisk (*) are mandatory. They cannot be null or empty."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "UpdateGroup",
+			"item": [
+				{
+					"name": "UpdateGroup",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{kong_api_key}}",
+								"type": "text"
+							},
+							{
+								"key": "X-Authenticated-User-token",
+								"value": "{{keycloak_access_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"request\": {\n        \"groupId\": \"{{group_id}}\",\n        \"name\": \"{{group_name}}\",\n        \"description\": \"{{group_description}}\"\n    }\n}",
+							"options": {
+								"raw": {
+									"headerFamily": "json",
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{host}}/api/group/v1/update",
+						"description": "This API is used for updating the group related details. This can also be used to add/edit/remove members of a group and also to add/remove activitties of a group. This API can add details partially as well, for example, one member in the request could not be added, because that member is inactive or id doesn't exist, still other properties in the request is updated. If a member is not added, only the status of that will be shown in the “errors” array in response.\n  - The endpoint for **Update Group** is `/group/v1/update`\n  - The fields marked with an asterisk (*) are mandatory. They cannot be null or empty.\n  - Once group suspended following operation can only be performed :-\n    1. All member are eligible to leave the group. \n    2. Creator will be able to delete the group.\n    3. Admin will be able to reactivate the group.\n    4. All other operations are not permitted once group is suspended."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "ReadGroup",
+			"item": [
+				{
+					"name": "GetGroupByGroupID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{kong_api_key}}",
+								"type": "text"
+							},
+							{
+								"key": "X-Authenticated-User-token",
+								"value": "{{keycloak_access_token}}",
+								"type": "text"
+							}
+						],
+						"url": "{{host}}/api/group/v1/read/{{group_id}}",
+						"description": "This API is used for getting a specific group, it is based on the unique ID of the group\n  - The endpoint for **Get Group by Group ID** is `/group/v1/read/{groupId}`\n  - The fields marked with an asterisk (*) are mandatory. They cannot be null or empty.\n  - User can pass an optional query parameter 'fields'. The value is a comma separated list of fields whose information is required in response. e.g. fields=members,activities\n  - 'members' is to return all the members of the group.\n  - 'activities' is to return all the activities of the group along with activity information from search service."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "DeleteGroup",
+			"item": [
+				{
+					"name": "DeleteGroupByUser",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{kong_api_key}}",
+								"type": "text"
+							},
+							{
+								"key": "X-Authenticated-User-token",
+								"value": "{{keycloak_access_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"request\": {\n        \"groupId\": \"{{group_id}}\"\n    }\n}",
+							"options": {
+								"raw": {
+									"headerFamily": "json",
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{host}}/api/group/v1/delete",
+						"description": "This API is used for deleting the groups .\n  - The endpoint for **Delete Group** is `/group/v1/delete`\n  - The fields marked with an asterisk (*) are mandatory. They cannot be null or empty.\n  "
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "UpdateGroupMembership",
+			"item": [
+				{
+					"name": "UpdateGroupMembership",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{kong_api_key}}",
+								"type": "text"
+							},
+							{
+								"key": "X-Authenticated-User-token",
+								"value": "{{keycloak_access_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"request\": {\n    \"userId\": \"{{user_id}}\",\n    \"groups\": [\n      {\n        \"groupId\": \"{{group_id}}\",\n        \"visited\": true\n      }\n    ]\n  }\n}"
+						},
+						"url": "{{host}}/api/group/membership/v1/update"
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"function generateRandomGroupName() {",
+					"    const adjectives = ['Advanced', 'Beginner', 'Intermediate', 'Expert', 'Pro', 'Novice', 'Skilled', 'Enthusiastic'];",
+					"    const subjects = ['Math', 'Science', 'History', 'Literature', 'Programming', 'Languages', 'Art', 'Music'];",
+					"    const randomAdjective = adjectives[Math.floor(Math.random() * adjectives.length)];",
+					"    const randomSubject = subjects[Math.floor(Math.random() * subjects.length)];",
+					"    const randomNumber = Math.floor(Math.random() * 1000);",
+					"    ",
+					"    return `${randomAdjective} ${randomSubject} Group ${randomNumber}`;",
+					"}",
+					"",
+					"    if (pm.environment.get(\"environment\") === \"local\") {",
+					"        var baseURL = pm.environment.get(\"host\")",
+					"        pm.variables.set(\"baseURL\", baseURL);",
+					"    } else {",
+					"        var baseURL = pm.environment.get(\"host\") + pm.variables.get(\"basePath\");",
+					"        pm.variables.set(\"baseURL\", baseURL);",
+					"    }",
+					"",
+					"function generateRandomDescription() {",
+					"    const phrases = [",
+					"        'Join this study group to collaborate and learn together.',",
+					"        'In this group, we discuss various topics and share resources.',",
+					"        'Looking for fellow learners to study together? Join us now!',",
+					"        'We focus on interactive learning and knowledge sharing.',",
+					"        'This study group is open to all levels of expertise.'",
+					"    ];",
+					"    ",
+					"    const randomPhrase = phrases[Math.floor(Math.random() * phrases.length)];",
+					"    return randomPhrase;",
+					"}",
+					"",
+					"const groupName = generateRandomGroupName();",
+					"const groupDescription = generateRandomDescription();",
+					"",
+					"pm.environment.set('group_name', groupName);",
+					"pm.environment.set('group_description', groupDescription);"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "refresh_token",
+			"value": ""
+		}
+	]
+}
