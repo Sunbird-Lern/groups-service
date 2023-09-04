@@ -1100,7 +1100,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"request\": {\n        \"groupId\": \"aaaaaaa\",\n        \"name\": \"{{group_name}}\",\n        \"description\": \"{{group_description}}\"\n    }\n}",
+									"raw": "{\n    \"request\": {\n        \"groupId\": \"{{invalid_group_id}}\",\n        \"name\": \"{{group_name}}\",\n        \"description\": \"{{group_description}}\"\n    }\n}",
 									"options": {
 										"raw": {
 											"headerFamily": "json",
@@ -1143,6 +1143,15 @@
 										],
 										"type": "text/javascript"
 									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.globals.set('invalid_group_id', '1aswe3daa');"
+										],
+										"type": "text/javascript"
+									}
 								}
 							],
 							"request": {
@@ -1169,7 +1178,7 @@
 										"type": "text"
 									}
 								],
-								"url": "{{host}}/api/group/v1/read/aaa",
+								"url": "{{host}}/api/group/v1/read/{{invalid_group_id}}",
 								"description": "This API is used for getting a specific group, it is based on the unique ID of the group\n  - The endpoint for **Get Group by Group ID** is `/group/v1/read/{groupId}`\n  - The fields marked with an asterisk (*) are mandatory. They cannot be null or empty.\n  - User can pass an optional query parameter 'fields'. The value is a comma separated list of fields whose information is required in response. e.g. fields=members,activities\n  - 'members' is to return all the members of the group.\n  - 'activities' is to return all the activities of the group along with activity information from search service."
 							},
 							"response": []
@@ -1205,6 +1214,15 @@
 										],
 										"type": "text/javascript"
 									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.globals.set('invalid_group_id', '1aswe3daa');"
+										],
+										"type": "text/javascript"
+									}
 								}
 							],
 							"request": {
@@ -1231,7 +1249,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"request\": {\n        \"groupId\": \"aaaa\"\n    }\n}",
+									"raw": "{\n    \"request\": {\n        \"groupId\": \"{{invalid_group_id}}\"\n    }\n}",
 									"options": {
 										"raw": {
 											"headerFamily": "json",
