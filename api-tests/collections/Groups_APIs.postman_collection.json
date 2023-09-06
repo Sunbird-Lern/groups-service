@@ -85,7 +85,75 @@
 						"header": [],
 						"url": "{{host}}/health"
 					},
-					"response": []
+					"response": [
+						{
+							"name": "HealthCheck",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": "{{host}}/health"
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Wed, 06 Sep 2023 09:51:49 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Vary",
+									"value": "Accept-Encoding"
+								},
+								{
+									"key": "X-DNS-Prefetch-Control",
+									"value": "off"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "SAMEORIGIN"
+								},
+								{
+									"key": "Strict-Transport-Security",
+									"value": "max-age=15552000; includeSubDomains"
+								},
+								{
+									"key": "X-Download-Options",
+									"value": "noopen"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "1; mode=block"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"238-BhInmyWrw6CgIvd/USALPBH9bkQ\""
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "gzip"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": \"portal.Health.API\",\n    \"ver\": \"1.0\",\n    \"ts\": \"2023-09-06T09:51:49.625Z\",\n    \"params\": {\n        \"resmsgid\": \"ffda8690-4c9a-11ee-b391-6fa19702090c\",\n        \"msgid\": \"ffd7ee80-4c9a-11ee-b391-6fa19702090c\",\n        \"status\": \"successful\",\n        \"err\": null,\n        \"errmsg\": null\n    },\n    \"responseCode\": \"OK\",\n    \"result\": {\n        \"name\": \"PortalHealthCheckService\",\n        \"version\": \"1.0\",\n        \"healthy\": false,\n        \"check\": [\n            {\n                \"name\": \"contentservice.api\",\n                \"err\": \"CONTENT_SERVICE_HEALTH_FAILED\",\n                \"errmsg\": \"content service is not healthy\"\n            },\n            {\n                \"name\": \"learnerservice.api\",\n                \"healthy\": true,\n                \"err\": \"\",\n                \"errmsg\": \"\"\n            },\n            {\n                \"name\": \"cassandra.db\",\n                \"healthy\": true,\n                \"err\": \"\",\n                \"errmsg\": \"\"\n            }\n        ]\n    }\n}"
+						}
+					]
 				}
 			]
 		},
@@ -145,12 +213,12 @@
 							"urlencoded": [
 								{
 									"key": "client_id",
-									"value": "{{client_id}}",
+									"value": "{{auth_client_id}}",
 									"type": "text"
 								},
 								{
 									"key": "client_secret",
-									"value": "{{client_secret}}",
+									"value": "{{auth_client_secret}}",
 									"type": "text"
 								},
 								{
@@ -172,7 +240,98 @@
 						},
 						"url": "{{host}}/auth/realms/sunbird/protocol/openid-connect/token"
 					},
-					"response": []
+					"response": [
+						{
+							"name": "UserToken",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/x-www-form-urlencoded"
+									},
+									{
+										"key": "Cookie",
+										"value": "connect.sid=s%3Ad3chYLP8OfuB2bWgfEFohiWpDxM7GFol.gOPmzH3d2nP9enZ5qSHlVx1e%2BozTleCjXtfz7LUycCk"
+									}
+								],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "client_id",
+											"value": "{{auth_client_id}}",
+											"type": "text"
+										},
+										{
+											"key": "client_secret",
+											"value": "{{auth_client_secret}}",
+											"type": "text"
+										},
+										{
+											"key": "grant_type",
+											"value": "password",
+											"type": "text"
+										},
+										{
+											"key": "username",
+											"value": "{{username}}",
+											"type": "text"
+										},
+										{
+											"key": "password",
+											"value": "{{password}}",
+											"type": "text"
+										}
+									]
+								},
+								"url": "{{host}}/auth/realms/sunbird/protocol/openid-connect/token"
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Wed, 06 Sep 2023 09:52:18 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Vary",
+									"value": "Accept-Encoding"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-store"
+								},
+								{
+									"key": "Set-Cookie",
+									"value": "KC_RESTART=; Version=1; Expires=Thu, 01-Jan-1970 00:00:10 GMT; Max-Age=0; Path=/auth/realms/sunbird/; HttpOnly"
+								},
+								{
+									"key": "Pragma",
+									"value": "no-cache"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "gzip"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"access_token\": \"eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJsclI0MWpJNndlZmZoQldnaUpHSjJhNlowWDFHaE53a21IU3pzdzE0R0MwIn0.eyJqdGkiOiI5ZGUwNjVmNy00YzhlLTQwNTctOGNlOS01NGRkZDY1NWRkNmYiLCJleHAiOjE2OTQwODAzMzgsIm5iZiI6MCwiaWF0IjoxNjkzOTkzOTM4LCJpc3MiOiJodHRwczovL2Rldi5zdW5iaXJkZWQub3JnL2F1dGgvcmVhbG1zL3N1bmJpcmQiLCJhdWQiOiJhY2NvdW50Iiwic3ViIjoiZjo1YThhM2YyYi0zNDA5LTQyZTAtOTAwMS1mOTEzYmMwZmRlMzE6ODRjZmUwNjgtOTRmMS00NjgxLTk4ZjktMGMxYTMyMzliNTVmIiwidHlwIjoiQmVhcmVyIiwiYXpwIjoicHJvamVjdC1zdW5iaXJkLWRldi1jbGllbnQiLCJhdXRoX3RpbWUiOjAsInNlc3Npb25fc3RhdGUiOiIzYmVhMDVlMy1jNzc1LTQ5MWQtOGUzYi0xYTM4NTBmOWRjNDgiLCJhY3IiOiIxIiwiYWxsb3dlZC1vcmlnaW5zIjpbImh0dHBzOi8vZGV2LnN1bmJpcmRlZC5vcmciXSwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbIm9mZmxpbmVfYWNjZXNzIiwidW1hX2F1dGhvcml6YXRpb24iXX0sInJlc291cmNlX2FjY2VzcyI6eyJhY2NvdW50Ijp7InJvbGVzIjpbIm1hbmFnZS1hY2NvdW50IiwibWFuYWdlLWFjY291bnQtbGlua3MiLCJ2aWV3LXByb2ZpbGUiXX19LCJzY29wZSI6IiIsIm5hbWUiOiJJc2FiZWxsYSBKb25lcyIsInByZWZlcnJlZF91c2VybmFtZSI6InRlc3R1c2VyX3U4NTZtaSIsImdpdmVuX25hbWUiOiJJc2FiZWxsYSIsImZhbWlseV9uYW1lIjoiSm9uZXMiLCJlbWFpbCI6InRlKioqKioqKioqKioqKkB5b3BtYWlsLmNvbSJ9.P2NOpx0Gi0sa-smUty1e2sUL-1pr_-8ayKYDSr1_QKPJ9lCoMDOd4iCVg9Y6srbAJZqSIGXjXPtlpY3-FbM0919lO58t5JYW8Egey-BNEEuQaZnWkR6nKvJBfOV4bFdYj1jXDIyNgNiA2nqqv3-v7CjgQdkZmpnZqT_dUBo5cAvo2Rqwh8lGUVNVilB-RZaHdP7UrITEn_NxlzWvCtnNdt8XpZk1vX7Sor3MYOFLW-E-qZ90fpXrBlLH-TZFCDu_zbq7II3vYGfOIcz0FfUL8Myp3Py8M6xiYe_U3dbf9TOBdD2xV0dm4jLqP3QbnpercPWqks0xCk4G9HU_Civ6zw\",\n    \"expires_in\": 86400,\n    \"refresh_expires_in\": 86400,\n    \"refresh_token\": \"eyJhbGciOiJIUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJjNzlhOWFiYS0xYWZmLTQ1OTktYjhlNy02MzJmOTJmM2RiZmMifQ.eyJqdGkiOiI3ZTAwMThiZS1kNWMxLTRhYTMtYjMwZS1hYTg4YWU0MzI4NzciLCJleHAiOjE2OTQwODAzMzgsIm5iZiI6MCwiaWF0IjoxNjkzOTkzOTM4LCJpc3MiOiJodHRwczovL2Rldi5zdW5iaXJkZWQub3JnL2F1dGgvcmVhbG1zL3N1bmJpcmQiLCJhdWQiOiJodHRwczovL2Rldi5zdW5iaXJkZWQub3JnL2F1dGgvcmVhbG1zL3N1bmJpcmQiLCJzdWIiOiJmOjVhOGEzZjJiLTM0MDktNDJlMC05MDAxLWY5MTNiYzBmZGUzMTo4NGNmZTA2OC05NGYxLTQ2ODEtOThmOS0wYzFhMzIzOWI1NWYiLCJ0eXAiOiJSZWZyZXNoIiwiYXpwIjoicHJvamVjdC1zdW5iaXJkLWRldi1jbGllbnQiLCJhdXRoX3RpbWUiOjAsInNlc3Npb25fc3RhdGUiOiIzYmVhMDVlMy1jNzc1LTQ5MWQtOGUzYi0xYTM4NTBmOWRjNDgiLCJyZWFsbV9hY2Nlc3MiOnsicm9sZXMiOlsib2ZmbGluZV9hY2Nlc3MiLCJ1bWFfYXV0aG9yaXphdGlvbiJdfSwicmVzb3VyY2VfYWNjZXNzIjp7ImFjY291bnQiOnsicm9sZXMiOlsibWFuYWdlLWFjY291bnQiLCJtYW5hZ2UtYWNjb3VudC1saW5rcyIsInZpZXctcHJvZmlsZSJdfX0sInNjb3BlIjoiIn0.BgoenMGuHRkVtqCmnFsPzMcgEw91LAAxE-IOhI43BmM\",\n    \"token_type\": \"bearer\",\n    \"not-before-policy\": 1601871784,\n    \"session_state\": \"3bea05e3-c775-491d-8e3b-1a3850f9dc48\",\n    \"scope\": \"\"\n}"
+						}
+					]
 				},
 				{
 					"name": "RefreshToken",
@@ -269,7 +428,98 @@
 						},
 						"url": "{{host}}/auth/v1/refresh/token"
 					},
-					"response": []
+					"response": [
+						{
+							"name": "RefreshToken",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{kong_api_key}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/x-www-form-urlencoded"
+									},
+									{
+										"key": "Cookie",
+										"value": "connect.sid=s%3Ad3chYLP8OfuB2bWgfEFohiWpDxM7GFol.gOPmzH3d2nP9enZ5qSHlVx1e%2BozTleCjXtfz7LUycCk"
+									}
+								],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "refresh_token",
+											"value": "{{refresh_token}}",
+											"type": "text"
+										}
+									]
+								},
+								"url": "{{host}}/auth/v1/refresh/token"
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Wed, 06 Sep 2023 09:52:25 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json;charset=UTF-8"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Vary",
+									"value": "Accept-Encoding"
+								},
+								{
+									"key": "X-RateLimit-Limit-hour",
+									"value": "100"
+								},
+								{
+									"key": "X-RateLimit-Remaining-hour",
+									"value": "97"
+								},
+								{
+									"key": "X-Application-Context",
+									"value": "application:production:4000"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "X-Kong-Upstream-Latency",
+									"value": "12"
+								},
+								{
+									"key": "X-Kong-Proxy-Latency",
+									"value": "7"
+								},
+								{
+									"key": "Via",
+									"value": "kong/0.14.1"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "gzip"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": \"api.refresh.token\",\n    \"ver\": \"1.0\",\n    \"ts\": 1693993945100,\n    \"params\": {\n        \"resmsgid\": \"aca92686-9b47-4c26-95a5-cebe95684c16\",\n        \"status\": \"successful\",\n        \"err\": null,\n        \"errmsg\": null\n    },\n    \"result\": {\n        \"access_token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6ImFjY2Vzc3YxX2tleTIifQ.eyJhdWQiOiJodHRwczovL2Rldi5zdW5iaXJkZWQub3JnL2F1dGgvcmVhbG1zL3N1bmJpcmQiLCJzdWIiOiJmOjVhOGEzZjJiLTM0MDktNDJlMC05MDAxLWY5MTNiYzBmZGUzMTo4NGNmZTA2OC05NGYxLTQ2ODEtOThmOS0wYzFhMzIzOWI1NWYiLCJyb2xlcyI6W3sicm9sZSI6IlBVQkxJQyIsInNjb3BlIjpbXX1dLCJpc3MiOiJodHRwczovL2Rldi5zdW5iaXJkZWQub3JnL2F1dGgvcmVhbG1zL3N1bmJpcmQiLCJ0eXAiOiJCZWFyZXIiLCJleHAiOjE2OTQwMzcxNDUsImlhdCI6MTY5Mzk5Mzk0NX0.OqkuN4GkkcYglUEtd5hMIhlAsOgehr5uMADJfEgMadaTuRfxhDfxvS-DSC4Y22X1-sO_Gqg5PAZ2ZsexJSRHk9WZ1RA9ZEI8xdRQzOCiDd8geIjkdmqZ_di-bR2UTlkbobitCkpo-rwSNLRX6mls9B3kGaPkVBol3uqzpILKfRKbTBuM_4z_rOiY3mtL6lzOPgR4c7hhOd5xQYMCMPYbAdMlGCdLM5e4T64VcdoEKKQvEG4efRV9waf2pkxqXuFU7m6hRdBWFLQML1W22SIxsb7T3XMdI5r7bbzNLdNFoIPwK-A4G56heSvINXfn6wQ-7w_S1puxYyKxECP5lx0CYg\",\n        \"expires_in\": 43200,\n        \"refresh_expires_in\": 86393,\n        \"refresh_token\": \"eyJhbGciOiJIUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJjNzlhOWFiYS0xYWZmLTQ1OTktYjhlNy02MzJmOTJmM2RiZmMifQ.eyJqdGkiOiI3ZTAwMThiZS1kNWMxLTRhYTMtYjMwZS1hYTg4YWU0MzI4NzciLCJleHAiOjE2OTQwODAzMzgsIm5iZiI6MCwiaWF0IjoxNjkzOTkzOTM4LCJpc3MiOiJodHRwczovL2Rldi5zdW5iaXJkZWQub3JnL2F1dGgvcmVhbG1zL3N1bmJpcmQiLCJhdWQiOiJodHRwczovL2Rldi5zdW5iaXJkZWQub3JnL2F1dGgvcmVhbG1zL3N1bmJpcmQiLCJzdWIiOiJmOjVhOGEzZjJiLTM0MDktNDJlMC05MDAxLWY5MTNiYzBmZGUzMTo4NGNmZTA2OC05NGYxLTQ2ODEtOThmOS0wYzFhMzIzOWI1NWYiLCJ0eXAiOiJSZWZyZXNoIiwiYXpwIjoicHJvamVjdC1zdW5iaXJkLWRldi1jbGllbnQiLCJhdXRoX3RpbWUiOjAsInNlc3Npb25fc3RhdGUiOiIzYmVhMDVlMy1jNzc1LTQ5MWQtOGUzYi0xYTM4NTBmOWRjNDgiLCJyZWFsbV9hY2Nlc3MiOnsicm9sZXMiOlsib2ZmbGluZV9hY2Nlc3MiLCJ1bWFfYXV0aG9yaXphdGlvbiJdfSwicmVzb3VyY2VfYWNjZXNzIjp7ImFjY291bnQiOnsicm9sZXMiOlsibWFuYWdlLWFjY291bnQiLCJtYW5hZ2UtYWNjb3VudC1saW5rcyIsInZpZXctcHJvZmlsZSJdfX0sInNjb3BlIjoiIn0.BgoenMGuHRkVtqCmnFsPzMcgEw91LAAxE-IOhI43BmM\"\n    }\n}"
+						}
+					]
 				}
 			]
 		},
@@ -380,7 +630,94 @@
 						"url": "{{host}}/api/group/v1/create",
 						"description": "This API is used to create a group\n   - The endpoint for **Create Group** is `/group/v1/create`  \n   - The fields marked with an asterisk (*) are mandatory. They cannot be null or empty."
 					},
-					"response": []
+					"response": [
+						{
+							"name": "CreateGroup",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{kong_api_key}}",
+										"type": "text"
+									},
+									{
+										"key": "X-Authenticated-User-token",
+										"value": "{{keycloak_access_token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"request\": {\n        \"name\": \"{{group_name}}\",\n        \"description\": \"{{group_description}}\"\n    }\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{host}}/api/group/v1/create"
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Wed, 06 Sep 2023 09:51:17 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Content-Length",
+									"value": "165"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "X-RateLimit-Limit-hour",
+									"value": "30000"
+								},
+								{
+									"key": "X-RateLimit-Remaining-hour",
+									"value": "29991"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "X-Kong-Upstream-Latency",
+									"value": "17"
+								},
+								{
+									"key": "X-Kong-Proxy-Latency",
+									"value": "14"
+								},
+								{
+									"key": "Via",
+									"value": "kong/0.14.1"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": \"api.group.create\",\n    \"ver\": \"v1\",\n    \"ts\": \"2023-09-06 09:51:17:026+0000\",\n    \"params\": null,\n    \"result\": {\n        \"groupId\": \"37100e96-bc78-42f4-a873-ec30a1bf725a\"\n    },\n    \"responseCode\": 200\n}"
+						}
+					]
 				}
 			]
 		},
@@ -479,7 +816,102 @@
 						"url": "{{host}}/api/group/v1/list",
 						"description": "This API is used for listing groups of a particular user.\n  - The endpoint for **List Group** is `/group/v1/list`\n  - The fields marked with an asterisk (*) are mandatory. They cannot be null or empty."
 					},
-					"response": []
+					"response": [
+						{
+							"name": "ListGroupsByUser",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{kong_api_key}}",
+										"type": "text"
+									},
+									{
+										"key": "X-Authenticated-User-token",
+										"value": "{{keycloak_access_token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"request\": {\n        \"filters\": {\n            \"userId\": \"{{user_id}}\"\n        }\n    }\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{host}}/api/group/v1/list"
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Wed, 06 Sep 2023 09:51:21 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Vary",
+									"value": "Accept-Encoding"
+								},
+								{
+									"key": "X-RateLimit-Limit-hour",
+									"value": "30000"
+								},
+								{
+									"key": "X-RateLimit-Remaining-hour",
+									"value": "29990"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "X-Kong-Upstream-Latency",
+									"value": "14"
+								},
+								{
+									"key": "X-Kong-Proxy-Latency",
+									"value": "1"
+								},
+								{
+									"key": "Via",
+									"value": "kong/0.14.1"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "gzip"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": \"api.group.list\",\n    \"ver\": \"v1\",\n    \"ts\": \"2023-09-06 09:51:21:856+0000\",\n    \"params\": null,\n    \"result\": {\n        \"group\": [\n            {\n                \"id\": \"37100e96-bc78-42f4-a873-ec30a1bf725a\",\n                \"name\": \"Expert Literature Group 718\",\n                \"description\": \"Join this study group to collaborate and learn together.\",\n                \"status\": \"active\",\n                \"membershipType\": \"invite_only\",\n                \"createdOn\": \"2023-09-06 09:51:17:016+0000\",\n                \"createdBy\": \"84cfe068-94f1-4681-98f9-0c1a3239b55f\",\n                \"memberRole\": \"admin\",\n                \"visited\": true\n            },\n            {\n                \"id\": \"5b4cfc68-5bab-4236-a0aa-981b64d47179\",\n                \"name\": \"Pro Science Group 179\",\n                \"status\": \"active\",\n                \"membershipType\": \"invite_only\",\n                \"createdOn\": \"2023-09-06 09:50:40:640+0000\",\n                \"createdBy\": \"84cfe068-94f1-4681-98f9-0c1a3239b55f\",\n                \"memberRole\": \"admin\",\n                \"visited\": true\n            },\n            {\n                \"id\": \"7e0f951e-b397-4aef-aedd-8337acd3cea3\",\n                \"name\": \"Expert Literature Group 668\",\n                \"status\": \"active\",\n                \"membershipType\": \"invite_only\",\n                \"createdOn\": \"2023-09-06 09:17:45:945+0000\",\n                \"createdBy\": \"84cfe068-94f1-4681-98f9-0c1a3239b55f\",\n                \"memberRole\": \"admin\",\n                \"visited\": true\n            }\n        ]\n    },\n    \"responseCode\": 200\n}"
+						}
+					]
 				}
 			]
 		},
@@ -585,7 +1017,94 @@
 						"url": "{{host}}/api/group/v1/update",
 						"description": "This API is used for updating the group related details. This can also be used to add/edit/remove members of a group and also to add/remove activitties of a group. This API can add details partially as well, for example, one member in the request could not be added, because that member is inactive or id doesn't exist, still other properties in the request is updated. If a member is not added, only the status of that will be shown in the “errors” array in response.\n  - The endpoint for **Update Group** is `/group/v1/update`\n  - The fields marked with an asterisk (*) are mandatory. They cannot be null or empty.\n  - Once group suspended following operation can only be performed :-\n    1. All member are eligible to leave the group. \n    2. Creator will be able to delete the group.\n    3. Admin will be able to reactivate the group.\n    4. All other operations are not permitted once group is suspended."
 					},
-					"response": []
+					"response": [
+						{
+							"name": "UpdateGroup",
+							"originalRequest": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{kong_api_key}}",
+										"type": "text"
+									},
+									{
+										"key": "X-Authenticated-User-token",
+										"value": "{{keycloak_access_token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"request\": {\n        \"groupId\": \"{{group_id}}\",\n        \"name\": \"{{group_name}}\",\n        \"description\": \"{{group_description}}\"\n    }\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{host}}/api/group/v1/update"
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Wed, 06 Sep 2023 09:51:26 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Content-Length",
+									"value": "137"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "X-RateLimit-Limit-hour",
+									"value": "30000"
+								},
+								{
+									"key": "X-RateLimit-Remaining-hour",
+									"value": "29987"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "X-Kong-Upstream-Latency",
+									"value": "15"
+								},
+								{
+									"key": "X-Kong-Proxy-Latency",
+									"value": "6"
+								},
+								{
+									"key": "Via",
+									"value": "kong/0.14.1"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": \"api.group.update\",\n    \"ver\": \"v1\",\n    \"ts\": \"2023-09-06 09:51:26:562+0000\",\n    \"params\": null,\n    \"result\": {\n        \"response\": \"success\"\n    },\n    \"responseCode\": 200\n}"
+						}
+					]
 				}
 			]
 		},
@@ -672,7 +1191,92 @@
 						"url": "{{host}}/api/group/v1/read/{{group_id}}",
 						"description": "This API is used for getting a specific group, it is based on the unique ID of the group\n  - The endpoint for **Get Group by Group ID** is `/group/v1/read/{groupId}`\n  - The fields marked with an asterisk (*) are mandatory. They cannot be null or empty.\n  - User can pass an optional query parameter 'fields'. The value is a comma separated list of fields whose information is required in response. e.g. fields=members,activities\n  - 'members' is to return all the members of the group.\n  - 'activities' is to return all the activities of the group along with activity information from search service."
 					},
-					"response": []
+					"response": [
+						{
+							"name": "GetGroupByGroupID",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{kong_api_key}}",
+										"type": "text"
+									},
+									{
+										"key": "X-Authenticated-User-token",
+										"value": "{{keycloak_access_token}}",
+										"type": "text"
+									}
+								],
+								"url": "{{host}}/api/group/v1/read/{{group_id}}"
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Wed, 06 Sep 2023 09:51:32 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Vary",
+									"value": "Accept-Encoding"
+								},
+								{
+									"key": "X-RateLimit-Limit-hour",
+									"value": "30000"
+								},
+								{
+									"key": "X-RateLimit-Remaining-hour",
+									"value": "29993"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "X-Kong-Upstream-Latency",
+									"value": "8"
+								},
+								{
+									"key": "X-Kong-Proxy-Latency",
+									"value": "7"
+								},
+								{
+									"key": "Via",
+									"value": "kong/0.14.1"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "gzip"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": \"api.group.read\",\n    \"ver\": \"v1\",\n    \"ts\": \"2023-09-06 09:51:32:009+0000\",\n    \"params\": null,\n    \"result\": {\n        \"membershipType\": \"invite_only\",\n        \"updatedBy\": \"84cfe068-94f1-4681-98f9-0c1a3239b55f\",\n        \"createdBy\": \"84cfe068-94f1-4681-98f9-0c1a3239b55f\",\n        \"activities\": [],\n        \"name\": \"Enthusiastic Art Group 725\",\n        \"description\": \"Join this study group to collaborate and learn together.\",\n        \"id\": \"37100e96-bc78-42f4-a873-ec30a1bf725a\",\n        \"updatedOn\": \"2023-09-06 09:51:26:556+0000\",\n        \"createdOn\": \"2023-09-06 09:51:17:016+0000\",\n        \"status\": \"active\"\n    },\n    \"responseCode\": 200\n}"
+						}
+					]
 				}
 			]
 		},
@@ -777,7 +1381,89 @@
 						"url": "{{host}}/api/group/v1/delete",
 						"description": "This API is used for deleting the groups .\n  - The endpoint for **Delete Group** is `/group/v1/delete`\n  - The fields marked with an asterisk (*) are mandatory. They cannot be null or empty.\n  "
 					},
-					"response": []
+					"response": [
+						{
+							"name": "DeleteGroupByUser",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{kong_api_key}}",
+										"type": "text"
+									},
+									{
+										"key": "X-Authenticated-User-token",
+										"value": "{{keycloak_access_token}}",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"request\": {\n        \"groupId\": \"{{group_id}}\"\n    }\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{host}}/api/group/v1/delete"
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Wed, 06 Sep 2023 09:51:37 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Content-Length",
+									"value": "137"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "X-RateLimit-Limit-hour",
+									"value": "30000"
+								},
+								{
+									"key": "X-RateLimit-Remaining-hour",
+									"value": "29993"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "X-Kong-Upstream-Latency",
+									"value": "18"
+								},
+								{
+									"key": "X-Kong-Proxy-Latency",
+									"value": "11"
+								},
+								{
+									"key": "Via",
+									"value": "kong/0.14.1"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": \"api.group.delete\",\n    \"ver\": \"v1\",\n    \"ts\": \"2023-09-06 09:51:37:090+0000\",\n    \"params\": null,\n    \"result\": {\n        \"response\": \"SUCCESS\"\n    },\n    \"responseCode\": 200\n}"
+						}
+					]
 				}
 			]
 		},
@@ -786,8 +1472,35 @@
 			"item": [
 				{
 					"name": "UpdateGroupMembership",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let jsonResponse = pm.response.json();",
+									"",
+									"// Verification",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"// Verify responseCode",
+									"pm.test(\"responseCode should be '200'\", function () {",
+									"    pm.expect(jsonResponse.responseCode).to.eql(200);",
+									"});",
+									"",
+									"// Verify result.response",
+									"pm.test(\"result.response should be 'SUCCESS'\", function () {",
+									"    pm.expect(jsonResponse.result.response).to.eql(\"SUCCESS\");",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
-						"method": "POST",
+						"method": "PATCH",
 						"header": [
 							{
 								"key": "Accept",
@@ -816,7 +1529,88 @@
 						},
 						"url": "{{host}}/api/group/membership/v1/update"
 					},
-					"response": []
+					"response": [
+						{
+							"name": "UpdateGroupMembership",
+							"originalRequest": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{kong_api_key}}",
+										"type": "text"
+									},
+									{
+										"key": "X-Authenticated-User-token",
+										"value": "{{keycloak_access_token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"request\": {\n    \"userId\": \"{{user_id}}\",\n    \"groups\": [\n      {\n        \"groupId\": \"{{group_id}}\",\n        \"visited\": true\n      }\n    ]\n  }\n}"
+								},
+								"url": "{{host}}/api/group/membership/v1/update"
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Wed, 06 Sep 2023 09:51:41 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Content-Length",
+									"value": "148"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "X-RateLimit-Limit-hour",
+									"value": "30000"
+								},
+								{
+									"key": "X-RateLimit-Remaining-hour",
+									"value": "29973"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "X-Kong-Upstream-Latency",
+									"value": "9"
+								},
+								{
+									"key": "X-Kong-Proxy-Latency",
+									"value": "0"
+								},
+								{
+									"key": "Via",
+									"value": "kong/0.14.1"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": \"api.group.membership.update\",\n    \"ver\": \"v1\",\n    \"ts\": \"2023-09-06 09:51:41:765+0000\",\n    \"params\": null,\n    \"result\": {\n        \"response\": \"SUCCESS\"\n    },\n    \"responseCode\": 200\n}"
+						}
+					]
 				}
 			]
 		}

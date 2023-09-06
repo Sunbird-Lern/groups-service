@@ -1,0 +1,3714 @@
+{
+	"info": {
+		"_postman_id": "9f8adfcf-f42f-4d10-8c09-d0fc4339b206",
+		"name": "Groups_APIs Test",
+		"description": "The Group APIs is a collection of API's for creation and management of learning groups in sunbird platform.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "4875988",
+		"_collection_link": "https://dark-star-147860.postman.co/workspace/LernBBAPIs~32e17cc4-6806-407e-b8ef-485ad4d0b712/collection/4875988-9f8adfcf-f42f-4d10-8c09-d0fc4339b206?action=share&source=collection_link&creator=4875988"
+	},
+	"item": [
+		{
+			"name": "HealthCheck",
+			"item": [
+				{
+					"name": "HealthCheck",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let jsonResponse = pm.response.json();",
+									"",
+									"// Verification",
+									"pm.test(\"Status code is 200\", () => {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Content-Type header is present\", () => {",
+									"    pm.response.to.have.header(\"Content-Type\");",
+									"});",
+									"",
+									"pm.test(\"Content-Type header is application/json\", () => {",
+									"    pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json');",
+									"});",
+									"",
+									"pm.test(\"Test data type of the response and keys\", () => {",
+									"    pm.expect(jsonResponse).to.be.an(\"object\").that.has.all.keys(",
+									"        'id', 'ver', 'ts', 'params', 'responseCode', 'result'",
+									"    );",
+									"",
+									"    pm.expect(jsonResponse.id).to.be.a(\"string\");",
+									"    pm.expect(jsonResponse.ver).to.be.a(\"string\");",
+									"    pm.expect(jsonResponse.ts).to.be.a(\"string\");",
+									"    pm.expect(jsonResponse.responseCode).to.be.a(\"string\");",
+									"",
+									"    pm.expect(jsonResponse.params).to.be.an(\"object\").that.has.all.keys(",
+									"        'resmsgid', 'msgid', 'status', 'err', 'errmsg'",
+									"    );",
+									"",
+									"    pm.expect(jsonResponse.params.resmsgid).to.be.a(\"string\");",
+									"    pm.expect(jsonResponse.params.msgid).to.be.a(\"string\");",
+									"    pm.expect(jsonResponse.params.status).to.be.a(\"string\");",
+									"    pm.expect(jsonResponse.params.err).to.be.null;",
+									"    pm.expect(jsonResponse.params.errmsg).to.be.null;",
+									"",
+									"    pm.expect(jsonResponse.result).to.be.an(\"object\").that.has.all.keys(",
+									"        'name', 'version', 'healthy', 'check'",
+									"    );",
+									"",
+									"    pm.expect(jsonResponse.result.name).to.be.a(\"string\");",
+									"    pm.expect(jsonResponse.result.version).to.be.a(\"string\");",
+									"    pm.expect(jsonResponse.result.healthy).to.be.a(\"boolean\");",
+									"    pm.expect(jsonResponse.result.check).to.be.an(\"array\");",
+									"});",
+									"",
+									"// Validation",
+									"pm.test(\"id should be portal.Health.API\", function () {",
+									"    pm.expect(jsonResponse.id).to.eql(\"portal.Health.API\");",
+									"});",
+									"",
+									"pm.test(\"ver should be 1.0\", function () {",
+									"    pm.expect(jsonResponse.ver).to.eql(\"1.0\");",
+									"});",
+									"",
+									"pm.test(\"responseCode should be OK\", function () {",
+									"    pm.expect(jsonResponse.responseCode).to.eql(\"OK\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{host}}/health"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "AuthToken",
+			"item": [
+				{
+					"name": "UserToken",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let jsonResponse = pm.response.json();",
+									"",
+									"// Set global variable",
+									"// pm.variables.set('refresh_token', jsonResponse.refresh_token);",
+									"// pm.globals.set(\"refresh_token\", jsonResponse.result.identifier);",
+									"pm.collectionVariables.set(\"refresh_token\", jsonResponse.refresh_token);",
+									"// pm.collectionVariables.set(\"variable_key\", \"variable_value\");",
+									"",
+									"// Verification",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Content-Type header is application/json\", () => {",
+									"    pm.expect(pm.response.headers.get('Content-Type')).to.eql('application/json');",
+									"});",
+									"",
+									"pm.test(\"Access token is present\", () => {",
+									"    pm.expect(jsonResponse).to.have.property('access_token');",
+									"});",
+									"",
+									"pm.test(\"Token type is bearer\", () => {",
+									"    pm.expect(jsonResponse.token_type).to.eql('bearer');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "client_id",
+									"value": "{{auth_client_id}}",
+									"type": "text"
+								},
+								{
+									"key": "client_secret",
+									"value": "{{auth_client_secret}}",
+									"type": "text"
+								},
+								{
+									"key": "grant_type",
+									"value": "password",
+									"type": "text"
+								},
+								{
+									"key": "username",
+									"value": "{{username}}",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "{{password}}",
+									"type": "text"
+								}
+							]
+						},
+						"url": "{{host}}/auth/realms/sunbird/protocol/openid-connect/token"
+					},
+					"response": []
+				},
+				{
+					"name": "RefreshToken",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Extract the locationId from the response and set it to the environment variable",
+									"pm.test(\"Set access_token in environment variable\", function () {",
+									"    const responseJson = pm.response.json();",
+									"    pm.environment.set(\"keycloak_access_token\", responseJson.result.access_token);",
+									"});",
+									"",
+									"let jsonResponse = pm.response.json();",
+									"",
+									"// Verification",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Content-Type header is application/json\", () => {",
+									"    pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json');",
+									"});",
+									"",
+									"// Validation",
+									"pm.test(\"id should be api.refresh.token\", function () {",
+									"   pm.expect(jsonResponse.id).to.eql(\"api.refresh.token\");",
+									"});",
+									"",
+									"pm.test(\"ver should be 1.0\", function () {",
+									"   pm.expect(jsonResponse.ver).to.eql(\"1.0\");",
+									"});",
+									"",
+									"pm.test(\"params.status should be successful\", function () {",
+									"    pm.expect(jsonResponse.params.status).to.eql(\"successful\");",
+									"});",
+									"",
+									"// Validate result properties",
+									"pm.test(\"result should have necessary properties\", function () {",
+									"    pm.expect(jsonResponse.result).to.have.property(\"access_token\");",
+									"    pm.expect(jsonResponse.result).to.have.property(\"expires_in\");",
+									"    pm.expect(jsonResponse.result).to.have.property(\"refresh_expires_in\");",
+									"    pm.expect(jsonResponse.result).to.have.property(\"refresh_token\");",
+									"});",
+									"",
+									"// Additional validation for specific properties",
+									"pm.test(\"access_token should be a non-empty string\", function () {",
+									"    pm.expect(jsonResponse.result.access_token).to.be.a(\"string\").and.not.empty;",
+									"});",
+									"",
+									"pm.test(\"expires_in should be a positive number\", function () {",
+									"    pm.expect(jsonResponse.result.expires_in).to.be.a(\"number\").and.above(0);",
+									"});",
+									"",
+									"pm.test(\"refresh_expires_in should be a positive number\", function () {",
+									"    pm.expect(jsonResponse.result.refresh_expires_in).to.be.a(\"number\").and.above(0);",
+									"});",
+									"",
+									"pm.test(\"refresh_token should be a non-empty string\", function () {",
+									"    pm.expect(jsonResponse.result.refresh_token).to.be.a(\"string\").and.not.empty;",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{kong_api_key}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "refresh_token",
+									"value": "{{refresh_token}}",
+									"type": "text"
+								}
+							]
+						},
+						"url": "{{host}}/auth/v1/refresh/token"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "CreateGroup",
+			"item": [
+				{
+					"name": "Positive",
+					"item": [
+						{
+							"name": "200 - With minimum required input",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Extract the groupId from the response and set it to the environment variable",
+											"pm.test(\"Set groupId in environment variable\", function () {",
+											"    const responseJson = pm.response.json();",
+											"    pm.environment.set(\"group_id\", responseJson.result.groupId);",
+											"});",
+											"",
+											"let jsonResponse = pm.response.json();",
+											"",
+											"// Verification",
+											"pm.test(\"Status code is 200\", () => {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.test(\"Content-Type header is present\", () => {",
+											"    pm.response.to.have.header(\"Content-Type\");",
+											"});",
+											"",
+											"pm.test(\"Content-Type header is application/json\", () => {",
+											"    pm.expect(pm.response.headers.get('Content-Type')).to.eql('application/json');",
+											"});",
+											"",
+											"pm.test(\"Test data type of the response and keys\", () => {",
+											"    pm.expect(jsonResponse).to.be.an(\"object\").that.has.all.keys(",
+											"        'id', 'ver', 'ts', 'params', 'result', 'responseCode'",
+											"    );",
+											"",
+											"    pm.expect(jsonResponse.id).to.be.a(\"string\");",
+											"    pm.expect(jsonResponse.ver).to.be.a(\"string\");",
+											"    pm.expect(jsonResponse.ts).to.be.a(\"string\");",
+											"    pm.expect(jsonResponse.responseCode).to.be.a(\"number\");",
+											"",
+											"    pm.expect(jsonResponse.params).to.be.null;",
+											"",
+											"    pm.expect(jsonResponse.result).to.be.an(\"object\").that.has.all.keys(",
+											"        'groupId'",
+											"    );",
+											"",
+											"    pm.expect(jsonResponse.result.groupId).to.be.a(\"string\");",
+											"});",
+											"",
+											"// Validation",
+											"pm.test(\"id should be api.group.create\", function () {",
+											"    pm.expect(jsonResponse.id).to.eql(\"api.group.create\");",
+											"});",
+											"",
+											"pm.test(\"ver should be v1\", function () {",
+											"    pm.expect(jsonResponse.ver).to.eql(\"v1\");",
+											"});",
+											"",
+											"pm.test(\"responseCode should be 200\", function () {",
+											"    pm.expect(jsonResponse.responseCode).to.eql(200);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{kong_api_key}}",
+										"type": "text"
+									},
+									{
+										"key": "X-Authenticated-User-token",
+										"value": "{{keycloak_access_token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"request\": {\n        \"name\": \"{{group_name}}\"\n    }\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{host}}/api/group/v1/create",
+								"description": "This API is used to create a group\n   - The endpoint for **Create Group** is `/group/v1/create`  \n   - The fields marked with an asterisk (*) are mandatory. They cannot be null or empty."
+							},
+							"response": [
+								{
+									"name": "200 - With minimum required input",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "Authorization",
+												"value": "{{kong_api_key}}",
+												"type": "text"
+											},
+											{
+												"key": "X-Authenticated-User-token",
+												"value": "{{keycloak_access_token}}",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"request\": {\n        \"name\": \"{{group_name}}\"\n    }\n}",
+											"options": {
+												"raw": {
+													"headerFamily": "json",
+													"language": "json"
+												}
+											}
+										},
+										"url": "{{host}}/api/group/v1/create"
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Date",
+											"value": "Wed, 06 Sep 2023 09:17:45 GMT"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "Content-Length",
+											"value": "165"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "X-RateLimit-Limit-hour",
+											"value": "30000"
+										},
+										{
+											"key": "X-RateLimit-Remaining-hour",
+											"value": "29997"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										},
+										{
+											"key": "X-Kong-Upstream-Latency",
+											"value": "19"
+										},
+										{
+											"key": "X-Kong-Proxy-Latency",
+											"value": "14"
+										},
+										{
+											"key": "Via",
+											"value": "kong/0.14.1"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"id\": \"api.group.create\",\n    \"ver\": \"v1\",\n    \"ts\": \"2023-09-06 09:17:45:958+0000\",\n    \"params\": null,\n    \"result\": {\n        \"groupId\": \"7e0f951e-b397-4aef-aedd-8337acd3cea3\"\n    },\n    \"responseCode\": 200\n}"
+								}
+							]
+						},
+						{
+							"name": "200 - With All Required Inputs",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Extract the groupId from the response and set it to the environment variable",
+											"pm.test(\"Set groupId in environment variable\", function () {",
+											"    const responseJson = pm.response.json();",
+											"    pm.environment.set(\"group_id\", responseJson.result.groupId);",
+											"});",
+											"",
+											"let jsonResponse = pm.response.json();",
+											"",
+											"// Verification",
+											"pm.test(\"Status code is 200\", () => {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.test(\"Content-Type header is present\", () => {",
+											"    pm.response.to.have.header(\"Content-Type\");",
+											"});",
+											"",
+											"pm.test(\"Content-Type header is application/json\", () => {",
+											"    pm.expect(pm.response.headers.get('Content-Type')).to.eql('application/json');",
+											"});",
+											"",
+											"pm.test(\"Test data type of the response and keys\", () => {",
+											"    pm.expect(jsonResponse).to.be.an(\"object\").that.has.all.keys(",
+											"        'id', 'ver', 'ts', 'params', 'result', 'responseCode'",
+											"    );",
+											"",
+											"    pm.expect(jsonResponse.id).to.be.a(\"string\");",
+											"    pm.expect(jsonResponse.ver).to.be.a(\"string\");",
+											"    pm.expect(jsonResponse.ts).to.be.a(\"string\");",
+											"    pm.expect(jsonResponse.responseCode).to.be.a(\"number\");",
+											"",
+											"    pm.expect(jsonResponse.params).to.be.null;",
+											"",
+											"    pm.expect(jsonResponse.result).to.be.an(\"object\").that.has.all.keys(",
+											"        'groupId'",
+											"    );",
+											"",
+											"    pm.expect(jsonResponse.result.groupId).to.be.a(\"string\");",
+											"});",
+											"",
+											"// Validation",
+											"pm.test(\"id should be api.group.create\", function () {",
+											"    pm.expect(jsonResponse.id).to.eql(\"api.group.create\");",
+											"});",
+											"",
+											"pm.test(\"ver should be v1\", function () {",
+											"    pm.expect(jsonResponse.ver).to.eql(\"v1\");",
+											"});",
+											"",
+											"pm.test(\"responseCode should be 200\", function () {",
+											"    pm.expect(jsonResponse.responseCode).to.eql(200);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{kong_api_key}}",
+										"type": "text"
+									},
+									{
+										"key": "X-Authenticated-User-token",
+										"value": "{{keycloak_access_token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"request\": {\n        \"name\": \"{{group_name}}\",\n        \"description\": \"{{group_description}}\"\n    }\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{host}}/api/group/v1/create",
+								"description": "This API is used to create a group\n   - The endpoint for **Create Group** is `/group/v1/create`  \n   - The fields marked with an asterisk (*) are mandatory. They cannot be null or empty."
+							},
+							"response": [
+								{
+									"name": "200 - With All Required Inputs",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "Authorization",
+												"value": "{{kong_api_key}}",
+												"type": "text"
+											},
+											{
+												"key": "X-Authenticated-User-token",
+												"value": "{{keycloak_access_token}}",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"request\": {\n        \"name\": \"{{group_name}}\",\n        \"description\": \"{{group_description}}\"\n    }\n}",
+											"options": {
+												"raw": {
+													"headerFamily": "json",
+													"language": "json"
+												}
+											}
+										},
+										"url": "{{host}}/api/group/v1/create"
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Date",
+											"value": "Wed, 06 Sep 2023 09:18:01 GMT"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "Content-Length",
+											"value": "165"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "X-RateLimit-Limit-hour",
+											"value": "30000"
+										},
+										{
+											"key": "X-RateLimit-Remaining-hour",
+											"value": "29996"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										},
+										{
+											"key": "X-Kong-Upstream-Latency",
+											"value": "18"
+										},
+										{
+											"key": "X-Kong-Proxy-Latency",
+											"value": "14"
+										},
+										{
+											"key": "Via",
+											"value": "kong/0.14.1"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"id\": \"api.group.create\",\n    \"ver\": \"v1\",\n    \"ts\": \"2023-09-06 09:18:01:288+0000\",\n    \"params\": null,\n    \"result\": {\n        \"groupId\": \"8463f883-737d-45bc-89bc-bffefa7f9d0d\"\n    },\n    \"responseCode\": 200\n}"
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Negative",
+					"item": [
+						{
+							"name": "400 - missing group name",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"let jsonResponse = pm.response.json();",
+											"",
+											"// Verification",
+											"pm.test(\"Status code is 400\", function () {",
+											"    pm.response.to.have.status(400);",
+											"});",
+											"",
+											"// Validation",
+											"// Verify params",
+											"pm.test(\"params.err should be \\\"GS_CRT02\\\"\", () => {",
+											"    pm.expect(jsonResponse.params.err).to.eql(\"GS_CRT02\");",
+											"});",
+											"pm.test(\"params.errmsg should be \\\"Failed to create group, fields are missing or invalid in the request. Enter the required values and resend the request.\\\"\", () => {",
+											"    pm.expect(jsonResponse.params.errmsg).to.eql(\"Failed to create group, fields are missing or invalid in the request. Enter the required values and resend the request.\");",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{kong_api_key}}",
+										"type": "text"
+									},
+									{
+										"key": "X-Authenticated-User-token",
+										"value": "{{keycloak_access_token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"request\": {\n        \"description\": \"{{group_description}}\"\n    }\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{host}}/api/group/v1/create",
+								"description": "This API is used to create a group\n   - The endpoint for **Create Group** is `/group/v1/create`  \n   - The fields marked with an asterisk (*) are mandatory. They cannot be null or empty."
+							},
+							"response": [
+								{
+									"name": "400 - missing group name",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "Authorization",
+												"value": "{{kong_api_key}}",
+												"type": "text"
+											},
+											{
+												"key": "X-Authenticated-User-token",
+												"value": "{{keycloak_access_token}}",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"request\": {\n        \"description\": \"{{group_description}}\"\n    }\n}",
+											"options": {
+												"raw": {
+													"headerFamily": "json",
+													"language": "json"
+												}
+											}
+										},
+										"url": "{{host}}/api/group/v1/create"
+									},
+									"status": "Bad Request",
+									"code": 400,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Date",
+											"value": "Wed, 06 Sep 2023 09:18:33 GMT"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "Content-Length",
+											"value": "339"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "X-RateLimit-Limit-hour",
+											"value": "30000"
+										},
+										{
+											"key": "X-RateLimit-Remaining-hour",
+											"value": "29995"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										},
+										{
+											"key": "X-Kong-Upstream-Latency",
+											"value": "7"
+										},
+										{
+											"key": "X-Kong-Proxy-Latency",
+											"value": "10"
+										},
+										{
+											"key": "Via",
+											"value": "kong/0.14.1"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"id\": \"api.group.create\",\n    \"ver\": null,\n    \"ts\": \"2023-09-06 09:18:33:957+0000\",\n    \"params\": {\n        \"resmsgid\": null,\n        \"msgid\": \"fd981c18dca47d1a5acd731ce7e52f4a\",\n        \"err\": \"GS_CRT02\",\n        \"status\": \"failed\",\n        \"errmsg\": \"Failed to create group, fields are missing or invalid in the request. Enter the required values and resend the request.\"\n    },\n    \"result\": {},\n    \"responseCode\": 400\n}"
+								}
+							]
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "ListGroup",
+			"item": [
+				{
+					"name": "Positive",
+					"item": [
+						{
+							"name": "200 - With minimum required input",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"let jsonResponse = pm.response.json();",
+											"",
+											"// Verification",
+											"pm.test(\"Status code is 200\", () => {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.test(\"Content-Type header is present\", () => {",
+											"    pm.response.to.have.header(\"Content-Type\");",
+											"});",
+											"",
+											"pm.test(\"Content-Type header is application/json\", () => {",
+											"    pm.expect(pm.response.headers.get('Content-Type')).to.eql('application/json');",
+											"});",
+											"",
+											"pm.test(\"Test data type of the response and keys\", () => {",
+											"    pm.expect(jsonResponse).to.be.an(\"object\").that.has.all.keys(",
+											"        'id', 'ver', 'ts', 'params', 'result', 'responseCode'",
+											"    );",
+											"",
+											"    pm.expect(jsonResponse.id).to.be.a(\"string\");",
+											"    pm.expect(jsonResponse.ver).to.be.a(\"string\");",
+											"    pm.expect(jsonResponse.ts).to.be.a(\"string\");",
+											"    pm.expect(jsonResponse.responseCode).to.be.a(\"number\");",
+											"",
+											"    pm.expect(jsonResponse.params).to.be.null;",
+											"",
+											"    pm.expect(jsonResponse.result).to.be.an(\"object\").that.has.key('group');",
+											"    pm.expect(jsonResponse.result.group).to.be.an(\"array\").that.is.not.empty;",
+											"});",
+											"",
+											"// Validation",
+											"pm.test(\"id should be api.group.list\", function () {",
+											"    pm.expect(jsonResponse.id).to.eql(\"api.group.list\");",
+											"});",
+											"",
+											"pm.test(\"ver should be v1\", function () {",
+											"    pm.expect(jsonResponse.ver).to.eql(\"v1\");",
+											"});",
+											"",
+											"pm.test(\"responseCode should be 200\", function () {",
+											"    pm.expect(jsonResponse.responseCode).to.eql(200);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{kong_api_key}}",
+										"type": "text"
+									},
+									{
+										"key": "X-Authenticated-User-token",
+										"value": "{{keycloak_access_token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"request\": {\n        \"filters\": {\n            \"userId\": \"{{user_id}}\"\n        }\n    }\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{host}}/api/group/v1/list",
+								"description": "This API is used for listing groups of a particular user.\n  - The endpoint for **List Group** is `/group/v1/list`\n  - The fields marked with an asterisk (*) are mandatory. They cannot be null or empty."
+							},
+							"response": [
+								{
+									"name": "200 - With minimum required input",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "Authorization",
+												"value": "{{kong_api_key}}",
+												"type": "text"
+											},
+											{
+												"key": "X-Authenticated-User-token",
+												"value": "{{keycloak_access_token}}",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"request\": {\n        \"filters\": {\n            \"userId\": \"{{user_id}}\"\n        }\n    }\n}",
+											"options": {
+												"raw": {
+													"headerFamily": "json",
+													"language": "json"
+												}
+											}
+										},
+										"url": "{{host}}/api/group/v1/list"
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Date",
+											"value": "Wed, 06 Sep 2023 09:19:05 GMT"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "Transfer-Encoding",
+											"value": "chunked"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "Vary",
+											"value": "Accept-Encoding"
+										},
+										{
+											"key": "X-RateLimit-Limit-hour",
+											"value": "30000"
+										},
+										{
+											"key": "X-RateLimit-Remaining-hour",
+											"value": "29997"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										},
+										{
+											"key": "X-Kong-Upstream-Latency",
+											"value": "19"
+										},
+										{
+											"key": "X-Kong-Proxy-Latency",
+											"value": "60"
+										},
+										{
+											"key": "Via",
+											"value": "kong/0.14.1"
+										},
+										{
+											"key": "Content-Encoding",
+											"value": "gzip"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"id\": \"api.group.list\",\n    \"ver\": \"v1\",\n    \"ts\": \"2023-09-06 09:19:05:423+0000\",\n    \"params\": null,\n    \"result\": {\n        \"group\": [\n            {\n                \"id\": \"7e0f951e-b397-4aef-aedd-8337acd3cea3\",\n                \"name\": \"Expert Literature Group 668\",\n                \"status\": \"active\",\n                \"membershipType\": \"invite_only\",\n                \"createdOn\": \"2023-09-06 09:17:45:945+0000\",\n                \"createdBy\": \"84cfe068-94f1-4681-98f9-0c1a3239b55f\",\n                \"memberRole\": \"admin\",\n                \"visited\": true\n            },\n            {\n                \"id\": \"8463f883-737d-45bc-89bc-bffefa7f9d0d\",\n                \"name\": \"Beginner History Group 938\",\n                \"description\": \"Looking for fellow learners to study together? Join us now!\",\n                \"status\": \"active\",\n                \"membershipType\": \"invite_only\",\n                \"createdOn\": \"2023-09-06 09:18:01:277+0000\",\n                \"createdBy\": \"84cfe068-94f1-4681-98f9-0c1a3239b55f\",\n                \"memberRole\": \"admin\",\n                \"visited\": true\n            }\n        ]\n    },\n    \"responseCode\": 200\n}"
+								}
+							]
+						},
+						{
+							"name": "200 - With All Required Inputs",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"let jsonResponse = pm.response.json();",
+											"",
+											"// Verification",
+											"pm.test(\"Status code is 200\", () => {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.test(\"Content-Type header is present\", () => {",
+											"    pm.response.to.have.header(\"Content-Type\");",
+											"});",
+											"",
+											"pm.test(\"Content-Type header is application/json\", () => {",
+											"    pm.expect(pm.response.headers.get('Content-Type')).to.eql('application/json');",
+											"});",
+											"",
+											"pm.test(\"Test data type of the response and keys\", () => {",
+											"    pm.expect(jsonResponse).to.be.an(\"object\").that.has.all.keys(",
+											"        'id', 'ver', 'ts', 'params', 'result', 'responseCode'",
+											"    );",
+											"",
+											"    pm.expect(jsonResponse.id).to.be.a(\"string\");",
+											"    pm.expect(jsonResponse.ver).to.be.a(\"string\");",
+											"    pm.expect(jsonResponse.ts).to.be.a(\"string\");",
+											"    pm.expect(jsonResponse.responseCode).to.be.a(\"number\");",
+											"",
+											"    pm.expect(jsonResponse.params).to.be.null;",
+											"",
+											"    pm.expect(jsonResponse.result).to.be.an(\"object\").that.has.key('group');",
+											"    pm.expect(jsonResponse.result.group).to.be.an(\"array\").that.is.not.empty;",
+											"});",
+											"",
+											"// Validation",
+											"pm.test(\"id should be api.group.list\", function () {",
+											"    pm.expect(jsonResponse.id).to.eql(\"api.group.list\");",
+											"});",
+											"",
+											"pm.test(\"ver should be v1\", function () {",
+											"    pm.expect(jsonResponse.ver).to.eql(\"v1\");",
+											"});",
+											"",
+											"pm.test(\"responseCode should be 200\", function () {",
+											"    pm.expect(jsonResponse.responseCode).to.eql(200);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{kong_api_key}}",
+										"type": "text"
+									},
+									{
+										"key": "X-Authenticated-User-token",
+										"value": "{{keycloak_access_token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"request\": {\n        \"filters\": {\n            \"userId\": \"{{user_id}}\"\n        }\n    }\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{host}}/api/group/v1/list",
+								"description": "This API is used for listing groups of a particular user.\n  - The endpoint for **List Group** is `/group/v1/list`\n  - The fields marked with an asterisk (*) are mandatory. They cannot be null or empty."
+							},
+							"response": [
+								{
+									"name": "200 - With All Required Inputs",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "Authorization",
+												"value": "{{kong_api_key}}",
+												"type": "text"
+											},
+											{
+												"key": "X-Authenticated-User-token",
+												"value": "{{keycloak_access_token}}",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"request\": {\n        \"filters\": {\n            \"userId\": \"{{user_id}}\"\n        }\n    }\n}",
+											"options": {
+												"raw": {
+													"headerFamily": "json",
+													"language": "json"
+												}
+											}
+										},
+										"url": "{{host}}/api/group/v1/list"
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Date",
+											"value": "Wed, 06 Sep 2023 09:20:30 GMT"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "Transfer-Encoding",
+											"value": "chunked"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "Vary",
+											"value": "Accept-Encoding"
+										},
+										{
+											"key": "X-RateLimit-Limit-hour",
+											"value": "30000"
+										},
+										{
+											"key": "X-RateLimit-Remaining-hour",
+											"value": "29995"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										},
+										{
+											"key": "X-Kong-Upstream-Latency",
+											"value": "5"
+										},
+										{
+											"key": "X-Kong-Proxy-Latency",
+											"value": "13"
+										},
+										{
+											"key": "Via",
+											"value": "kong/0.14.1"
+										},
+										{
+											"key": "Content-Encoding",
+											"value": "gzip"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"id\": \"api.group.list\",\n    \"ver\": \"v1\",\n    \"ts\": \"2023-09-06 09:20:30:324+0000\",\n    \"params\": null,\n    \"result\": {\n        \"group\": [\n            {\n                \"id\": \"7e0f951e-b397-4aef-aedd-8337acd3cea3\",\n                \"name\": \"Expert Literature Group 668\",\n                \"status\": \"active\",\n                \"membershipType\": \"invite_only\",\n                \"createdOn\": \"2023-09-06 09:17:45:945+0000\",\n                \"createdBy\": \"84cfe068-94f1-4681-98f9-0c1a3239b55f\",\n                \"memberRole\": \"admin\",\n                \"visited\": true\n            },\n            {\n                \"id\": \"8463f883-737d-45bc-89bc-bffefa7f9d0d\",\n                \"name\": \"Beginner History Group 938\",\n                \"description\": \"Looking for fellow learners to study together? Join us now!\",\n                \"status\": \"active\",\n                \"membershipType\": \"invite_only\",\n                \"createdOn\": \"2023-09-06 09:18:01:277+0000\",\n                \"createdBy\": \"84cfe068-94f1-4681-98f9-0c1a3239b55f\",\n                \"memberRole\": \"admin\",\n                \"visited\": true\n            }\n        ]\n    },\n    \"responseCode\": 200\n}"
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Negative",
+					"item": [
+						{
+							"name": "400 - missing filters",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"let jsonResponse = pm.response.json();",
+											"",
+											"// Verification",
+											"pm.test(\"Status code is 400\", function () {",
+											"    pm.response.to.have.status(400);",
+											"});",
+											"",
+											"// Validation",
+											"// Verify params",
+											"pm.test(\"params.err should be \\\"GS_LST02\\\"\", () => {",
+											"    pm.expect(jsonResponse.params.err).to.eql(\"GS_LST02\");",
+											"});",
+											"pm.test(\"params.errmsg should be \\\"Failed to fetch group list, mandatory fields are missing or invalid fields value in the request. Enter the required values and resend the request.\\\"\", () => {",
+											"    pm.expect(jsonResponse.params.errmsg).to.eql(\"Failed to fetch group list, mandatory fields are missing or invalid fields value in the request. Enter the required values and resend the request.\");",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{kong_api_key}}",
+										"type": "text"
+									},
+									{
+										"key": "X-Authenticated-User-token",
+										"value": "{{keycloak_access_token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"request\": {\n        \"filters\": {}\n    }\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{host}}/api/group/v1/list",
+								"description": "This API is used for listing groups of a particular user.\n  - The endpoint for **List Group** is `/group/v1/list`\n  - The fields marked with an asterisk (*) are mandatory. They cannot be null or empty."
+							},
+							"response": [
+								{
+									"name": "400 - missing filters",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "Authorization",
+												"value": "{{kong_api_key}}",
+												"type": "text"
+											},
+											{
+												"key": "X-Authenticated-User-token",
+												"value": "{{keycloak_access_token}}",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"request\": {\n        \"filters\": {}\n    }\n}",
+											"options": {
+												"raw": {
+													"headerFamily": "json",
+													"language": "json"
+												}
+											}
+										},
+										"url": "{{host}}/api/group/v1/list"
+									},
+									"status": "Bad Request",
+									"code": 400,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Date",
+											"value": "Wed, 06 Sep 2023 09:21:03 GMT"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "Content-Length",
+											"value": "364"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "X-RateLimit-Limit-hour",
+											"value": "30000"
+										},
+										{
+											"key": "X-RateLimit-Remaining-hour",
+											"value": "29994"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										},
+										{
+											"key": "X-Kong-Upstream-Latency",
+											"value": "6"
+										},
+										{
+											"key": "X-Kong-Proxy-Latency",
+											"value": "11"
+										},
+										{
+											"key": "Via",
+											"value": "kong/0.14.1"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"id\": \"api.group.list\",\n    \"ver\": null,\n    \"ts\": \"2023-09-06 09:21:03:244+0000\",\n    \"params\": {\n        \"resmsgid\": null,\n        \"msgid\": \"c6fd77a1fa296d2612134a01c9d51263\",\n        \"err\": \"GS_LST02\",\n        \"status\": \"failed\",\n        \"errmsg\": \"Failed to fetch group list, mandatory fields are missing or invalid fields value in the request. Enter the required values and resend the request.\"\n    },\n    \"result\": {},\n    \"responseCode\": 400\n}"
+								}
+							]
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "UpdateGroup",
+			"item": [
+				{
+					"name": "Positive",
+					"item": [
+						{
+							"name": "200 - With minimum required input",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"let jsonResponse = pm.response.json();",
+											"",
+											"// Verification",
+											"pm.test(\"Status code is 200\", () => {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.test(\"Content-Type header is present\", () => {",
+											"    pm.response.to.have.header(\"Content-Type\");",
+											"});",
+											"",
+											"pm.test(\"Content-Type header is application/json\", () => {",
+											"    pm.expect(pm.response.headers.get('Content-Type')).to.eql('application/json');",
+											"});",
+											"",
+											"pm.test(\"Test data type of the response and keys\", () => {",
+											"    pm.expect(jsonResponse).to.be.an(\"object\").that.has.all.keys(",
+											"        'id', 'ver', 'ts', 'params', 'result', 'responseCode'",
+											"    );",
+											"",
+											"    pm.expect(jsonResponse.id).to.be.a(\"string\");",
+											"    pm.expect(jsonResponse.ver).to.be.a(\"string\");",
+											"    pm.expect(jsonResponse.ts).to.be.a(\"string\");",
+											"    pm.expect(jsonResponse.responseCode).to.be.a(\"number\");",
+											"",
+											"    pm.expect(jsonResponse.params).to.be.null;",
+											"",
+											"    pm.expect(jsonResponse.result).to.be.an(\"object\").that.has.key('response');",
+											"    pm.expect(jsonResponse.result.response).to.be.a(\"string\");",
+											"});",
+											"",
+											"// Validation",
+											"pm.test(\"id should be api.group.update\", function () {",
+											"    pm.expect(jsonResponse.id).to.eql(\"api.group.update\");",
+											"});",
+											"",
+											"pm.test(\"ver should be v1\", function () {",
+											"    pm.expect(jsonResponse.ver).to.eql(\"v1\");",
+											"});",
+											"",
+											"pm.test(\"responseCode should be 200\", function () {",
+											"    pm.expect(jsonResponse.responseCode).to.eql(200);",
+											"});",
+											"",
+											"pm.test(\"result.response should be 'success'\", function () {",
+											"    pm.expect(jsonResponse.result.response).to.eql(\"success\");",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{kong_api_key}}",
+										"type": "text"
+									},
+									{
+										"key": "X-Authenticated-User-token",
+										"value": "{{keycloak_access_token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"request\": {\n        \"groupId\": \"{{group_id}}\",\n        \"name\": \"{{group_name}}\"\n    }\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{host}}/api/group/v1/update",
+								"description": "This API is used for updating the group related details. This can also be used to add/edit/remove members of a group and also to add/remove activitties of a group. This API can add details partially as well, for example, one member in the request could not be added, because that member is inactive or id doesn't exist, still other properties in the request is updated. If a member is not added, only the status of that will be shown in the “errors” array in response.\n  - The endpoint for **Update Group** is `/group/v1/update`\n  - The fields marked with an asterisk (*) are mandatory. They cannot be null or empty.\n  - Once group suspended following operation can only be performed :-\n    1. All member are eligible to leave the group. \n    2. Creator will be able to delete the group.\n    3. Admin will be able to reactivate the group.\n    4. All other operations are not permitted once group is suspended."
+							},
+							"response": [
+								{
+									"name": "200 - With minimum required input",
+									"originalRequest": {
+										"method": "PATCH",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "Authorization",
+												"value": "{{kong_api_key}}",
+												"type": "text"
+											},
+											{
+												"key": "X-Authenticated-User-token",
+												"value": "{{keycloak_access_token}}",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"request\": {\n        \"groupId\": \"{{group_id}}\",\n        \"name\": \"{{group_name}}\"\n    }\n}",
+											"options": {
+												"raw": {
+													"headerFamily": "json",
+													"language": "json"
+												}
+											}
+										},
+										"url": "{{host}}/api/group/v1/update"
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Date",
+											"value": "Wed, 06 Sep 2023 09:21:30 GMT"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "Content-Length",
+											"value": "137"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "X-RateLimit-Limit-hour",
+											"value": "30000"
+										},
+										{
+											"key": "X-RateLimit-Remaining-hour",
+											"value": "29996"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										},
+										{
+											"key": "X-Kong-Upstream-Latency",
+											"value": "16"
+										},
+										{
+											"key": "X-Kong-Proxy-Latency",
+											"value": "10"
+										},
+										{
+											"key": "Via",
+											"value": "kong/0.14.1"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"id\": \"api.group.update\",\n    \"ver\": \"v1\",\n    \"ts\": \"2023-09-06 09:21:30:701+0000\",\n    \"params\": null,\n    \"result\": {\n        \"response\": \"success\"\n    },\n    \"responseCode\": 200\n}"
+								}
+							]
+						},
+						{
+							"name": "200 - With All Required Fields",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"let jsonResponse = pm.response.json();",
+											"",
+											"// Verification",
+											"pm.test(\"Status code is 200\", () => {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.test(\"Content-Type header is present\", () => {",
+											"    pm.response.to.have.header(\"Content-Type\");",
+											"});",
+											"",
+											"pm.test(\"Content-Type header is application/json\", () => {",
+											"    pm.expect(pm.response.headers.get('Content-Type')).to.eql('application/json');",
+											"});",
+											"",
+											"pm.test(\"Test data type of the response and keys\", () => {",
+											"    pm.expect(jsonResponse).to.be.an(\"object\").that.has.all.keys(",
+											"        'id', 'ver', 'ts', 'params', 'result', 'responseCode'",
+											"    );",
+											"",
+											"    pm.expect(jsonResponse.id).to.be.a(\"string\");",
+											"    pm.expect(jsonResponse.ver).to.be.a(\"string\");",
+											"    pm.expect(jsonResponse.ts).to.be.a(\"string\");",
+											"    pm.expect(jsonResponse.responseCode).to.be.a(\"number\");",
+											"",
+											"    pm.expect(jsonResponse.params).to.be.null;",
+											"",
+											"    pm.expect(jsonResponse.result).to.be.an(\"object\").that.has.key('response');",
+											"    pm.expect(jsonResponse.result.response).to.be.a(\"string\");",
+											"});",
+											"",
+											"// Validation",
+											"pm.test(\"id should be api.group.update\", function () {",
+											"    pm.expect(jsonResponse.id).to.eql(\"api.group.update\");",
+											"});",
+											"",
+											"pm.test(\"ver should be v1\", function () {",
+											"    pm.expect(jsonResponse.ver).to.eql(\"v1\");",
+											"});",
+											"",
+											"pm.test(\"responseCode should be 200\", function () {",
+											"    pm.expect(jsonResponse.responseCode).to.eql(200);",
+											"});",
+											"",
+											"pm.test(\"result.response should be 'success'\", function () {",
+											"    pm.expect(jsonResponse.result.response).to.eql(\"success\");",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{kong_api_key}}",
+										"type": "text"
+									},
+									{
+										"key": "X-Authenticated-User-token",
+										"value": "{{keycloak_access_token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"request\": {\n        \"groupId\": \"{{group_id}}\",\n        \"name\": \"{{group_name}}\",\n        \"description\": \"{{group_description}}\"\n    }\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{host}}/api/group/v1/update",
+								"description": "This API is used for updating the group related details. This can also be used to add/edit/remove members of a group and also to add/remove activitties of a group. This API can add details partially as well, for example, one member in the request could not be added, because that member is inactive or id doesn't exist, still other properties in the request is updated. If a member is not added, only the status of that will be shown in the “errors” array in response.\n  - The endpoint for **Update Group** is `/group/v1/update`\n  - The fields marked with an asterisk (*) are mandatory. They cannot be null or empty.\n  - Once group suspended following operation can only be performed :-\n    1. All member are eligible to leave the group. \n    2. Creator will be able to delete the group.\n    3. Admin will be able to reactivate the group.\n    4. All other operations are not permitted once group is suspended."
+							},
+							"response": [
+								{
+									"name": "200 - With All Required Fields",
+									"originalRequest": {
+										"method": "PATCH",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "Authorization",
+												"value": "{{kong_api_key}}",
+												"type": "text"
+											},
+											{
+												"key": "X-Authenticated-User-token",
+												"value": "{{keycloak_access_token}}",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"request\": {\n        \"groupId\": \"{{group_id}}\",\n        \"name\": \"{{group_name}}\",\n        \"description\": \"{{group_description}}\"\n    }\n}",
+											"options": {
+												"raw": {
+													"headerFamily": "json",
+													"language": "json"
+												}
+											}
+										},
+										"url": "{{host}}/api/group/v1/update"
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Date",
+											"value": "Wed, 06 Sep 2023 09:22:12 GMT"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "Content-Length",
+											"value": "137"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "X-RateLimit-Limit-hour",
+											"value": "30000"
+										},
+										{
+											"key": "X-RateLimit-Remaining-hour",
+											"value": "29995"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										},
+										{
+											"key": "X-Kong-Upstream-Latency",
+											"value": "14"
+										},
+										{
+											"key": "X-Kong-Proxy-Latency",
+											"value": "8"
+										},
+										{
+											"key": "Via",
+											"value": "kong/0.14.1"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"id\": \"api.group.update\",\n    \"ver\": \"v1\",\n    \"ts\": \"2023-09-06 09:22:12:578+0000\",\n    \"params\": null,\n    \"result\": {\n        \"response\": \"success\"\n    },\n    \"responseCode\": 200\n}"
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Negative",
+					"item": [
+						{
+							"name": "400 -  Missing group id",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"let jsonResponse = pm.response.json();",
+											"",
+											"// Verification",
+											"pm.test(\"Status code is 400\", function () {",
+											"    pm.response.to.have.status(400);",
+											"});",
+											"",
+											"// Validation",
+											"// Verify params",
+											"pm.test(\"params.err should be \\\"GS_UDT02\\\"\", () => {",
+											"    pm.expect(jsonResponse.params.err).to.eql(\"GS_UDT02\");",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{kong_api_key}}",
+										"type": "text"
+									},
+									{
+										"key": "X-Authenticated-User-token",
+										"value": "{{keycloak_access_token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"request\": {\n        \"name\": \"{{group_name}}\",\n        \"description\": \"{{group_description}}\"\n    }\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{host}}/api/group/v1/update",
+								"description": "This API is used for updating the group related details. This can also be used to add/edit/remove members of a group and also to add/remove activitties of a group. This API can add details partially as well, for example, one member in the request could not be added, because that member is inactive or id doesn't exist, still other properties in the request is updated. If a member is not added, only the status of that will be shown in the “errors” array in response.\n  - The endpoint for **Update Group** is `/group/v1/update`\n  - The fields marked with an asterisk (*) are mandatory. They cannot be null or empty.\n  - Once group suspended following operation can only be performed :-\n    1. All member are eligible to leave the group. \n    2. Creator will be able to delete the group.\n    3. Admin will be able to reactivate the group.\n    4. All other operations are not permitted once group is suspended."
+							},
+							"response": [
+								{
+									"name": "400 -  Missing group id",
+									"originalRequest": {
+										"method": "PATCH",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "Authorization",
+												"value": "{{kong_api_key}}",
+												"type": "text"
+											},
+											{
+												"key": "X-Authenticated-User-token",
+												"value": "{{keycloak_access_token}}",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"request\": {\n        \"name\": \"{{group_name}}\",\n        \"description\": \"{{group_description}}\"\n    }\n}",
+											"options": {
+												"raw": {
+													"headerFamily": "json",
+													"language": "json"
+												}
+											}
+										},
+										"url": "{{host}}/api/group/v1/update"
+									},
+									"status": "Bad Request",
+									"code": 400,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Date",
+											"value": "Wed, 06 Sep 2023 09:23:02 GMT"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "Content-Length",
+											"value": "356"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "X-RateLimit-Limit-hour",
+											"value": "30000"
+										},
+										{
+											"key": "X-RateLimit-Remaining-hour",
+											"value": "29994"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										},
+										{
+											"key": "X-Kong-Upstream-Latency",
+											"value": "6"
+										},
+										{
+											"key": "X-Kong-Proxy-Latency",
+											"value": "13"
+										},
+										{
+											"key": "Via",
+											"value": "kong/0.14.1"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"id\": \"api.group.update\",\n    \"ver\": null,\n    \"ts\": \"2023-09-06 09:23:02:108+0000\",\n    \"params\": {\n        \"resmsgid\": null,\n        \"msgid\": \"44af41c17b29f16127b2b94a33994b0c\",\n        \"err\": \"GS_UDT02\",\n        \"status\": \"failed\",\n        \"errmsg\": \"Failed to update group, mandatory  are missing or invalid fields value in the request. Enter the required values and resend the request.\"\n    },\n    \"result\": {},\n    \"responseCode\": 400\n}"
+								}
+							]
+						},
+						{
+							"name": "400 -  Invalid group id",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"let jsonResponse = pm.response.json();",
+											"",
+											"// Verification",
+											"pm.test(\"Status code is 400\", function () {",
+											"    pm.response.to.have.status(400);",
+											"});",
+											"",
+											"// Verify params",
+											"pm.test(\"params.err should be \\\"GS_UDT07\\\"\", () => {",
+											"    pm.expect(jsonResponse.params.err).to.eql(\"GS_UDT07\");",
+											"});",
+											"pm.test(\"params.errmsg should be \\\"Failed to update, group does not exist. Contact your system administrator.\\\"\", () => {",
+											"    pm.expect(jsonResponse.params.errmsg).to.eql(\"Failed to update, group does not exist. Contact your system administrator.\");",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{kong_api_key}}",
+										"type": "text"
+									},
+									{
+										"key": "X-Authenticated-User-token",
+										"value": "{{keycloak_access_token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"request\": {\n        \"groupId\": \"{{invalid_group_id}}\",\n        \"name\": \"{{group_name}}\",\n        \"description\": \"{{group_description}}\"\n    }\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{host}}/api/group/v1/update",
+								"description": "This API is used for updating the group related details. This can also be used to add/edit/remove members of a group and also to add/remove activitties of a group. This API can add details partially as well, for example, one member in the request could not be added, because that member is inactive or id doesn't exist, still other properties in the request is updated. If a member is not added, only the status of that will be shown in the “errors” array in response.\n  - The endpoint for **Update Group** is `/group/v1/update`\n  - The fields marked with an asterisk (*) are mandatory. They cannot be null or empty.\n  - Once group suspended following operation can only be performed :-\n    1. All member are eligible to leave the group. \n    2. Creator will be able to delete the group.\n    3. Admin will be able to reactivate the group.\n    4. All other operations are not permitted once group is suspended."
+							},
+							"response": [
+								{
+									"name": "400 -  Invalid group id",
+									"originalRequest": {
+										"method": "PATCH",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "Authorization",
+												"value": "{{kong_api_key}}",
+												"type": "text"
+											},
+											{
+												"key": "X-Authenticated-User-token",
+												"value": "{{keycloak_access_token}}",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"request\": {\n        \"groupId\": \"{{invalid_group_id}}\",\n        \"name\": \"{{group_name}}\",\n        \"description\": \"{{group_description}}\"\n    }\n}",
+											"options": {
+												"raw": {
+													"headerFamily": "json",
+													"language": "json"
+												}
+											}
+										},
+										"url": "{{host}}/api/group/v1/update"
+									},
+									"status": "Bad Request",
+									"code": 400,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Date",
+											"value": "Wed, 06 Sep 2023 09:23:08 GMT"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "Content-Length",
+											"value": "294"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "X-RateLimit-Limit-hour",
+											"value": "30000"
+										},
+										{
+											"key": "X-RateLimit-Remaining-hour",
+											"value": "29993"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										},
+										{
+											"key": "X-Kong-Upstream-Latency",
+											"value": "8"
+										},
+										{
+											"key": "X-Kong-Proxy-Latency",
+											"value": "8"
+										},
+										{
+											"key": "Via",
+											"value": "kong/0.14.1"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"id\": \"api.group.update\",\n    \"ver\": null,\n    \"ts\": \"2023-09-06 09:23:08:393+0000\",\n    \"params\": {\n        \"resmsgid\": null,\n        \"msgid\": \"b08c2c88a031de62fbe6e1f6997681d5\",\n        \"err\": \"GS_UDT07\",\n        \"status\": \"failed\",\n        \"errmsg\": \"Failed to update, group does not exist. Contact your system administrator.\"\n    },\n    \"result\": {},\n    \"responseCode\": 400\n}"
+								}
+							]
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "ReadGroup",
+			"item": [
+				{
+					"name": "Positive",
+					"item": [
+						{
+							"name": "200 - With minimum required input",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"let jsonResponse = pm.response.json();",
+											"",
+											"// Verification",
+											"pm.test(\"Status code is 200\", () => {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.test(\"Content-Type header is present\", () => {",
+											"    pm.response.to.have.header(\"Content-Type\");",
+											"});",
+											"",
+											"pm.test(\"Content-Type header is application/json\", () => {",
+											"    pm.expect(pm.response.headers.get('Content-Type')).to.eql('application/json');",
+											"});",
+											"",
+											"pm.test(\"Test data type of the response and keys\", () => {",
+											"    pm.expect(jsonResponse).to.be.an(\"object\").that.has.all.keys(",
+											"        'id', 'ver', 'ts', 'params', 'result', 'responseCode'",
+											"    );",
+											"",
+											"    pm.expect(jsonResponse.id).to.be.a(\"string\");",
+											"    pm.expect(jsonResponse.ver).to.be.a(\"string\");",
+											"    pm.expect(jsonResponse.ts).to.be.a(\"string\");",
+											"    pm.expect(jsonResponse.responseCode).to.be.a(\"number\");",
+											"",
+											"    pm.expect(jsonResponse.params).to.be.null;",
+											"});",
+											"",
+											"// Validation",
+											"pm.test(\"id should be api.group.read\", function () {",
+											"    pm.expect(jsonResponse.id).to.eql(\"api.group.read\");",
+											"});",
+											"",
+											"pm.test(\"ver should be v1\", function () {",
+											"    pm.expect(jsonResponse.ver).to.eql(\"v1\");",
+											"});",
+											"",
+											"pm.test(\"responseCode should be 200\", function () {",
+											"    pm.expect(jsonResponse.responseCode).to.eql(200);",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{kong_api_key}}",
+										"type": "text"
+									},
+									{
+										"key": "X-Authenticated-User-token",
+										"value": "{{keycloak_access_token}}",
+										"type": "text"
+									}
+								],
+								"url": "{{host}}/api/group/v1/read/{{group_id}}",
+								"description": "This API is used for getting a specific group, it is based on the unique ID of the group\n  - The endpoint for **Get Group by Group ID** is `/group/v1/read/{groupId}`\n  - The fields marked with an asterisk (*) are mandatory. They cannot be null or empty.\n  - User can pass an optional query parameter 'fields'. The value is a comma separated list of fields whose information is required in response. e.g. fields=members,activities\n  - 'members' is to return all the members of the group.\n  - 'activities' is to return all the activities of the group along with activity information from search service."
+							},
+							"response": [
+								{
+									"name": "200 - With minimum required input",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "Authorization",
+												"value": "{{kong_api_key}}",
+												"type": "text"
+											},
+											{
+												"key": "X-Authenticated-User-token",
+												"value": "{{keycloak_access_token}}",
+												"type": "text"
+											}
+										],
+										"url": "{{host}}/api/group/v1/read/{{group_id}}"
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Date",
+											"value": "Wed, 06 Sep 2023 09:23:31 GMT"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "Transfer-Encoding",
+											"value": "chunked"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "Vary",
+											"value": "Accept-Encoding"
+										},
+										{
+											"key": "X-RateLimit-Limit-hour",
+											"value": "30000"
+										},
+										{
+											"key": "X-RateLimit-Remaining-hour",
+											"value": "29997"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										},
+										{
+											"key": "X-Kong-Upstream-Latency",
+											"value": "6"
+										},
+										{
+											"key": "X-Kong-Proxy-Latency",
+											"value": "8"
+										},
+										{
+											"key": "Via",
+											"value": "kong/0.14.1"
+										},
+										{
+											"key": "Content-Encoding",
+											"value": "gzip"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"id\": \"api.group.read\",\n    \"ver\": \"v1\",\n    \"ts\": \"2023-09-06 09:23:31:858+0000\",\n    \"params\": null,\n    \"result\": {\n        \"membershipType\": \"invite_only\",\n        \"updatedBy\": \"84cfe068-94f1-4681-98f9-0c1a3239b55f\",\n        \"createdBy\": \"84cfe068-94f1-4681-98f9-0c1a3239b55f\",\n        \"activities\": [],\n        \"name\": \"Novice History Group 428\",\n        \"description\": \"This study group is open to all levels of expertise.\",\n        \"id\": \"8463f883-737d-45bc-89bc-bffefa7f9d0d\",\n        \"updatedOn\": \"2023-09-06 09:22:12:574+0000\",\n        \"createdOn\": \"2023-09-06 09:18:01:277+0000\",\n        \"status\": \"active\"\n    },\n    \"responseCode\": 200\n}"
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Negative",
+					"item": [
+						{
+							"name": "400 -  Invalid group id",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"let jsonResponse = pm.response.json();",
+											"",
+											"// Verification",
+											"pm.test(\"Status code is 400\", function () {",
+											"    pm.response.to.have.status(400);",
+											"});",
+											"",
+											"// Verify params",
+											"pm.test(\"params.err should be \\\"GS_RED07\\\"\", () => {",
+											"    pm.expect(jsonResponse.params.err).to.eql(\"GS_RED07\");",
+											"});",
+											"pm.test(\"params.errmsg should be \\\"Failed to read details, group not found. Contact your system administrator.\\\"\", () => {",
+											"    pm.expect(jsonResponse.params.errmsg).to.eql(\"Failed to read details, group not found. Contact your system administrator.\");",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.globals.set('invalid_group_id', '1aswe3daa');"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{kong_api_key}}",
+										"type": "text"
+									},
+									{
+										"key": "X-Authenticated-User-token",
+										"value": "{{keycloak_access_token}}",
+										"type": "text"
+									}
+								],
+								"url": "{{host}}/api/group/v1/read/{{invalid_group_id}}",
+								"description": "This API is used for getting a specific group, it is based on the unique ID of the group\n  - The endpoint for **Get Group by Group ID** is `/group/v1/read/{groupId}`\n  - The fields marked with an asterisk (*) are mandatory. They cannot be null or empty.\n  - User can pass an optional query parameter 'fields'. The value is a comma separated list of fields whose information is required in response. e.g. fields=members,activities\n  - 'members' is to return all the members of the group.\n  - 'activities' is to return all the activities of the group along with activity information from search service."
+							},
+							"response": [
+								{
+									"name": "400 -  Invalid group id",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "Authorization",
+												"value": "{{kong_api_key}}",
+												"type": "text"
+											},
+											{
+												"key": "X-Authenticated-User-token",
+												"value": "{{keycloak_access_token}}",
+												"type": "text"
+											}
+										],
+										"url": "{{host}}/api/group/v1/read/{{invalid_group_id}}"
+									},
+									"status": "Bad Request",
+									"code": 400,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Date",
+											"value": "Wed, 06 Sep 2023 09:23:46 GMT"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "Content-Length",
+											"value": "293"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "X-RateLimit-Limit-hour",
+											"value": "30000"
+										},
+										{
+											"key": "X-RateLimit-Remaining-hour",
+											"value": "29996"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										},
+										{
+											"key": "X-Kong-Upstream-Latency",
+											"value": "8"
+										},
+										{
+											"key": "X-Kong-Proxy-Latency",
+											"value": "13"
+										},
+										{
+											"key": "Via",
+											"value": "kong/0.14.1"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"id\": \"api.group.read\",\n    \"ver\": null,\n    \"ts\": \"2023-09-06 09:23:46:500+0000\",\n    \"params\": {\n        \"resmsgid\": null,\n        \"msgid\": \"39b02db912ea8f22f44847cc6190779c\",\n        \"err\": \"GS_RED07\",\n        \"status\": \"failed\",\n        \"errmsg\": \"Failed to read details, group not found. Contact your system administrator.\"\n    },\n    \"result\": {},\n    \"responseCode\": 400\n}"
+								}
+							]
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "DeleteGroup",
+			"item": [
+				{
+					"name": "Positive",
+					"item": [
+						{
+							"name": "200 - With minimum required input",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"let jsonResponse = pm.response.json();",
+											"",
+											"// Verification",
+											"pm.test(\"Status code is 200\", () => {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.test(\"Content-Type header is present\", () => {",
+											"    pm.response.to.have.header(\"Content-Type\");",
+											"});",
+											"",
+											"pm.test(\"Content-Type header is application/json\", () => {",
+											"    pm.expect(pm.response.headers.get('Content-Type')).to.eql('application/json');",
+											"});",
+											"",
+											"pm.test(\"Test data type of the response and keys\", () => {",
+											"    pm.expect(jsonResponse).to.be.an(\"object\").that.has.all.keys(",
+											"        'id', 'ver', 'ts', 'params', 'result', 'responseCode'",
+											"    );",
+											"",
+											"    pm.expect(jsonResponse.id).to.be.a(\"string\");",
+											"    pm.expect(jsonResponse.ver).to.be.a(\"string\");",
+											"    pm.expect(jsonResponse.ts).to.be.a(\"string\");",
+											"    pm.expect(jsonResponse.responseCode).to.be.a(\"number\");",
+											"",
+											"    pm.expect(jsonResponse.params).to.be.null;",
+											"",
+											"    pm.expect(jsonResponse.result).to.be.an(\"object\").that.has.all.keys(",
+											"        'response'",
+											"    );",
+											"",
+											"    pm.expect(jsonResponse.result.response).to.be.a(\"string\");",
+											"});",
+											"",
+											"// Validation",
+											"pm.test(\"id should be api.group.delete\", function () {",
+											"    pm.expect(jsonResponse.id).to.eql(\"api.group.delete\");",
+											"});",
+											"",
+											"pm.test(\"ver should be v1\", function () {",
+											"    pm.expect(jsonResponse.ver).to.eql(\"v1\");",
+											"});",
+											"",
+											"pm.test(\"responseCode should be 200\", function () {",
+											"    pm.expect(jsonResponse.responseCode).to.eql(200);",
+											"});",
+											"",
+											"pm.test(\"result.response should be SUCCESS\", function () {",
+											"    pm.expect(jsonResponse.result.response).to.eql(\"SUCCESS\");",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{kong_api_key}}",
+										"type": "text"
+									},
+									{
+										"key": "X-Authenticated-User-token",
+										"value": "{{keycloak_access_token}}",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"request\": {\n        \"groupId\": \"{{group_id}}\"\n    }\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{host}}/api/group/v1/delete",
+								"description": "This API is used for deleting the groups .\n  - The endpoint for **Delete Group** is `/group/v1/delete`\n  - The fields marked with an asterisk (*) are mandatory. They cannot be null or empty.\n  "
+							},
+							"response": [
+								{
+									"name": "200 - With minimum required input",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Authorization",
+												"value": "{{kong_api_key}}",
+												"type": "text"
+											},
+											{
+												"key": "X-Authenticated-User-token",
+												"value": "{{keycloak_access_token}}",
+												"type": "text"
+											},
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"request\": {\n        \"groupId\": \"{{group_id}}\"\n    }\n}",
+											"options": {
+												"raw": {
+													"headerFamily": "json",
+													"language": "json"
+												}
+											}
+										},
+										"url": "{{host}}/api/group/v1/delete"
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Date",
+											"value": "Wed, 06 Sep 2023 09:24:36 GMT"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "Content-Length",
+											"value": "137"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "X-RateLimit-Limit-hour",
+											"value": "30000"
+										},
+										{
+											"key": "X-RateLimit-Remaining-hour",
+											"value": "29997"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										},
+										{
+											"key": "X-Kong-Upstream-Latency",
+											"value": "19"
+										},
+										{
+											"key": "X-Kong-Proxy-Latency",
+											"value": "9"
+										},
+										{
+											"key": "Via",
+											"value": "kong/0.14.1"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"id\": \"api.group.delete\",\n    \"ver\": \"v1\",\n    \"ts\": \"2023-09-06 09:24:36:886+0000\",\n    \"params\": null,\n    \"result\": {\n        \"response\": \"SUCCESS\"\n    },\n    \"responseCode\": 200\n}"
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Negative",
+					"item": [
+						{
+							"name": "400 - Invalid group id",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"let jsonResponse = pm.response.json();",
+											"",
+											"// Verification",
+											"pm.test(\"Status code is 400\", function () {",
+											"    pm.response.to.have.status(400);",
+											"});",
+											"",
+											"// Validation",
+											"// Verify params",
+											"pm.test(\"params.err should be \\\"GS_DLT07\\\"\", () => {",
+											"    pm.expect(jsonResponse.params.err).to.eql(\"GS_DLT07\");",
+											"});",
+											"pm.test(\"params.errmsg should be \\\"Failed to delete, group not found. Contact your system administrator.\\\"\", () => {",
+											"    pm.expect(jsonResponse.params.errmsg).to.eql(\"Failed to delete, group not found. Contact your system administrator.\");",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.globals.set('invalid_group_id', '1aswe3daa');"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{kong_api_key}}",
+										"type": "text"
+									},
+									{
+										"key": "X-Authenticated-User-token",
+										"value": "{{keycloak_access_token}}",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"request\": {\n        \"groupId\": \"{{invalid_group_id}}\"\n    }\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": "{{host}}/api/group/v1/delete",
+								"description": "This API is used for deleting the groups .\n  - The endpoint for **Delete Group** is `/group/v1/delete`\n  - The fields marked with an asterisk (*) are mandatory. They cannot be null or empty.\n  "
+							},
+							"response": [
+								{
+									"name": "400 - Invalid group id",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Authorization",
+												"value": "{{kong_api_key}}",
+												"type": "text"
+											},
+											{
+												"key": "X-Authenticated-User-token",
+												"value": "{{keycloak_access_token}}",
+												"type": "text"
+											},
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"request\": {\n        \"groupId\": \"{{invalid_group_id}}\"\n    }\n}",
+											"options": {
+												"raw": {
+													"headerFamily": "json",
+													"language": "json"
+												}
+											}
+										},
+										"url": "{{host}}/api/group/v1/delete"
+									},
+									"status": "Bad Request",
+									"code": 400,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Date",
+											"value": "Wed, 06 Sep 2023 09:24:50 GMT"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "Content-Length",
+											"value": "289"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "X-RateLimit-Limit-hour",
+											"value": "30000"
+										},
+										{
+											"key": "X-RateLimit-Remaining-hour",
+											"value": "29996"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										},
+										{
+											"key": "X-Kong-Upstream-Latency",
+											"value": "7"
+										},
+										{
+											"key": "X-Kong-Proxy-Latency",
+											"value": "8"
+										},
+										{
+											"key": "Via",
+											"value": "kong/0.14.1"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"id\": \"api.group.delete\",\n    \"ver\": null,\n    \"ts\": \"2023-09-06 09:24:50:287+0000\",\n    \"params\": {\n        \"resmsgid\": null,\n        \"msgid\": \"4962eb51b2b47a60fba7a7e417ca195c\",\n        \"err\": \"GS_DLT07\",\n        \"status\": \"failed\",\n        \"errmsg\": \"Failed to delete, group not found. Contact your system administrator.\"\n    },\n    \"result\": {},\n    \"responseCode\": 400\n}"
+								}
+							]
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "UpdateGroupMembership",
+			"item": [
+				{
+					"name": "Positive",
+					"item": [
+						{
+							"name": "200 - With minimum required inputs",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"let jsonResponse = pm.response.json();",
+											"",
+											"// Verification",
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"// Verify responseCode",
+											"pm.test(\"responseCode should be '200'\", function () {",
+											"    pm.expect(jsonResponse.responseCode).to.eql(200);",
+											"});",
+											"",
+											"// Verify result.response",
+											"pm.test(\"result.response should be 'SUCCESS'\", function () {",
+											"    pm.expect(jsonResponse.result.response).to.eql(\"SUCCESS\");",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{kong_api_key}}",
+										"type": "text"
+									},
+									{
+										"key": "X-Authenticated-User-token",
+										"value": "{{keycloak_access_token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"request\": {\n        \"userId\": \"{{user_id}}\",\n        \"groups\": [\n            {\n                \"groupId\": \"{{group_id}}\",\n                \"visited\": true\n            }\n        ]\n    }\n}"
+								},
+								"url": "{{host}}/api/group/membership/v1/update"
+							},
+							"response": [
+								{
+									"name": "UpdateGroupMembership",
+									"originalRequest": {
+										"method": "PATCH",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "Authorization",
+												"value": "{{kong_api_key}}",
+												"type": "text"
+											},
+											{
+												"key": "X-Authenticated-User-token",
+												"value": "{{keycloak_access_token}}",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"request\": {\n        \"userId\": \"{{user_id}}\",\n        \"groups\": [\n            {\n                \"groupId\": \"{{group_id}}\",\n                \"visited\": true\n            }\n        ]\n    }\n}"
+										},
+										"url": "{{host}}/api/group/membership/v1/update"
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Date",
+											"value": "Wed, 06 Sep 2023 09:36:00 GMT"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "Content-Length",
+											"value": "148"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "X-RateLimit-Limit-hour",
+											"value": "30000"
+										},
+										{
+											"key": "X-RateLimit-Remaining-hour",
+											"value": "29996"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										},
+										{
+											"key": "X-Kong-Upstream-Latency",
+											"value": "14"
+										},
+										{
+											"key": "X-Kong-Proxy-Latency",
+											"value": "74"
+										},
+										{
+											"key": "Via",
+											"value": "kong/0.14.1"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"id\": \"api.group.membership.update\",\n    \"ver\": \"v1\",\n    \"ts\": \"2023-09-06 09:36:00:708+0000\",\n    \"params\": null,\n    \"result\": {\n        \"response\": \"SUCCESS\"\n    },\n    \"responseCode\": 200\n}"
+								}
+							]
+						},
+						{
+							"name": "200 - With visited Flag False",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"let jsonResponse = pm.response.json();",
+											"",
+											"// Verification",
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"// Verify responseCode",
+											"pm.test(\"responseCode should be '200'\", function () {",
+											"    pm.expect(jsonResponse.responseCode).to.eql(200);",
+											"});",
+											"",
+											"// Verify result.response",
+											"pm.test(\"result.response should be 'SUCCESS'\", function () {",
+											"    pm.expect(jsonResponse.result.response).to.eql(\"SUCCESS\");",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{kong_api_key}}",
+										"type": "text"
+									},
+									{
+										"key": "X-Authenticated-User-token",
+										"value": "{{keycloak_access_token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"request\": {\n        \"userId\": \"{{user_id}}\",\n        \"groups\": [\n            {\n                \"groupId\": \"{{group_id}}\",\n                \"visited\": false\n            }\n        ]\n    }\n}"
+								},
+								"url": "{{host}}/api/group/membership/v1/update"
+							},
+							"response": [
+								{
+									"name": "UpdateGroupMembership",
+									"originalRequest": {
+										"method": "PATCH",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "Authorization",
+												"value": "{{kong_api_key}}",
+												"type": "text"
+											},
+											{
+												"key": "X-Authenticated-User-token",
+												"value": "{{keycloak_access_token}}",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"request\": {\n        \"userId\": \"{{user_id}}\",\n        \"groups\": [\n            {\n                \"groupId\": \"{{group_id}}\",\n                \"visited\": true\n            }\n        ]\n    }\n}"
+										},
+										"url": "{{host}}/api/group/membership/v1/update"
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Date",
+											"value": "Wed, 06 Sep 2023 09:36:00 GMT"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "Content-Length",
+											"value": "148"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "X-RateLimit-Limit-hour",
+											"value": "30000"
+										},
+										{
+											"key": "X-RateLimit-Remaining-hour",
+											"value": "29996"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										},
+										{
+											"key": "X-Kong-Upstream-Latency",
+											"value": "14"
+										},
+										{
+											"key": "X-Kong-Proxy-Latency",
+											"value": "74"
+										},
+										{
+											"key": "Via",
+											"value": "kong/0.14.1"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"id\": \"api.group.membership.update\",\n    \"ver\": \"v1\",\n    \"ts\": \"2023-09-06 09:36:00:708+0000\",\n    \"params\": null,\n    \"result\": {\n        \"response\": \"SUCCESS\"\n    },\n    \"responseCode\": 200\n}"
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Negative",
+					"item": [
+						{
+							"name": "400 - Missing User Id",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"let jsonResponse = pm.response.json();",
+											"",
+											"// Verification",
+											"pm.test(\"Status code is 400\", function () {",
+											"    pm.response.to.have.status(400);",
+											"});",
+											"",
+											"// Verify responseCode",
+											"pm.test(\"responseCode should be '400'\", function () {",
+											"    pm.expect(jsonResponse.responseCode).to.eql(400);",
+											"});",
+											"",
+											"// Verify params.err",
+											"pm.test(\"params.err should be 'GS_MBRSHP_UDT02'\", function () {",
+											"    pm.expect(jsonResponse.params.err).to.eql(\"GS_MBRSHP_UDT02\");",
+											"});",
+											"",
+											"// Verify params.errmsg",
+											"pm.test(\"params.errmsg should be 'Failed to update group member details, mandatory fields are missing or invalid fields value in the request. Enter the required values and resend the request.'\", function () {",
+											"    pm.expect(jsonResponse.params.errmsg).to.eql(\"Failed to update group member details, mandatory fields are missing or invalid fields value in the request. Enter the required values and resend the request.\");",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{kong_api_key}}",
+										"type": "text"
+									},
+									{
+										"key": "X-Authenticated-User-token",
+										"value": "{{keycloak_access_token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"request\": {\n        \"groups\": [\n            {\n                \"groupId\": \"{{group_id}}\",\n                \"visited\": true\n            }\n        ]\n    }\n}"
+								},
+								"url": "{{host}}/api/group/membership/v1/update"
+							},
+							"response": [
+								{
+									"name": "UpdateGroupMembership",
+									"originalRequest": {
+										"method": "PATCH",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "Authorization",
+												"value": "{{kong_api_key}}",
+												"type": "text"
+											},
+											{
+												"key": "X-Authenticated-User-token",
+												"value": "{{keycloak_access_token}}",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"request\": {\n        \"groups\": [\n            {\n                \"groupId\": \"{{group_id}}\",\n                \"visited\": true\n            }\n        ]\n    }\n}"
+										},
+										"url": "{{host}}/api/group/membership/v1/update"
+									},
+									"status": "Bad Request",
+									"code": 400,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Date",
+											"value": "Wed, 06 Sep 2023 09:40:57 GMT"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "Content-Length",
+											"value": "395"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "X-RateLimit-Limit-hour",
+											"value": "30000"
+										},
+										{
+											"key": "X-RateLimit-Remaining-hour",
+											"value": "29988"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										},
+										{
+											"key": "X-Kong-Upstream-Latency",
+											"value": "6"
+										},
+										{
+											"key": "X-Kong-Proxy-Latency",
+											"value": "9"
+										},
+										{
+											"key": "Via",
+											"value": "kong/0.14.1"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"id\": \"api.group.membership.update\",\n    \"ver\": null,\n    \"ts\": \"2023-09-06 09:40:57:319+0000\",\n    \"params\": {\n        \"resmsgid\": null,\n        \"msgid\": \"a6d9cb67d37821cbe619cff9805fdcd3\",\n        \"err\": \"GS_MBRSHP_UDT02\",\n        \"status\": \"failed\",\n        \"errmsg\": \"Failed to update group member details, mandatory fields are missing or invalid fields value in the request. Enter the required values and resend the request.\"\n    },\n    \"result\": {},\n    \"responseCode\": 400\n}"
+								}
+							]
+						},
+						{
+							"name": "400 - Missing group id and visited Flag",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"let jsonResponse = pm.response.json();",
+											"",
+											"// Verification",
+											"pm.test(\"Status code is 400\", function () {",
+											"    pm.response.to.have.status(400);",
+											"});",
+											"",
+											"// Verify responseCode",
+											"pm.test(\"responseCode should be '400'\", function () {",
+											"    pm.expect(jsonResponse.responseCode).to.eql(400);",
+											"});",
+											"",
+											"// Verify params.err",
+											"pm.test(\"params.err should be 'GS_MBRSHP_UDT02'\", function () {",
+											"    pm.expect(jsonResponse.params.err).to.eql(\"GS_MBRSHP_UDT02\");",
+											"});",
+											"",
+											"// Verify params.errmsg",
+											"pm.test(\"params.errmsg should be 'Failed to update group member details, mandatory fields are missing or invalid fields value in the request. Enter the required values and resend the request.'\", function () {",
+											"    pm.expect(jsonResponse.params.errmsg).to.eql(\"Failed to update group member details, mandatory fields are missing or invalid fields value in the request. Enter the required values and resend the request.\");",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{kong_api_key}}",
+										"type": "text"
+									},
+									{
+										"key": "X-Authenticated-User-token",
+										"value": "{{keycloak_access_token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"request\": {\n        \"userId\": \"{{user_id}}\",\n        \"groups\": []\n    }\n}"
+								},
+								"url": "{{host}}/api/group/membership/v1/update"
+							},
+							"response": [
+								{
+									"name": "UpdateGroupMembership Copy",
+									"originalRequest": {
+										"method": "PATCH",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "Authorization",
+												"value": "{{kong_api_key}}",
+												"type": "text"
+											},
+											{
+												"key": "X-Authenticated-User-token",
+												"value": "{{keycloak_access_token}}",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"request\": {\n        \"userId\": \"{{user_id}}\",\n        \"groups\": []\n    }\n}"
+										},
+										"url": "{{host}}/api/group/membership/v1/update"
+									},
+									"status": "Bad Request",
+									"code": 400,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Date",
+											"value": "Wed, 06 Sep 2023 09:39:54 GMT"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "Content-Length",
+											"value": "395"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "X-RateLimit-Limit-hour",
+											"value": "30000"
+										},
+										{
+											"key": "X-RateLimit-Remaining-hour",
+											"value": "29990"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										},
+										{
+											"key": "X-Kong-Upstream-Latency",
+											"value": "5"
+										},
+										{
+											"key": "X-Kong-Proxy-Latency",
+											"value": "9"
+										},
+										{
+											"key": "Via",
+											"value": "kong/0.14.1"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"id\": \"api.group.membership.update\",\n    \"ver\": null,\n    \"ts\": \"2023-09-06 09:39:54:333+0000\",\n    \"params\": {\n        \"resmsgid\": null,\n        \"msgid\": \"0a2ea29f92f88a8c8856518a2f2bdc12\",\n        \"err\": \"GS_MBRSHP_UDT02\",\n        \"status\": \"failed\",\n        \"errmsg\": \"Failed to update group member details, mandatory fields are missing or invalid fields value in the request. Enter the required values and resend the request.\"\n    },\n    \"result\": {},\n    \"responseCode\": 400\n}"
+								}
+							]
+						},
+						{
+							"name": "400 - Missing visited Flag",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"let jsonResponse = pm.response.json();",
+											"",
+											"// Verification",
+											"pm.test(\"Status code is 500\", function () {",
+											"    pm.response.to.have.status(500);",
+											"});",
+											"",
+											"// Verify responseCode",
+											"pm.test(\"responseCode should be '500'\", function () {",
+											"    pm.expect(jsonResponse.responseCode).to.eql(500);",
+											"});",
+											"",
+											"// Verify params.err",
+											"pm.test(\"params.err should be 'GS_MBRSHP_UDT03'\", function () {",
+											"    pm.expect(jsonResponse.params.err).to.eql(\"GS_MBRSHP_UDT03\");",
+											"});",
+											"",
+											"// Verify params.errmsg",
+											"pm.test(\"params.errmsg should be 'Failed to create group, due to database error or there are too many concurrent calls to the server. Try again later.'\", function () {",
+											"    pm.expect(jsonResponse.params.errmsg).to.eql(\"Failed to create group, due to database error or there are too many concurrent calls to the server. Try again later.\");",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{kong_api_key}}",
+										"type": "text"
+									},
+									{
+										"key": "X-Authenticated-User-token",
+										"value": "{{keycloak_access_token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"request\": {\n        \"userId\": \"{{user_id}}\",\n        \"groups\": [\n            {\n                \"groupId\": \"{{group_id}}\"\n            }\n        ]\n    }\n}"
+								},
+								"url": "{{host}}/api/group/membership/v1/update"
+							},
+							"response": [
+								{
+									"name": "UpdateGroupMembership",
+									"originalRequest": {
+										"method": "PATCH",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "Authorization",
+												"value": "{{kong_api_key}}",
+												"type": "text"
+											},
+											{
+												"key": "X-Authenticated-User-token",
+												"value": "{{keycloak_access_token}}",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"request\": {\n        \"userId\": \"{{user_id}}\",\n        \"groups\": [\n            {\n                \"groupId\": \"{{group_id}}\",\n                \"visited\": true\n            }\n        ]\n    }\n}"
+										},
+										"url": "{{host}}/api/group/membership/v1/update"
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Date",
+											"value": "Wed, 06 Sep 2023 09:36:00 GMT"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "Content-Length",
+											"value": "148"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "X-RateLimit-Limit-hour",
+											"value": "30000"
+										},
+										{
+											"key": "X-RateLimit-Remaining-hour",
+											"value": "29996"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										},
+										{
+											"key": "X-Kong-Upstream-Latency",
+											"value": "14"
+										},
+										{
+											"key": "X-Kong-Proxy-Latency",
+											"value": "74"
+										},
+										{
+											"key": "Via",
+											"value": "kong/0.14.1"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"id\": \"api.group.membership.update\",\n    \"ver\": \"v1\",\n    \"ts\": \"2023-09-06 09:36:00:708+0000\",\n    \"params\": null,\n    \"result\": {\n        \"response\": \"SUCCESS\"\n    },\n    \"responseCode\": 200\n}"
+								}
+							]
+						},
+						{
+							"name": "401 - Invalid user id",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"let jsonResponse = pm.response.json();",
+											"",
+											"// Verification",
+											"pm.test(\"Status code is 401\", function () {",
+											"    pm.response.to.have.status(401);",
+											"});",
+											"",
+											"// Verify responseCode",
+											"pm.test(\"responseCode should be '401'\", function () {",
+											"    pm.expect(jsonResponse.responseCode).to.eql(401);",
+											"});",
+											"",
+											"// Verify params.err",
+											"pm.test(\"params.err should be 'GS_MBRSHP_UDT01'\", function () {",
+											"    pm.expect(jsonResponse.params.err).to.eql(\"GS_MBRSHP_UDT01\");",
+											"});",
+											"",
+											"// Verify params.errmsg",
+											"pm.test(\"params.errmsg should be 'Failed to update group member details, unauthorised user. Contact your system administrator.'\", function () {",
+											"    pm.expect(jsonResponse.params.errmsg).to.eql(\"Failed to update group member details, unauthorised user. Contact your system administrator.\");",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.globals.set('invalid_user_id', '1aswe3daa');"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{kong_api_key}}",
+										"type": "text"
+									},
+									{
+										"key": "X-Authenticated-User-token",
+										"value": "{{keycloak_access_token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"request\": {\n        \"userId\": \"{{invalid_user_id}}\",\n        \"groups\": [\n            {\n                \"groupId\": \"{{group_id}}\",\n                \"visited\":true\n            }\n        ]\n    }\n}"
+								},
+								"url": "{{host}}/api/group/membership/v1/update"
+							},
+							"response": [
+								{
+									"name": "401 - Invalid user id",
+									"originalRequest": {
+										"method": "PATCH",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "Content-Type",
+												"name": "Content-Type",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "Authorization",
+												"value": "{{kong_api_key}}",
+												"type": "text"
+											},
+											{
+												"key": "X-Authenticated-User-token",
+												"value": "{{keycloak_access_token}}",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"request\": {\n        \"userId\": \"{{invalid_user_id}}\",\n        \"groups\": [\n            {\n                \"groupId\": \"{{group_id}}\",\n                \"visited\":true\n            }\n        ]\n    }\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": "{{host}}/api/group/membership/v1/update"
+									},
+									"status": "Unauthorized",
+									"code": 401,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Date",
+											"value": "Wed, 06 Sep 2023 09:45:38 GMT"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "Content-Length",
+											"value": "330"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "X-RateLimit-Limit-hour",
+											"value": "30000"
+										},
+										{
+											"key": "X-RateLimit-Remaining-hour",
+											"value": "29984"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										},
+										{
+											"key": "X-Kong-Upstream-Latency",
+											"value": "5"
+										},
+										{
+											"key": "X-Kong-Proxy-Latency",
+											"value": "11"
+										},
+										{
+											"key": "Via",
+											"value": "kong/0.14.1"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"id\": \"api.group.membership.update\",\n    \"ver\": null,\n    \"ts\": \"2023-09-06 09:45:38:259+0000\",\n    \"params\": {\n        \"resmsgid\": null,\n        \"msgid\": \"3391f010ba0849ee3fbb35809f11d3d2\",\n        \"err\": \"GS_MBRSHP_UDT01\",\n        \"status\": \"failed\",\n        \"errmsg\": \"Failed to update group member details, unauthorised user. Contact your system administrator.\"\n    },\n    \"result\": {},\n    \"responseCode\": 401\n}"
+								}
+							]
+						}
+					]
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"function generateRandomGroupName() {",
+					"    const adjectives = ['Advanced', 'Beginner', 'Intermediate', 'Expert', 'Pro', 'Novice', 'Skilled', 'Enthusiastic'];",
+					"    const subjects = ['Math', 'Science', 'History', 'Literature', 'Programming', 'Languages', 'Art', 'Music'];",
+					"    const randomAdjective = adjectives[Math.floor(Math.random() * adjectives.length)];",
+					"    const randomSubject = subjects[Math.floor(Math.random() * subjects.length)];",
+					"    const randomNumber = Math.floor(Math.random() * 1000);",
+					"    ",
+					"    return `${randomAdjective} ${randomSubject} Group ${randomNumber}`;",
+					"}",
+					"",
+					"    if (pm.environment.get(\"environment\") === \"local\") {",
+					"        var baseURL = pm.environment.get(\"host\")",
+					"        pm.variables.set(\"baseURL\", baseURL);",
+					"    } else {",
+					"        var baseURL = pm.environment.get(\"host\") + pm.variables.get(\"basePath\");",
+					"        pm.variables.set(\"baseURL\", baseURL);",
+					"    }",
+					"",
+					"function generateRandomDescription() {",
+					"    const phrases = [",
+					"        'Join this study group to collaborate and learn together.',",
+					"        'In this group, we discuss various topics and share resources.',",
+					"        'Looking for fellow learners to study together? Join us now!',",
+					"        'We focus on interactive learning and knowledge sharing.',",
+					"        'This study group is open to all levels of expertise.'",
+					"    ];",
+					"    ",
+					"    const randomPhrase = phrases[Math.floor(Math.random() * phrases.length)];",
+					"    return randomPhrase;",
+					"}",
+					"",
+					"const groupName = generateRandomGroupName();",
+					"const groupDescription = generateRandomDescription();",
+					"",
+					"pm.environment.set('group_name', groupName);",
+					"pm.environment.set('group_description', groupDescription);"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "refresh_token",
+			"value": ""
+		}
+	]
+}
