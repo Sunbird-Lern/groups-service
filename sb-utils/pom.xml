@@ -59,7 +59,7 @@
         <dependency>
             <groupId>org.keycloak</groupId>
             <artifactId>keycloak-admin-client</artifactId>
-            <version>11.0.0</version>
+            <version>7.0.1</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>

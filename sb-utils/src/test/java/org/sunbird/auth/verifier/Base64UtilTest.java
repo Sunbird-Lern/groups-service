@@ -1,6 +1,5 @@
 package org.sunbird.auth.verifier;
 
-import org.jboss.resteasy.util.Base64;
 import org.junit.Assert;
 import org.junit.Test;
 
