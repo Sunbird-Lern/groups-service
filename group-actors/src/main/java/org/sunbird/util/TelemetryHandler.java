@@ -3,7 +3,6 @@ package org.sunbird.util;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.bouncycastle.cert.ocsp.Req;
 import org.sunbird.common.request.Request;
 import org.sunbird.common.util.JsonKey;
 import org.sunbird.models.Group;

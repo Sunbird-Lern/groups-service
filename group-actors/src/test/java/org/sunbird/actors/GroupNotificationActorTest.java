@@ -4,7 +4,6 @@ import akka.actor.ActorRef;
 import akka.actor.Props;
 import akka.testkit.javadsl.TestKit;
 import jnr.x86asm.Mem;
-import org.bouncycastle.cert.ocsp.Req;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
