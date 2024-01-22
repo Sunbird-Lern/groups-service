@@ -11,6 +11,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
+import org.sunbird.cache.util.Platform;
 import org.sunbird.common.exception.AuthorizationException;
 import org.sunbird.common.exception.BaseException;
 import org.sunbird.common.message.IResponseMessage;
@@ -207,11 +208,11 @@ public class OnRequestHandler implements ActionCreator {
 
   private static Map<String, Object> cacheTelemetryPdata() {
     Map<String, Object> telemetryPdata = new HashMap<>();
-    telemetryPdata.put("telemetry_pdata_id", PropertiesCache.getConfigValue("telemetry_pdata_id"));
+    telemetryPdata.put("telemetry_pdata_id", Platform.getString("telemetry_pdata_id", ""));
     telemetryPdata.put(
-        "telemetry_pdata_pid", PropertiesCache.getConfigValue("telemetry_pdata_pid"));
+        "telemetry_pdata_pid", Platform.getString("telemetry_pdata_pid", ""));
     telemetryPdata.put(
-        "telemetry_pdata_ver", PropertiesCache.getConfigValue("telemetry_pdata_ver"));
+        "telemetry_pdata_ver", Platform.getString("telemetry_pdata_ver", ""));
     return telemetryPdata;
   }
 

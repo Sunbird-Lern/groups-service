@@ -5,8 +5,11 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import org.sunbird.Application;
 import org.sunbird.auth.verifier.KeyManager;
+import org.sunbird.cache.util.Platform;
 import org.sunbird.common.exception.BaseException;
+import org.sunbird.telemetry.TelemetryEnvKey;
 import org.sunbird.util.*;
+import org.sunbird.util.helper.PropertiesCache;
 import play.api.Environment;
 import play.api.inject.ApplicationLifecycle;
 
@@ -16,6 +19,8 @@ import play.api.inject.ApplicationLifecycle;
  */
 @Singleton
 public class ApplicationStart {
+
+  LoggerUtil logger = new LoggerUtil(ApplicationStart.class);
   /**
    * All one time initialization which required during server startup will fall here.
    *
@@ -37,6 +42,14 @@ public class ApplicationStart {
           return CompletableFuture.completedFuture(null);
         });
     KeyManager.init();
+    logger.info("sunbird_user_service_search_url:1 "+ System.getenv("sunbird_user_service_search_url"));
+    logger.info("sunbird_user_service_search_url:2 "+ PropertiesCache.getInstance().getProperty("sunbird_user_service_search_url"));
+    logger.info("sunbird_user_service_search_url:3 "+ Platform.getString("sunbird_user_service_search_url", ""));
+    logger.info("sunbird_health_check_enable:1 "+  PropertiesCache.getInstance().getProperty("sunbird_health_check_enable"));
+    logger.info("sunbird_health_check_enable:2 "+  Platform.getBoolean("sunbird_health_check_enable", false));
+    logger.info("user_redis_ttl:1 "+  PropertiesCache.getInstance().getProperty("user_redis_ttl"));
+    logger.info("user_redis_ttl:2 "+  Platform.getLong("user_redis_ttl", 0l));
+    logger.info("groupid: "+ TelemetryEnvKey.GROUPID);
   }
 
   private void setEnvironment(Environment environment) {
