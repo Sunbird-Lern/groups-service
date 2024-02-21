@@ -10,7 +10,6 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>cassandra-utils</artifactId>
     <properties>
-        <version.compiler.plugin>2.3.1</version.compiler.plugin>
         <maven.compiler.target>11</maven.compiler.target>
         <maven.compiler.source>11</maven.compiler.source>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

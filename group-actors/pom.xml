@@ -8,9 +8,6 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>group-actors</artifactId>
-    <properties>
-        <scala.binary.version>2.11</scala.binary.version>
-    </properties>
     <dependencies>
         <dependency>
             <groupId>org.sunbird</groupId>
@@ -56,8 +53,8 @@
         </dependency>
         <dependency>
             <groupId>com.typesafe.akka</groupId>
-            <artifactId>akka-testkit_${scala.binary.version}</artifactId>
-            <version>2.5.19</version>
+            <artifactId>akka-testkit_${scala.major.version}</artifactId>
+            <version>${typesafe.akka.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -98,8 +95,8 @@
         </dependency>
         <dependency>
             <groupId>org.powermock</groupId>
-            <artifactId>powermock-api-mockito</artifactId>
-            <version>1.6.5</version>
+            <artifactId>powermock-api-mockito2</artifactId>
+            <version>${powermock.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -127,19 +124,6 @@
                         <include>**/*Test.java</include>
                     </includes>
                 </configuration>
-            </plugin>
-            <plugin>
-                <groupId>com.github.spotbugs</groupId>
-                <artifactId>spotbugs-maven-plugin</artifactId>
-                <version>${spotbugs.plugin.version}</version>
-                <dependencies>
-                    <!-- overwrite dependency on spotbugs if you want to specify the version of spotbugs -->
-                    <dependency>
-                        <groupId>com.github.spotbugs</groupId>
-                        <artifactId>spotbugs</artifactId>
-                        <version>4.2.0</version>
-                    </dependency>
-                </dependencies>
             </plugin>
         </plugins>
     </build>
