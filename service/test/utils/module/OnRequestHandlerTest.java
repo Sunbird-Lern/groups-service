@@ -22,7 +22,12 @@ import play.mvc.Http;
   "javax.management.*",
   "javax.net.ssl.*",
   "javax.security.*",
-  "jdk.internal.reflect.*"
+  "jdk.internal.reflect.*",
+  "javax.crypto.*",
+  "javax.script.*",
+  "javax.xml.*",
+  "com.sun.org.apache.xerces.*",
+  "org.xml.*"
 })
 public class OnRequestHandlerTest extends BaseRequestHandlerTest {
   private ObjectMapper mapper = new ObjectMapper();

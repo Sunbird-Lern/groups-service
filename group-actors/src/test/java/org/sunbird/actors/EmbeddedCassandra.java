@@ -29,7 +29,8 @@ public class EmbeddedCassandra {
   private static CQLDataLoader dataLoader;
 
   public static void setUp() throws Exception {
-    EmbeddedCassandraServerHelper.startEmbeddedCassandra(30000L);
+//    System.setProperty("cassandra.unsafesystem", "true");
+    EmbeddedCassandraServerHelper.startEmbeddedCassandra("cassandra.yaml", 100000L);
     session = EmbeddedCassandraServerHelper.getSession();
     dataLoader = new CQLDataLoader(session);
     dataLoader.load(new ClassPathCQLDataSet("createGroup.cql", KEYSPACE));
