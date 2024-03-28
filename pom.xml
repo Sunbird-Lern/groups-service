@@ -10,31 +10,25 @@
         <project.version>1.0.0</project.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        
+
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
         <jackson.version>2.13.5</jackson.version>
-        <akka.x.version>2.5.19</akka.x.version>
-        <junit.version>4.12</junit.version>
-
-        <version.compiler.plugin>2.3.1</version.compiler.plugin>
+        <typesafe.akka.version>2.5.22</typesafe.akka.version>
+        <junit.version>4.13.2</junit.version>
         <scoverage.plugin.version>1.1.1</scoverage.plugin.version>
         <slf4j.version>1.6.1</slf4j.version>
         <logback.version>1.0.7</logback.version>
-        <powermock.version>1.6.5</powermock.version>
-        <httpClient.version>4.5.1</httpClient.version>
+        <powermock.version>2.0.9</powermock.version>
         <play2.version>2.7.2</play2.version>
         <play2.plugin.version>1.0.0-rc5</play2.plugin.version>
-        <sbt-compiler.plugin.version>1.0.0</sbt-compiler.plugin.version>
-        <scala.major.version>2.11</scala.major.version>
-        <scala.version>2.11.12</scala.version>
+        <scala.major.version>2.12</scala.major.version>
+        <scala.version>2.12.11</scala.version>
         <jedis.version>2.6.2</jedis.version>
         <commons-lang3.version>3.9</commons-lang3.version>
-        <commons-collections4.version>4.1</commons-collections4.version>
-
-        <surefire.plugin.version>2.20</surefire.plugin.version>
-        <spotbugs.plugin.version>3.0.4</spotbugs.plugin.version>
-
+        <commons-collections4.version>4.3</commons-collections4.version>
+        <surefire.plugin.version>3.0.0</surefire.plugin.version>
+        <maven-compiler-plugin.version>3.8.0</maven-compiler-plugin.version>
     </properties>
 
     <modules>
@@ -64,7 +58,7 @@
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
-                <version>0.8.4</version>
+                <version>0.8.8</version>
                 <configuration>
                     <destFile>${basedir}/target/coverage-reports/jacoco-unit.exec</destFile>
                     <dataFile>${basedir}/target/coverage-reports/jacoco-unit.exec</dataFile>
