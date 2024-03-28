@@ -9,6 +9,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.sunbird.actor.core.ActorConfig;
+import org.sunbird.cache.util.Platform;
 import org.sunbird.common.exception.AuthorizationException;
 import org.sunbird.common.exception.BaseException;
 import org.sunbird.common.exception.ValidationException;
@@ -25,7 +26,6 @@ import org.sunbird.service.MemberService;
 import org.sunbird.service.MemberServiceImpl;
 import org.sunbird.util.*;
 import org.sunbird.common.util.JsonKey;
-import org.sunbird.util.helper.PropertiesCache;
 
 @ActorConfig(
   tasks = {"updateGroup"},
@@ -136,10 +136,9 @@ public class UpdateGroupActor extends BaseActor {
         }
       }
 
-
       boolean isUseridRedisEnabled =
-              Boolean.parseBoolean(
-                      PropertiesCache.getInstance().getConfigValue(JsonKey.ENABLE_USERID_REDIS_CACHE));
+              Platform.getBoolean(JsonKey.ENABLE_USERID_REDIS_CACHE, false);
+      logger.info(actorMessage.getContext(),"updateGroup ENABLE_USERID_REDIS_CACHE value: "+ isUseridRedisEnabled);
       if (isUseridRedisEnabled) {
         cacheUtil.deleteCacheSync(userId,actorMessage.getContext());
         // Remove group list user cache from redis

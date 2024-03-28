@@ -10,6 +10,7 @@ import java.util.Map;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.sunbird.actor.core.ActorConfig;
+import org.sunbird.cache.util.Platform;
 import org.sunbird.common.exception.BaseException;
 import org.sunbird.common.message.ResponseCode;
 import org.sunbird.models.GroupResponse;
@@ -52,9 +53,7 @@ public class SearchGroupActor extends BaseActor {
    * @param request
    */
   private void searchGroup(Request request) throws BaseException {
-    boolean isUseridRedisEnabled =
-        Boolean.parseBoolean(
-            PropertiesCache.getInstance().getConfigValue(JsonKey.ENABLE_USERID_REDIS_CACHE));
+
     CacheUtil cacheUtil = new CacheUtil();
     GroupService groupService = new GroupServiceImpl();
     Map<String, Object> searchQueryMap = request.getRequest();
@@ -66,6 +65,9 @@ public class SearchGroupActor extends BaseActor {
     try {
       if (StringUtils.isNotBlank(userId)) {
         boolean getFromDB = true;
+        boolean isUseridRedisEnabled =
+                Platform.getBoolean(JsonKey.ENABLE_USERID_REDIS_CACHE, false);
+        logger.info(request.getContext(),"searchGroup ENABLE_USERID_REDIS_CACHE value: "+ isUseridRedisEnabled);
         if (isUseridRedisEnabled) {
           String groupList = cacheUtil.getCache(userId,request.getContext());
           if (StringUtils.isNotEmpty(groupList)) {

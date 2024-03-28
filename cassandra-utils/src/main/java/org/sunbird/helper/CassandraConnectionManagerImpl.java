@@ -70,6 +70,9 @@ public class CassandraConnectionManagerImpl implements CassandraConnectionManage
               Platform.getInteger(Constants.POOL_TIMEOUT, 0));
 
       //check for multi DC enabled or not from configuration file and send the value
+      boolean isMultiDCEnabled  = Platform.config.hasPath(Constants.IS_MULTI_DC_ENABLED);
+      logger.info(
+              "CassandraConnectionManagerImpl:createCassandraConnection: isMultiDCEnabled = " + isMultiDCEnabled);
       cluster = createCluster(hosts, poolingOptions,Platform.getBoolean(Constants.IS_MULTI_DC_ENABLED, false));
 
       final Metadata metadata = cluster.getMetadata();
@@ -84,7 +87,7 @@ public class CassandraConnectionManagerImpl implements CassandraConnectionManage
         logger.info(msg);
       }
     } catch (Exception e) {
-      logger.info("Error occured while creating cassandra connection :", e);
+      logger.error("Error occured while creating cassandra connection :", e);
       throw new BaseException(
           IResponseMessage.INTERNAL_ERROR, e.getMessage(), ResponseCode.SERVER_ERROR.getCode());
     }
@@ -164,7 +167,7 @@ public class CassandraConnectionManagerImpl implements CassandraConnectionManage
         cluster.close();
         logger.info("completed resource cleanup Cassandra.");
       } catch (Exception ex) {
-        logger.info("Error :", ex);
+        logger.error("Error :", ex);
       }
     }
   }

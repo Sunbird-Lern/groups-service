@@ -9,6 +9,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.sunbird.actor.core.ActorConfig;
+import org.sunbird.cache.util.Platform;
 import org.sunbird.common.exception.AuthorizationException;
 import org.sunbird.common.exception.BaseException;
 import org.sunbird.common.message.ResponseCode;
@@ -92,8 +93,8 @@ public class CreateGroupActor extends BaseActor {
       if (CollectionUtils.isNotEmpty(memberList)) {
           logger.info(actorMessage.getContext(), MessageFormat.format("Adding members to the group: {0} started", groupId));
           boolean isUseridRedisEnabled =
-                  Boolean.parseBoolean(
-                          PropertiesCache.getInstance().getConfigValue(JsonKey.ENABLE_USERID_REDIS_CACHE));
+                  Platform.getBoolean(JsonKey.ENABLE_USERID_REDIS_CACHE, false);
+          logger.info(actorMessage.getContext(),"createGroup ENABLE_USERID_REDIS_CACHE value: "+ isUseridRedisEnabled);
           if (isUseridRedisEnabled) {
             // Remove group list user cache from redis
             cacheUtil.deleteCacheSync(userId,actorMessage.getContext());
