@@ -66,7 +66,7 @@ public class SearchGroupActor extends BaseActor {
       if (StringUtils.isNotBlank(userId)) {
         boolean getFromDB = true;
         boolean isUseridRedisEnabled =
-                Platform.getBoolean(JsonKey.ENABLE_USERID_REDIS_CACHE, false);
+                Platform.config.getBoolean(JsonKey.ENABLE_USERID_REDIS_CACHE);
         logger.info(request.getContext(),"searchGroup ENABLE_USERID_REDIS_CACHE value: "+ isUseridRedisEnabled);
         if (isUseridRedisEnabled) {
           String groupList = cacheUtil.getCache(userId,request.getContext());

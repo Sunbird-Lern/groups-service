@@ -68,7 +68,7 @@ public class UpdateGroupMembershipActor extends BaseActor {
         response = memberService.editMembers(members,actorMessage.getContext(), userId);
       }
       boolean isUseridRedisEnabled =
-              Platform.getBoolean(JsonKey.ENABLE_USERID_REDIS_CACHE, false);
+              Platform.config.getBoolean(JsonKey.ENABLE_USERID_REDIS_CACHE);
       logger.info(actorMessage.getContext(),"updateGroupMembership ENABLE_USERID_REDIS_CACHE value: "+ isUseridRedisEnabled);
       if (isUseridRedisEnabled) {
         // Remove updated groups from cache

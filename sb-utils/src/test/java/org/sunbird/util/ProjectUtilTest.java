@@ -10,13 +10,13 @@ public class ProjectUtilTest {
 
   @Test
   public void testGetConfigValueWithExistsInPropertyFile() {
-    String exists = Platform.getBoolean(JsonKey.SUNBIRD_HEALTH_CHECK_ENABLE, false).toString();
+    String exists = String.valueOf(Platform.config.getBoolean(JsonKey.SUNBIRD_HEALTH_CHECK_ENABLE));
     assertEquals("true", exists);
   }
 
   @Test
   public void testGetConfigValueWithNotExistsInPropertyFile() {
-    Boolean exists = Platform.getBoolean("sunbird_health_check_not_enable", false);
+    Boolean exists = Platform.config.getBoolean("sunbird_health_check_not_enable");
     assertFalse(exists);
   }
 }

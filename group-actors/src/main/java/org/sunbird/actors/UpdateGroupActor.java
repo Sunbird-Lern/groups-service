@@ -137,7 +137,7 @@ public class UpdateGroupActor extends BaseActor {
       }
 
       boolean isUseridRedisEnabled =
-              Platform.getBoolean(JsonKey.ENABLE_USERID_REDIS_CACHE, false);
+              Platform.config.getBoolean(JsonKey.ENABLE_USERID_REDIS_CACHE);
       logger.info(actorMessage.getContext(),"updateGroup ENABLE_USERID_REDIS_CACHE value: "+ isUseridRedisEnabled);
       if (isUseridRedisEnabled) {
         cacheUtil.deleteCacheSync(userId,actorMessage.getContext());
