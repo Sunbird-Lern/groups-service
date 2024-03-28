@@ -21,7 +21,7 @@ public abstract class BaseActor extends UntypedAbstractActor {
 
   public abstract void onReceive(Request request) throws Throwable;
 
-  protected Localizer localizer = Localizer.getInstance();
+//  protected Localizer localizer = Localizer.getInstance();
 
   @Override
   public void onReceive(Object message) throws Throwable {
@@ -92,9 +92,9 @@ public abstract class BaseActor extends UntypedAbstractActor {
    * @param locale
    * @return
    */
-  protected String getLocalizedMessage(String key, Locale locale) {
-    return localizer.getMessage(key, locale);
-  }
+//  protected String getLocalizedMessage(String key, Locale locale) {
+//    return localizer.getMessage(key, locale);
+//  }
 
   /**
    * This method will return the current timestamp.
