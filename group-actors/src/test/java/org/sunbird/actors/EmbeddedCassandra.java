@@ -10,12 +10,13 @@ import org.cassandraunit.CQLDataLoader;
 import org.cassandraunit.dataset.cql.ClassPathCQLDataSet;
 import org.cassandraunit.dataset.cql.FileCQLDataSet;
 import org.cassandraunit.utils.EmbeddedCassandraServerHelper;
+import org.sunbird.cache.util.Platform;
 import org.sunbird.common.util.JsonKey;
 import org.sunbird.util.ProjectUtil;
 
 public class EmbeddedCassandra {
 
-  static final String KEYSPACE = ProjectUtil.getConfigValue(JsonKey.SUNBIRD_GROUPS_KEYSPACE);
+  static final String KEYSPACE = Platform.getString(JsonKey.SUNBIRD_GROUPS_KEYSPACE, "");
   static final String GROUP_TABLE = "group";
   static final String MEMBER_TABLE = "group_member";
   static final String USER_GROUP = "user_group";
