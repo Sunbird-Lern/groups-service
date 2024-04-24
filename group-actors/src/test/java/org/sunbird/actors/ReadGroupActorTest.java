@@ -175,9 +175,11 @@ public class ReadGroupActorTest extends BaseActorTest {
     String response =
         "{ \"id\": \"api.content.search\", \"ver\": \"1.0\", \"ts\": \"2020-07-10T12:36:10.076Z\", \"params\": { \"resmsgid\": "
             + "\"eeda31c0-c2a9-11ea-8ebb-8389e3bbdc82\", \"msgid\": \"eed88410-c2a9-11ea-8ebb-8389e3bbdc82\", \"status\": \"successful\", "
-            + "\"err\": null, \"errmsg\": null }, \"responseCode\": \"OK\", \"result\": { \"count\": 2, "
+            + "\"err\": null, \"errmsg\": null }, \"responseCode\": \"OK\", \"result\": { \"count\": 3, "
             + "\"content\": [ { \"identifier\": \"do_11304065892935270414\", \"contentType\": \"TextBook\", \"objectType\": \"Content\" },"
-            + " { \"identifier\": \"do_112470675618004992181\", \"contentType\": \"Course\", \"objectType\": \"Content\" } ] } }";
+            + " { \"identifier\": \"do_112470675618004992181\", \"contentType\": \"Course\", \"objectType\": \"Content\" } ],"
+            + "\"QuestionSet\": [ { \"identifier\": \"do_21387852048561766411\", \"primaryCategory\": \"Practice Question Set\", \"objectType\": \"QuestionSet\" } ]"
+            + " } }";
     return response;
   }
 
@@ -204,8 +206,14 @@ public class ReadGroupActorTest extends BaseActorTest {
     Map<String, Object> activity2 = new HashMap<>();
     activity2.put(JsonKey.ID, "do_11304065892935270414");
     activity2.put(JsonKey.TYPE, "Textbook");
+
+    Map<String, Object> activity3 = new HashMap<>();
+    activity3.put(JsonKey.ID, "do_21387852048561766411");
+    activity3.put(JsonKey.TYPE, "Practice Question Set");
+
     activities.add(activity1);
     activities.add(activity2);
+    activities.add(activity3);
     group1.put(JsonKey.ACTIVITIES, activities);
     groupList.add(group1);
     result.put(JsonKey.RESPONSE, groupList);
