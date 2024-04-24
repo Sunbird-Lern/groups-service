@@ -75,6 +75,7 @@ public interface JsonKey {
   String SUNBIRD_CS_BASE_URL = "CONTENT_SERVICE_PORT";
   String SUNBIRD_CS_SEARCH_URL = "sunbird_cs_search_url";
   String CONTENT = "content";
+  String QUESTION_SET = "QuestionSet";
   String RESULT = "result";
   String SUNBIRD_HEALTH_CHECK_ENABLE = "sunbird_health_check_enable";
   String HEALTH = "health";
