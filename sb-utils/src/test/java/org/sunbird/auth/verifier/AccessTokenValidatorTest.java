@@ -9,7 +9,6 @@ import java.util.HashMap;
 import java.util.Map;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.keycloak.common.util.Time;
 import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
@@ -20,6 +19,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 @PrepareForTest({CryptoUtil.class, KeyManager.class, Base64Util.class})
 @PowerMockIgnore({"javax.management.*", "jdk.internal.reflect.*"})
 public class AccessTokenValidatorTest {
+  private static int offset;
   @Test
   public void verifyUserAccessToken() throws JsonProcessingException {
     PowerMockito.mockStatic(CryptoUtil.class);
@@ -30,7 +30,7 @@ public class AccessTokenValidatorTest {
     PublicKey publicKey = PowerMockito.mock(PublicKey.class);
     Mockito.when(keyData.getPublicKey()).thenReturn(publicKey);
     Map<String, Object> payload = new HashMap<>();
-    int expTime = Time.currentTime() + 3600000;
+    int expTime = (int)(System.currentTimeMillis() / 1000L) + offset + 3600000;
     payload.put("exp", expTime);
     payload.put("iss", "nullrealms/null");
     payload.put("kid", "kid");
@@ -58,7 +58,7 @@ public class AccessTokenValidatorTest {
     PublicKey publicKey = PowerMockito.mock(PublicKey.class);
     Mockito.when(keyData.getPublicKey()).thenReturn(publicKey);
     Map<String, Object> payload = new HashMap<>();
-    int expTime = Time.currentTime() + 3600000;
+    int expTime = (int)(System.currentTimeMillis() / 1000L) + offset + 3600000;
     payload.put("exp", expTime);
     payload.put("kid", "kid");
     ObjectMapper mapper = new ObjectMapper();
@@ -84,7 +84,7 @@ public class AccessTokenValidatorTest {
     PublicKey publicKey = PowerMockito.mock(PublicKey.class);
     Mockito.when(keyData.getPublicKey()).thenReturn(publicKey);
     Map<String, Object> payload = new HashMap<>();
-    int expTime = Time.currentTime() - 3600000;
+    int expTime = (int)(System.currentTimeMillis() / 1000L) + offset - 3600000;
     payload.put("exp", expTime);
     payload.put("kid", "kid");
     ObjectMapper mapper = new ObjectMapper();
@@ -110,7 +110,7 @@ public class AccessTokenValidatorTest {
     PublicKey publicKey = PowerMockito.mock(PublicKey.class);
     Mockito.when(keyData.getPublicKey()).thenReturn(publicKey);
     Map<String, Object> payload = new HashMap<>();
-    int expTime = Time.currentTime() + 3600000;
+    int expTime = (int)(System.currentTimeMillis() / 1000L) + offset + 3600000;
     payload.put("exp", expTime);
     payload.put("requestedByUserId", "386c7960-7f85-4a24-8131-a8aba519ce7d");
     payload.put("requestedForUserId", "386c7960-7f85-4a24-8131-a8aba519ce7e");
@@ -142,7 +142,7 @@ public class AccessTokenValidatorTest {
     PublicKey publicKey = PowerMockito.mock(PublicKey.class);
     Mockito.when(keyData.getPublicKey()).thenReturn(publicKey);
     Map<String, Object> payload = new HashMap<>();
-    int expTime = Time.currentTime() + 3600000;
+    int expTime = (int)(System.currentTimeMillis() / 1000L) + offset + 3600000;
     payload.put("exp", expTime);
     payload.put("requestedByUserId", "386c7960-7f85-4a24-8131-a8aba519ce7d");
     payload.put("requestedForUserId", "386c7960-7f85-4a24-8131-a8aba519ce7e");

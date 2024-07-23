@@ -6,7 +6,6 @@ import java.util.Collections;
 import java.util.Map;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.keycloak.common.util.Time;
 import org.sunbird.common.util.JsonKey;
 import org.sunbird.common.util.LoggerEnum;
 import org.sunbird.util.LoggerUtil;
@@ -15,6 +14,7 @@ import org.sunbird.util.helper.PropertiesCache;
 public class AccessTokenValidator {
 
   static LoggerUtil logger = new LoggerUtil(AccessTokenValidator.class);
+  private static int offset;
   private static ObjectMapper mapper = new ObjectMapper();
   private static PropertiesCache propertiesCache = PropertiesCache.getInstance();
 
@@ -104,7 +104,8 @@ public class AccessTokenValidator {
   }
 
   private static boolean isExpired(Integer expiration) {
-    return (Time.currentTime() > expiration);
+    Integer currentTime = (int)(System.currentTimeMillis() / 1000L) + offset;
+    return (currentTime > expiration);
   }
 
   private static byte[] decodeFromBase64(String data) {
