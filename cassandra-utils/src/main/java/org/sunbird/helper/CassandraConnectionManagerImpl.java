@@ -16,6 +16,7 @@ import org.sunbird.common.exception.BaseException;
 import org.sunbird.common.message.IResponseMessage;
 import org.sunbird.common.message.ResponseCode;
 import org.sunbird.util.helper.PropertiesCache;
+import org.sunbird.cache.util.Platform;
 
 public class CassandraConnectionManagerImpl implements CassandraConnectionManager {
   private static Cluster cluster;
@@ -45,30 +46,31 @@ public class CassandraConnectionManagerImpl implements CassandraConnectionManage
 
   private void createCassandraConnection(String[] hosts) throws BaseException {
     try {
-      PropertiesCache cache = PropertiesCache.getInstance();
+      /*PropertiesCache cache = PropertiesCache.getInstance();*/
+      //PropertiesCache cache = PropertiesCache.getInstance();
       PoolingOptions poolingOptions = new PoolingOptions();
       poolingOptions.setCoreConnectionsPerHost(
           HostDistance.LOCAL,
-          Integer.parseInt(cache.getProperty(Constants.CORE_CONNECTIONS_PER_HOST_FOR_LOCAL)));
+          Platform.getInteger(Constants.CORE_CONNECTIONS_PER_HOST_FOR_LOCAL, 0));
       poolingOptions.setMaxConnectionsPerHost(
           HostDistance.LOCAL,
-          Integer.parseInt(cache.getProperty(Constants.MAX_CONNECTIONS_PER_HOST_FOR_LOCAl)));
+              Platform.getInteger(Constants.CORE_CONNECTIONS_PER_HOST_FOR_LOCAL, 0));
       poolingOptions.setCoreConnectionsPerHost(
           HostDistance.REMOTE,
-          Integer.parseInt(cache.getProperty(Constants.CORE_CONNECTIONS_PER_HOST_FOR_REMOTE)));
+              Platform.getInteger(Constants.MAX_CONNECTIONS_PER_HOST_FOR_REMOTE, 0));
       poolingOptions.setMaxConnectionsPerHost(
           HostDistance.REMOTE,
-          Integer.parseInt(cache.getProperty(Constants.MAX_CONNECTIONS_PER_HOST_FOR_REMOTE)));
+              Platform.getInteger(Constants.MAX_CONNECTIONS_PER_HOST_FOR_REMOTE, 0));
       poolingOptions.setMaxRequestsPerConnection(
           HostDistance.LOCAL,
-          Integer.parseInt(cache.getProperty(Constants.MAX_REQUEST_PER_CONNECTION)));
+              Platform.getInteger(Constants.MAX_REQUEST_PER_CONNECTION, 0));
       poolingOptions.setHeartbeatIntervalSeconds(
-          Integer.parseInt(cache.getProperty(Constants.HEARTBEAT_INTERVAL)));
+              Platform.getInteger(Constants.HEARTBEAT_INTERVAL, 0));
       poolingOptions.setPoolTimeoutMillis(
-          Integer.parseInt(cache.getProperty(Constants.POOL_TIMEOUT)));
+              Platform.getInteger(Constants.POOL_TIMEOUT, 0));
 
       //check for multi DC enabled or not from configuration file and send the value
-      cluster = createCluster(hosts, poolingOptions, Boolean.parseBoolean(cache.getProperty(Constants.IS_MULTI_DC_ENABLED)));
+      cluster = createCluster(hosts, poolingOptions, Platform.config.getBoolean(Constants.IS_MULTI_DC_ENABLED));
 
       final Metadata metadata = cluster.getMetadata();
       String msg = String.format("Connected to cluster: %s", metadata.getClusterName());
@@ -82,7 +84,7 @@ public class CassandraConnectionManagerImpl implements CassandraConnectionManage
         logger.info(msg);
       }
     } catch (Exception e) {
-      logger.info("Error occured while creating cassandra connection :", e);
+      logger.error("Error occured while creating cassandra connection :", e);
       throw new BaseException(
           IResponseMessage.INTERNAL_ERROR, e.getMessage(), ResponseCode.SERVER_ERROR.getCode());
     }
@@ -162,7 +164,7 @@ public class CassandraConnectionManagerImpl implements CassandraConnectionManage
         cluster.close();
         logger.info("completed resource cleanup Cassandra.");
       } catch (Exception ex) {
-        logger.info("Error :", ex);
+        logger.error("Error :", ex);
       }
     }
   }

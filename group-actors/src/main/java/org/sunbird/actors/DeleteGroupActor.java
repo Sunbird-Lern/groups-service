@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
 import org.sunbird.actor.core.ActorConfig;
+import org.sunbird.cache.util.Platform;
 import org.sunbird.common.exception.AuthorizationException;
 import org.sunbird.common.exception.BaseException;
 import org.sunbird.common.message.ResponseCode;
@@ -20,7 +21,6 @@ import org.sunbird.service.MemberService;
 import org.sunbird.service.MemberServiceImpl;
 import org.sunbird.util.*;
 import org.sunbird.common.util.JsonKey;
-import org.sunbird.util.helper.PropertiesCache;
 
 @ActorConfig(
   tasks = {"deleteGroup"},
@@ -76,8 +76,8 @@ public class DeleteGroupActor extends BaseActor {
      Response response = groupService.deleteGroup(groupId, membersInDB, actorMessage.getContext());
      // delete cache for the group and all members belong to the group
      boolean isUseridRedisEnabled =
-             Boolean.parseBoolean(
-                     PropertiesCache.getInstance().getConfigValue(JsonKey.ENABLE_USERID_REDIS_CACHE));
+             Platform.config.getBoolean(JsonKey.ENABLE_USERID_REDIS_CACHE);
+     logger.info(actorMessage.getContext(),"deleteGroup ENABLE_USERID_REDIS_CACHE value: "+ isUseridRedisEnabled);
      if (isUseridRedisEnabled) {
        cacheUtil.deleteCacheSync(groupId, actorMessage.getContext());
        cacheUtil.delCache(groupId + "_" + JsonKey.MEMBERS);
