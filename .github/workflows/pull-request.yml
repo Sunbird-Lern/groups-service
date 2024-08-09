@@ -1,5 +1,4 @@
 name: Pull Request Analysis
-
 on:
   pull_request:
     types: [opened, synchronize]
